@@ -20,11 +20,14 @@ class AdminProvidersController extends ModuleAdminController {
     {
         $this->bootstrap = true;
         $this->required_database = true;
-        $this->required_fields = array('name', 'description', 'email', 'order_day');
+        $this->required_fields = array('name', 'description', 'email'/*, 'order_day'*/);
         $this->table = 'providers';
         $this->className = 'Providers';
         $this->lang = false;
         $this->context = Context::getContext();
+        $this->allow_export = true;
+
+        parent::__construct();
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
@@ -36,16 +39,14 @@ class AdminProvidersController extends ModuleAdminController {
             )
         );
 
-        $this->allow_export = true;
-
         $this->fields_list = array(
             'id_providers' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'name' => array('title' => $this->l('Name'), 'filter_key' => 'a!name'),
             'description' => array('title' => $this->l('Description')),
             'email' => array('title' => $this->l('Email'), 'filter_key' => 'a!email'),
-            'order_day' => array('title' => $this->l('Order day'), 'type' => 'select', 'list' => $this->weekdays, 'filter_key' => 'a!order_day', 'callback' => 'getDay'));
+//            'order_day' => array('title' => $this->l('Order day'), 'type' => 'select', 'list' => $this->weekdays, 'filter_key' => 'a!order_day', 'callback' => 'getDay')
+        );
 
-        parent::__construct();
     }
 
     public function getDay($value){
@@ -54,13 +55,36 @@ class AdminProvidersController extends ModuleAdminController {
 
     public function renderForm()
     {
-        $weekdays_options = array();
-
-
+        /*$weekdays_options = array();
         foreach ($this->weekdays as $key => $day){
             $weekdays_options[$key]['id_option'] = $key;
             $weekdays_options[$key]['name'] = $day;
+        }*/
+
+        $this->available_tabs_lang = array(
+            'Provide' => $this->l('Provide'),
+            'Relation' => $this->l('Relation'),
+        );
+
+        $this->available_tabs = array('Quantities' => 6, 'Warehouses' => 14);
+        if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP) {
+            $this->available_tabs = array_merge($this->available_tabs, array(
+                'Provide' => 0,
+                'Relation' => 1,
+            ));
         }
+
+        asort($this->available_tabs, SORT_NUMERIC);
+
+        /* Adding tab if modules are hooked */
+        $modules_list = Hook::getHookModuleExecList('displayAdminProductsExtra');
+        if (is_array($modules_list) && count($modules_list) > 0) {
+            foreach ($modules_list as $m) {
+                $this->available_tabs['Module'.ucfirst($m['module'])] = 23;
+                $this->available_tabs_lang['Module'.ucfirst($m['module'])] = Module::getModuleName($m['module']);
+            }
+        }
+
 
         $this->fields_form = array(
             'legend' => array(
@@ -96,7 +120,7 @@ class AdminProvidersController extends ModuleAdminController {
                     'col' => '3',
                     'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
                 ),
-                array(
+                /*array(
                     'type' => 'select',
                     'label' => $this->l('Order day'),
                     'name' => 'order_day',
@@ -107,7 +131,7 @@ class AdminProvidersController extends ModuleAdminController {
                         'name' => 'name'                               // The value of the 'name' key must be the same as the key for the text content of the <option> tag in each $options sub-array.
                     ),
                     'col'  => 3,
-                )
+                )*/
             ),
             'submit' => array(
                 'title' => $this->l('Save'),

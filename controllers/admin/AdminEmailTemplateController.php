@@ -48,6 +48,7 @@ class AdminEmailTemplateController extends ModuleAdminController
                         'name' => 'template_email',
                         'required' => false,
                         'autoload_rte' => true,
+                        'col' => '5',
                         'desc' => $this->module->l('If you want insert name provider and status URL in the mail, you need use shortcode [name] and [status_url]!'),
                     ),
                 ),

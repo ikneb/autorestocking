@@ -9,7 +9,7 @@ class Providers extends ObjectModel
 
     public $email;
 
-    public $order_day;
+//    public $order_day;
 
     /**
      * @see ObjectModel::$definition
@@ -23,7 +23,7 @@ class Providers extends ObjectModel
             'name'         =>    array('type' => self::TYPE_STRING),
             'description'  =>    array('type' => self::TYPE_STRING),
             'email'        =>    array('type' => self::TYPE_STRING),
-            'order_day'    =>    array('type' => self::TYPE_NOTHING)
+            /*'order_day'    =>    array('type' => self::TYPE_NOTHING)*/
         ),
     );
 

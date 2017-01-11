@@ -8,9 +8,10 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."providers` (
 `name` varchar(36) NOT NULL,
 `description` varchar(255) NOT NULL,
 `email` varchar(36) NOT NULL,
-`order_day` enum('0','1','2','3','4','5','6','7') NOT NULL DEFAULT '0',
 PRIMARY KEY (`id_providers`)
 )";
+
+//`order_day` enum('0','1','2','3','4','5','6','7') NOT NULL DEFAULT '0',
 
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'sent_email` (

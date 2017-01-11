@@ -14,6 +14,9 @@ class AdminEmailController extends ModuleAdminController
         $this->lang = false;
         $this->context = Context::getContext();
 
+
+        parent::__construct();
+
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
@@ -42,8 +45,6 @@ class AdminEmailController extends ModuleAdminController
                 'align' => 'center'
             )
         );
-
-        parent::__construct();
     }
 
 }
