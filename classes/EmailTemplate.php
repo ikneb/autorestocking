@@ -21,7 +21,14 @@ class EmailTemplate extends ObjectModel
     );
 
 
-    public function getTemplate(){
-
+    public static function updateTemplate($template_email){
+            $sql = "INSERT INTO "._DB_PREFIX_."template_email
+             (id_template_email, template_email)
+              VALUES(1, '".$template_email."')
+             ON DUPLICATE KEY UPDATE
+            template_email='".$template_email."'";
+        if (!Db::getInstance()->execute($sql))
+            return false;
+        return true;
     }
 }

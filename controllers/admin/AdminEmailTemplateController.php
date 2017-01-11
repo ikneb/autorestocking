@@ -19,15 +19,15 @@ class AdminEmailTemplateController extends ModuleAdminController
 
     }
 
-    public function display()
+    public function setMedia()
     {
-        parent::display();
+        parent::setMedia();
+        $this->context->controller->addJS(_PS_MODULE_DIR_.'autorestocking/views/js/autorest.js');
     }
 
     public function renderList()
     {
         $form = $this->renderForm();
-
         // To load form inside your template
         $this->context->smarty->assign('form_tpl', $form);
         return $this->context->smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/email_template.tpl');
@@ -49,12 +49,21 @@ class AdminEmailTemplateController extends ModuleAdminController
                         'name' => 'template_email',
                         'required' => false,
                         'autoload_rte' => true,
-                        'desc' => $this->module->l('!!!!!!!!!!!!!!!'),
+                        'desc' => $this->module->l('If you want insert name provider and status URL in the mail, you need use shortcode [name] and [status_url]!'),
                     ),
                 ),
-                'submit' => array('title' => $this->module->l('Save')),
+                'submit' => array(
+                    'title' => $this->module->l('Save'),
+                    'id' => 'template_email'
+                    ),
             ),
         );
+
+        $sql = 'SELECT template_email FROM ' . _DB_PREFIX_ . 'template_email
+         WHERE id_template_email=1';
+        $template = DB::getInstance()->getValue($sql);
+
+//        var_dump($template);exit;
 
         $helper = new HelperForm();
         $helper->table = 'template_email';
@@ -62,12 +71,32 @@ class AdminEmailTemplateController extends ModuleAdminController
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
             'fields_value' => array(
-                'template_email' => '',
+                'template_email' => $template,
             ),
             'languages' => $this->context->controller->getLanguages(),
         );
 
         return $helper->generateForm(array($fields_form));
 
+    }
+
+
+    public function ajaxProcessUpdatePositions()
+    {
+
+        echo 'test';
+        /*$id_template_email = (int)Tools::getValue('id_template_email');
+        $template_email = (int)Tools::getValue('template_email');
+
+        $template = new EmailTemplate($id_template_email);
+        if (Validate::isLoadedObject($template)) {
+            if ($template->updateTemplate($id_template_email, $template_email)) {
+                die(true);
+            } else {
+                die('{"hasError" : true, errors : "Cannot update template"}');
+            }
+        } else {
+            die('{"hasError" : true, "errors" : "This template cannot be loaded"}');
+        }*/
     }
 }
