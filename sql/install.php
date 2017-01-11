@@ -6,6 +6,7 @@ $sql = array();
 $sql[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."providers` (
 `id_providers` int(11) NOT NULL AUTO_INCREMENT,
 `name` varchar(36) NOT NULL,
+`description` varchar(255) NOT NULL,
 `email` varchar(36) NOT NULL,
 `order_day` enum('0','1','2','3','4','5','6','7') NOT NULL DEFAULT '0',
 PRIMARY KEY (`id_providers`)

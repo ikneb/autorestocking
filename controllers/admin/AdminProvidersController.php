@@ -20,7 +20,7 @@ class AdminProvidersController extends ModuleAdminController {
     {
         $this->bootstrap = true;
         $this->required_database = true;
-        $this->required_fields = array('name','email', 'order_day');
+        $this->required_fields = array('name', 'description', 'email', 'order_day');
         $this->table = 'providers';
         $this->className = 'Providers';
         $this->lang = false;
@@ -41,6 +41,7 @@ class AdminProvidersController extends ModuleAdminController {
         $this->fields_list = array(
             'id_providers' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'name' => array('title' => $this->l('Name'), 'filter_key' => 'a!name'),
+            'description' => array('title' => $this->l('Description')),
             'email' => array('title' => $this->l('Email'), 'filter_key' => 'a!email'),
             'order_day' => array('title' => $this->l('Order day'), 'type' => 'select', 'list' => $this->weekdays, 'filter_key' => 'a!order_day', 'callback' => 'getDay'));
 
@@ -78,14 +79,21 @@ class AdminProvidersController extends ModuleAdminController {
                     'label' => $this->l('Name'),
                     'name' => 'name',
                     'required' => true,
-                    'col' => '4'
+                    'col' => '3'
+                ),
+                array(
+                    'type' => 'textarea',
+                    'label' => $this->l('Description'),
+                    'name' => 'description',
+                    'required' => false,
+                    'col' => '3'
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->l('Email'),
                     'name' => 'email',
                     'required' => true,
-                    'col' => '4',
+                    'col' => '3',
                     'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
                 ),
                 array(
@@ -98,7 +106,7 @@ class AdminProvidersController extends ModuleAdminController {
                         'id' => 'id_option',                           // The value of the 'id' key must be the same as the key for 'value' attribute of the <option> tag in each $options sub-array.
                         'name' => 'name'                               // The value of the 'name' key must be the same as the key for the text content of the <option> tag in each $options sub-array.
                     ),
-                    'col'  => 4,
+                    'col'  => 3,
                 )
             ),
             'submit' => array(

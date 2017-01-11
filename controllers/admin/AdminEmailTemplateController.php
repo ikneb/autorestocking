@@ -45,7 +45,6 @@ class AdminEmailTemplateController extends ModuleAdminController
                 'input' => array(
                     array(
                         'type' => 'textarea',
-                        'label' => $this->module->l('Add template email'),
                         'name' => 'template_email',
                         'required' => false,
                         'autoload_rte' => true,

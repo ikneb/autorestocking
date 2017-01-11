@@ -5,6 +5,8 @@ class Providers extends ObjectModel
 
     public $name;
 
+    public $description;
+
     public $email;
 
     public $order_day;
@@ -19,6 +21,7 @@ class Providers extends ObjectModel
         'fields' => array(
             'id_providers' =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'name'         =>    array('type' => self::TYPE_STRING),
+            'description'  =>    array('type' => self::TYPE_STRING),
             'email'        =>    array('type' => self::TYPE_STRING),
             'order_day'    =>    array('type' => self::TYPE_NOTHING)
         ),
