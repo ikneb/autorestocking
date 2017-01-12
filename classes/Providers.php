@@ -9,7 +9,6 @@ class Providers extends ObjectModel
 
     public $email;
 
-//    public $order_day;
 
     /**
      * @see ObjectModel::$definition
@@ -23,7 +22,6 @@ class Providers extends ObjectModel
             'name'         =>    array('type' => self::TYPE_STRING),
             'description'  =>    array('type' => self::TYPE_STRING),
             'email'        =>    array('type' => self::TYPE_STRING),
-            /*'order_day'    =>    array('type' => self::TYPE_NOTHING)*/
         ),
     );
 
@@ -37,5 +35,53 @@ class Providers extends ObjectModel
             return false;
         }
         return $result;
+    }
+
+    public  static function getCurrentProvider($id_provider){
+        $db = Db::getInstance();
+
+        $sql = "SELECT * FROM `"._DB_PREFIX_."providers` p WHERE p.`id_providers` =".$id_provider;
+
+        if(!$result=$db->getRow($sql))
+            return false;
+
+        return $result;
+    }
+
+    public static function updateProvider($provider_data){
+
+            $sql = "INSERT INTO "._DB_PREFIX_."providers
+             (id_providers, name, description, email)
+              VALUES(".$provider_data['id_providers'].",
+               '".$provider_data['name']."', '".$provider_data['description']."',
+               '".$provider_data['email']."' )
+             ON DUPLICATE KEY UPDATE
+            name='".$provider_data['name']."',
+            description='".$provider_data['description']."',
+            email='".$provider_data['email']."'
+            ";
+
+        if (!Db::getInstance()->execute($sql))
+            return false;
+
+        return true;
+    }
+
+    public static  function insertProviderReturnId($provider_data)
+    {
+
+        $sql = "INSERT INTO "._DB_PREFIX_."providers
+             ( name, description, email)
+              VALUES(
+               '".$provider_data['name']."', '".$provider_data['description']."',
+               '".$provider_data['email']."')";
+
+        if (!Db::getInstance()->execute($sql))
+            return false;
+
+        $id_insert = Db::getInstance()->Insert_ID();
+
+
+        return $id_insert;
     }
 }

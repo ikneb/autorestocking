@@ -63,7 +63,6 @@ class AdminEmailTemplateController extends ModuleAdminController
          WHERE id_template_email=1';
         $template = DB::getInstance()->getValue($sql);
 
-//        var_dump($template);exit;
 
         $helper = new HelperForm();
         $helper->table = 'template_email';

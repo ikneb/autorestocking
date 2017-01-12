@@ -3,7 +3,7 @@ $( document ).ready(function() {
     $('#template_email_form').submit(function(e){
         e.preventDefault();
         var tiny = tinyMCE.activeEditor.getContent();
-        console.log(tiny);
+
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',

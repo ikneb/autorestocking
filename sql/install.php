@@ -11,7 +11,17 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."providers` (
 PRIMARY KEY (`id_providers`)
 )";
 
-//`order_day` enum('0','1','2','3','4','5','6','7') NOT NULL DEFAULT '0',
+
+$sql[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."autorestocking_relations` (
+`id_relations` int(11) NOT NULL AUTO_INCREMENT,
+`id_product` int(11) NOT NULL,
+`id_provider` int(11) NOT NULL,
+`min_count` int(11) NOT NULL,
+`product_count` int(11) NOT NULL,
+`order_day` enum('0','1','2','3','4','5','6','7') NOT NULL DEFAULT '0',
+PRIMARY KEY (`id_relations`)
+)";
+
 
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'sent_email` (

@@ -2,8 +2,6 @@
 
 class AdminProvidersController extends ModuleAdminController {
 
-    /** @var array providers list */
-    protected $providers_array = array();
 
     private $weekdays = array(
         0 => ' ',
@@ -26,6 +24,7 @@ class AdminProvidersController extends ModuleAdminController {
         $this->lang = false;
         $this->context = Context::getContext();
         $this->allow_export = true;
+        $this->explicitSelect = true;
 
         parent::__construct();
 
@@ -55,97 +54,46 @@ class AdminProvidersController extends ModuleAdminController {
 
     public function renderForm()
     {
-        /*$weekdays_options = array();
-        foreach ($this->weekdays as $key => $day){
-            $weekdays_options[$key]['id_option'] = $key;
-            $weekdays_options[$key]['name'] = $day;
-        }*/
 
-        $this->available_tabs_lang = array(
-            'Provide' => $this->l('Provide'),
-            'Relation' => $this->l('Relation'),
-        );
-
-        $this->available_tabs = array('Quantities' => 6, 'Warehouses' => 14);
-        if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP) {
-            $this->available_tabs = array_merge($this->available_tabs, array(
-                'Provide' => 0,
-                'Relation' => 1,
-            ));
-        }
-
-        asort($this->available_tabs, SORT_NUMERIC);
-
-        /* Adding tab if modules are hooked */
-        $modules_list = Hook::getHookModuleExecList('displayAdminProductsExtra');
-        if (is_array($modules_list) && count($modules_list) > 0) {
-            foreach ($modules_list as $m) {
-                $this->available_tabs['Module'.ucfirst($m['module'])] = 23;
-                $this->available_tabs_lang['Module'.ucfirst($m['module'])] = Module::getModuleName($m['module']);
+        if($id_provider = Tools::getValue('id_providers')){
+        $provider = Providers::getCurrentProvider($id_provider);
+            if(!$relations = Relation::getByProviderId($id_provider)){
+                $relations = array();
             }
+            $this->context->smarty->assign(
+                array(
+                    'id_providers' => $provider['id_providers'],
+                    'name' => $provider['name'],
+                    'description' => $provider['description'],
+                    'email' => $provider['email'],
+                    'token' => $this->token,
+                    'relations' => $relations
+                ));
+        } else{
+
+            $this->context->smarty->assign(
+                array(
+                    'token' => $this->token,
+                    'id_providers' => '',
+                    'name' => '',
+                    'description' => '',
+                    'email' => ''
+                ));
         }
+        return $this->context->smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/provider_template.tpl');
+    }
 
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->l('Providers'),
-                'icon' => 'icon-briefcase'
-            ),
-            'input' => array(
-                array(
-                    'type' => 'text_customer',
-                    'label' => $this->l('Provider'),
-                    'name' => 'id_customer',
-                    'required' => false,
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Name'),
-                    'name' => 'name',
-                    'required' => true,
-                    'col' => '3'
-                ),
-                array(
-                    'type' => 'textarea',
-                    'label' => $this->l('Description'),
-                    'name' => 'description',
-                    'required' => false,
-                    'col' => '3'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Email'),
-                    'name' => 'email',
-                    'required' => true,
-                    'col' => '3',
-                    'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
-                ),
-                /*array(
-                    'type' => 'select',
-                    'label' => $this->l('Order day'),
-                    'name' => 'order_day',
-                    'required' => false,                               // If set to true, this option must be set.
-                    'options' => array(
-                        'query' => $weekdays_options,                  // $options contains the data itself.
-                        'id' => 'id_option',                           // The value of the 'id' key must be the same as the key for 'value' attribute of the <option> tag in each $options sub-array.
-                        'name' => 'name'                               // The value of the 'name' key must be the same as the key for the text content of the <option> tag in each $options sub-array.
-                    ),
-                    'col'  => 3,
-                )*/
-            ),
-            'submit' => array(
-                'title' => $this->l('Save'),
-            )
-        );
-
-        return parent::renderForm();
+    public function setMedia()
+    {
+        parent::setMedia();
+        $this->context->controller->addJS(_PS_MODULE_DIR_.'autorestocking/views/js/provider.js');
     }
 
     public function processDelete()
     {
 
         $res = parent::processDelete();
-
         return $res;
     }
 
