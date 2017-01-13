@@ -9,7 +9,6 @@ $( document ).ready(function() {
         e.preventDefault();
         var provider = $('#providers_form').serialize();
         var id_provider = $('#id_providers').val();
-        console.log(id_provider);
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
@@ -98,12 +97,18 @@ $( document ).ready(function() {
 
     $('#linkAddRelation').click(function(){
         var id_provider = $("input[name='id_providers']").val();
-        $.ajax({
-            type: 'POST',
-            url: '/modules/autorestocking/ajax_tab.php',
-            data: {id_provider: id_provider,ajax_tab: true},
-            success: function(data){
-                var obj = JSON.parse(data);
+        if(id_provider == ''){
+            $('#ajax_confirmation').text('Please add provider!').removeClass('hide alert-success').addClass('alert-danger');
+            setTimeout(function () {
+                $('#ajax_confirmation').addClass('hide');
+            }, 3000);
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: '/modules/autorestocking/ajax_tab.php',
+                data: {id_provider: id_provider,ajax_tab: true},
+                success: function(data){
+                    var obj = JSON.parse(data);
 
                     for (key in obj) {
                         $('.tree-item-name input, .tree-folder-name input').each(function(i) {
@@ -113,8 +118,10 @@ $( document ).ready(function() {
                             }
                         });
                     }
-            }
-        });
+                }
+            });
+        }
+
     })
 
 });
