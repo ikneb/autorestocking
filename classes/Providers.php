@@ -84,4 +84,17 @@ class Providers extends ObjectModel
 
         return $id_insert;
     }
+
+    public static function getLight($id_lang, $id_product, Context $context = null)
+    {
+        if (!$context)
+            $context = Context::getContext();
+
+        $sql = 'SELECT `id_product`,`name`
+                    FROM `'._DB_PREFIX_.'product_lang`
+                    WHERE `id_lang` = '.(int)$id_lang;
+
+        return Db::getInstance()->executeS($sql);
+    }
+
 }

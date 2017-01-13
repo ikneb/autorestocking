@@ -1,8 +1,9 @@
 <div class="row">
     <div class="col-lg-2 col-md-3">
         <div class="list-group">
-            <a class="list-group-item active" data-toggle="tab" id="link-Provider" href="#provider">Provider</a>
-            <a class="list-group-item " data-toggle="tab" id="link-Relation" href="#relation">Relation</a>
+            <a class="list-group-item active" data-toggle="tab" id="linkProvider" href="#provider">Provider</a>
+            <a class="list-group-item " data-toggle="tab" id="linkRelation" href="#relation">Relation</a>
+            <a class="list-group-item " data-toggle="tab" id="linkAddRelation" href="#addRelation">Add relation</a>
         </div>
     </div>
     <div class="tab-content">
@@ -62,7 +63,7 @@
                                         <i class="icon-briefcase"></i> {$relation.name|escape:'htmlall':'UTF-8'}
                                     </div>
                                     <div class="form-wrapper">
-                                        <input type="hidden" name="id_providers" id="id_providers" value="{$id_providers|escape:'htmlall':'UTF-8'}">
+                                        <input type="hidden" name="id_providers" id="id_provid" value="{$id_providers|escape:'htmlall':'UTF-8'}">
                                         <input type="hidden" name="id_product" id="id_product" value="{$relation.id_product|escape:'htmlall':'UTF-8'}">
                                         <input type="hidden" name="id_relations" id="id_relations" value="{$relation.id_relations|escape:'htmlall':'UTF-8'}">
                                         <div class="form-group">
@@ -97,7 +98,6 @@
                                             </div>
                                         </div>
 
-
                                     </div><!-- /.form-wrapper -->
                                     <div class="panel-footer">
                                         <button type="submit" value="1" id="providers_form_submit_btn" name="submitAddproviders" class="btn btn-default pull-right">
@@ -112,9 +112,49 @@
                         </div>
                     {/foreach}
                  {else}
-                     <h4>You need add relative in page product</h4>
+                     <h4>You need add relation</h4>
                  {/if}
             </div>
+        </div>
+        <div id="addRelation" class="tab-pane col-lg-9">
+            <diw class="row">
+                <form id="addRelationForm" class="defaultForm form-horizontal"  method="post" enctype="multipart/form-data" novalidate="">
+                    <input type="hidden" name="submitRelation" value="1">
+                    <div class="panel" id="fieldset_0">
+                        <div class="panel-heading">
+                            <i class="icon-briefcase"></i>Check
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {$tree}
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 ">
+                                        Search and add product</label>
+                                    <div id="">
+                                        <div class="input-group" style="padding-left: 50px">
+                                            <input type="text" id="product_autocomplete" name="product_autocomplete" />
+                                            <span class="input-group-addon"><i class="icon-search"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-footer">
+                            <button type="submit" value="1"  name="submitRelation" class="btn btn-default pull-right">
+                                <i class="process-icon-save"></i> Сохранить
+                            </button>
+                            <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa" class="btn btn-default" onclick="window.history.back();">
+                                <i class="process-icon-cancel"></i> Отмена
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </diw>
         </div>
     </div>
 </div>

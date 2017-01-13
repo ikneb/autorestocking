@@ -15,6 +15,7 @@ PRIMARY KEY (`id_providers`)
 $sql[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."autorestocking_relations` (
 `id_relations` int(11) NOT NULL AUTO_INCREMENT,
 `id_product` int(11) NOT NULL,
+`id_category` int(11) NOT NULL,
 `id_provider` int(11) NOT NULL,
 `min_count` int(11) NOT NULL,
 `product_count` int(11) NOT NULL,

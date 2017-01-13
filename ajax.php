@@ -17,7 +17,10 @@ if(Tools::getValue('tiny')){
   }
 }elseif(Tools::getValue('submitAddrelation')){
   echo Relation::updateRelation($_POST);
+}elseif(Tools::getValue('submitRelation')){
+  echo Relation::saveRelationByProvider($_POST);
 }
+
 
 
 

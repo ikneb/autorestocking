@@ -5,6 +5,8 @@ class Relation extends ObjectModel
 
     public $id_product;
 
+    public $id_category;
+
     public $id_provider;
 
     public $min_count;
@@ -23,6 +25,7 @@ class Relation extends ObjectModel
         'fields' => array(
             'id_relations'                 =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'id_product'         =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'id_category'         =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'id_provider'        =>    array('type' => self::TYPE_NOTHING, 'validate' => 'isNullOrUnsignedId'),
             'min_count'          =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'product_count'          =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
@@ -86,5 +89,56 @@ class Relation extends ObjectModel
 
             return true;
 
+    }
+
+    public static function saveRelationByProvider($relation_data){
+
+        if(!$relation_data)
+            return false;
+        $boxes = Tools::getValue('box');
+        $product = Tools::getValue('product') ? Tools::getValue('product') : '';
+        $id_provider = Tools::getValue('id_provider') ;
+
+        $sql = 'SELECT id_category FROM '._DB_PREFIX_.'autorestocking_relations WHERE id_provider = 1';
+        $categories = Db::getInstance()->executeS($sql);
+        $all_category = array();
+        foreach($categories as $categori){
+            $all_category[] = $categori['id_category'];
+        }
+        if($product){
+            $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
+                 (id_product,id_provider)
+                 VALUE ('.$product.','.$id_provider.')';
+            if (!Db::getInstance()->execute($sql))
+                return false;
+        }
+        if($boxes){
+            foreach($boxes as $box){
+                if(in_array($box,$all_category)){
+                    continue;
+                }else{
+                    $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
+                 (id_category,id_provider)
+                 VALUE ('.$box.','.$id_provider.')';
+                }
+
+                if (!Db::getInstance()->execute($sql))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static function getAllCategoryByProviderId(){
+        $id_provider = Tools::getValue('id_provider') ;
+
+        $sql = 'SELECT id_category FROM '._DB_PREFIX_.'autorestocking_relations WHERE id_provider ='.$id_provider;
+        $categories = Db::getInstance()->executeS($sql);
+        $all_category = array();
+        foreach($categories as $categori){
+            $all_category[] = $categori['id_category'];
+        }
+        return json_encode(array_unique($all_category));
     }
 }

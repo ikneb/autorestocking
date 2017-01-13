@@ -43,7 +43,6 @@ class AdminProvidersController extends ModuleAdminController {
             'name' => array('title' => $this->l('Name'), 'filter_key' => 'a!name'),
             'description' => array('title' => $this->l('Description')),
             'email' => array('title' => $this->l('Email'), 'filter_key' => 'a!email'),
-//            'order_day' => array('title' => $this->l('Order day'), 'type' => 'select', 'list' => $this->weekdays, 'filter_key' => 'a!order_day', 'callback' => 'getDay')
         );
 
     }
@@ -55,39 +54,47 @@ class AdminProvidersController extends ModuleAdminController {
     public function renderForm()
     {
 
-        if($id_provider = Tools::getValue('id_providers')){
-        $provider = Providers::getCurrentProvider($id_provider);
-            if(!$relations = Relation::getByProviderId($id_provider)){
+
+        $categories = new HelperTreeCategories('categories-tree', 'Add category');
+        $categories->setUseCheckBox(true);
+        $categories->render();
+        $my_associations = Providers::getLight($this->context->language->id,Tools::getValue('id_product'));
+        $id_provider = Tools::getValue('id_providers');
+
+        $provider = $id_provider ? Providers::getCurrentProvider($id_provider) : false;
+
+
+            if(!$provider){
                 $relations = array();
+            }else{
+                $relations = Relation::getByProviderId($id_provider);
             }
-            $this->context->smarty->assign(
-                array(
-                    'id_providers' => $provider['id_providers'],
-                    'name' => $provider['name'],
-                    'description' => $provider['description'],
-                    'email' => $provider['email'],
-                    'token' => $this->token,
-                    'relations' => $relations
-                ));
-        } else{
 
             $this->context->smarty->assign(
                 array(
+                    'id_providers' => $provider ? $provider['id_providers'] : '',
+                    'name' => $provider ? $provider['name'] : '',
+                    'description' => $provider ? $provider['description'] : '',
+                    'email' => $provider ? $provider['email'] : '',
                     'token' => $this->token,
-                    'id_providers' => '',
-                    'name' => '',
-                    'description' => '',
-                    'email' => ''
+                    'relations' => $relations,
+                    'tree' => $categories,
+                    'my_associations' => $my_associations,
+                    'product_id' => (int)Tools::getValue('id_product')
                 ));
-        }
+        parent::renderForm();
+        $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
+
         return $this->context->smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/provider_template.tpl');
     }
+
 
 
     public function setMedia()
     {
         parent::setMedia();
         $this->context->controller->addJS(_PS_MODULE_DIR_.'autorestocking/views/js/provider.js');
+        $this->context->controller->addJqueryPlugin('autocomplete');
     }
 
     public function processDelete()
