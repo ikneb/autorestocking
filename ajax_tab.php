@@ -5,6 +5,6 @@ require_once(dirname(__FILE__).'/classes/Relation.php');
 require_once(dirname(__FILE__).'/classes/Providers.php');
 
 if(Tools::getValue('ajax_tab')){
-   print_r(Relation::getAllCategoryByProviderId());
+//   print_r(Relation::getAllCategoryByProviderId());
 }
 

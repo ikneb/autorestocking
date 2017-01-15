@@ -3,22 +3,12 @@
 class AdminProvidersController extends ModuleAdminController {
 
 
-    private $weekdays = array(
-        0 => ' ',
-        1 => 'Mon',
-        2 => 'Tue',
-        3 => 'Wed',
-        4 => 'Thu',
-        5 => 'Fri',
-        6 => 'Sat',
-        7 => 'Sun'
-    );
 
     public function __construct()
     {
         $this->bootstrap = true;
         $this->required_database = true;
-        $this->required_fields = array('name', 'description', 'email'/*, 'order_day'*/);
+        $this->required_fields = array('name', 'description', 'email');
         $this->table = 'providers';
         $this->className = 'Providers';
         $this->lang = false;
@@ -47,23 +37,20 @@ class AdminProvidersController extends ModuleAdminController {
 
     }
 
-    public function getDay($value){
-        return $this->weekdays[$value];
-    }
+
 
     public function renderForm()
     {
-
-
+        $id_provider = Tools::getValue('id_providers');
+        $all_categories = Relation::getAllCategoryByProviderId($id_provider);
         $categories = new HelperTreeCategories('categories-tree', 'Add category');
-        $categories->setUseCheckBox(true);
+        $categories->setUseCheckBox(true)
+//            ->setHeaderTemplate('tree_associated_header.tpl')
+           ->setSelectedCategories($all_categories);
         $categories->render();
         $my_associations = Providers::getLight($this->context->language->id,Tools::getValue('id_product'));
-        $id_provider = Tools::getValue('id_providers');
 
         $provider = $id_provider ? Providers::getCurrentProvider($id_provider) : false;
-
-
             if(!$provider){
                 $relations = array();
             }else{
@@ -83,8 +70,6 @@ class AdminProvidersController extends ModuleAdminController {
                     'product_id' => (int)Tools::getValue('id_product')
                 ));
         parent::renderForm();
-        $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
-
         return $this->context->smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/provider_template.tpl');
     }
 
@@ -95,21 +80,7 @@ class AdminProvidersController extends ModuleAdminController {
         parent::setMedia();
         $this->context->controller->addJS(_PS_MODULE_DIR_.'autorestocking/views/js/provider.js');
         $this->context->controller->addJqueryPlugin('autocomplete');
+
     }
-
-    public function processDelete()
-    {
-
-        $res = parent::processDelete();
-        return $res;
-    }
-
-    public function processAdd()
-    {
-        if (Tools::getValue('submitFormAjax')) {
-            $this->redirect_after = false;
-        }
-
-        return parent::processAdd();
-    }
+            
 }

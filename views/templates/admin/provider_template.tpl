@@ -1,3 +1,4 @@
+{*
 <div class="row">
     <div class="col-lg-2 col-md-3">
         <div class="list-group">
@@ -117,8 +118,8 @@
             </div>
         </div>
         <div id="addRelation" class="tab-pane col-lg-9">
-            <diw class="row">
-                <form id="addRelationForm" class="defaultForm form-horizontal"  method="post" enctype="multipart/form-data" novalidate="">
+            <diw class="row">*}
+                <form id="addRelationForm"  class="defaultForm form-horizontal"  method="post" enctype="multipart/form-data" novalidate="">
                     <input type="hidden" name="submitRelation" value="1">
                     <div class="panel" id="fieldset_0">
                         <div class="panel-heading">
@@ -136,13 +137,17 @@
                                         Search and add product</label>
                                     <div id="">
                                         <div class="input-group" style="padding-left: 50px">
-                                            <input type="text" id="product_autocomplete" name="product_autocomplete" />
+                                            <input type="text" id="related_product_autocomplete_input" name="product_autocomplete" autocomplete="on"/>
                                             <span class="input-group-addon"><i class="icon-search"></i></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
+
+
+
 
                         <div class="panel-footer">
                             <button type="submit" value="1"  name="submitRelation" class="btn btn-default pull-right">
@@ -154,7 +159,7 @@
                         </div>
                     </div>
                 </form>
-            </diw>
-        </div>
-    </div>
+{*</diw>
 </div>
+</div>
+</div>*}

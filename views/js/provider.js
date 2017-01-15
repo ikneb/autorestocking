@@ -108,20 +108,41 @@ $( document ).ready(function() {
                 url: '/modules/autorestocking/ajax_tab.php',
                 data: {id_provider: id_provider,ajax_tab: true},
                 success: function(data){
-                    var obj = JSON.parse(data);
-
-                    for (key in obj) {
-                        $('.tree-item-name input, .tree-folder-name input').each(function(i) {
-                            if($(this).val() == obj[key] ){
-                                $(this).attr('checked','checked');
-                                $(this).closest('.tree-items-name').addClass('tree-selected');
-                            }
-                        });
-                    }
+                    
                 }
             });
         }
 
     })
+
+    $('#related_product_autocomplete_input')
+        .autocomplete('/modules/autorestocking/autocomplete_ajax.php', {
+            minChars: 1,
+            autoFill: true,
+            max:20,
+            matchContains: true,
+            mustMatch:false,
+            scroll:false,
+            cacheLength:0,
+            formatItem: function(item) {
+                return item[0]+' - '+item[1];
+            }
+        }).result(function(e, i){
+        if(i != undefined)
+            addRelatedProduct(i[1], i[0]);
+        $(this).val('');
+    });
+
+    function addRelatedProduct(id_product_to_add, product_name)
+    {
+        if (!id_product_to_add || id_product == id_product_to_add)
+            return;
+        $('#related_product_name').html(product_name);
+        $('input[name=id_product_redirected]').val(id_product_to_add);
+        $('#related_product_autocomplete_input').parent().hide();
+        $('#related_product_remove').show();
+    }
+
+
 
 });

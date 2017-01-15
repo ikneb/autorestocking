@@ -99,7 +99,7 @@ class Relation extends ObjectModel
         $product = Tools::getValue('product') ? Tools::getValue('product') : '';
         $id_provider = Tools::getValue('id_provider') ;
 
-        $sql = 'SELECT id_category FROM '._DB_PREFIX_.'autorestocking_relations WHERE id_provider = 1';
+        $sql = 'SELECT id_category FROM '._DB_PREFIX_.'autorestocking_relations WHERE id_provider ='.$id_provider;
         $categories = Db::getInstance()->executeS($sql);
         $all_category = array();
         foreach($categories as $categori){
@@ -126,12 +126,20 @@ class Relation extends ObjectModel
                     return false;
             }
         }
+        foreach ($all_category as $category){
+            if(!in_array($category, $boxes)){
+                $sql = 'DELETE FROM '._DB_PREFIX_.'autorestocking_relations 
+                WHERE id_provider ='.$id_provider.' AND id_category = '.$category;
+            }
+            if (!Db::getInstance()->execute($sql))
+                return false;
+        }
 
         return true;
     }
 
-    public static function getAllCategoryByProviderId(){
-        $id_provider = Tools::getValue('id_provider') ;
+
+    public static function getAllCategoryByProviderId($id_provider){
 
         $sql = 'SELECT id_category FROM '._DB_PREFIX_.'autorestocking_relations WHERE id_provider ='.$id_provider;
         $categories = Db::getInstance()->executeS($sql);
@@ -139,6 +147,6 @@ class Relation extends ObjectModel
         foreach($categories as $categori){
             $all_category[] = $categori['id_category'];
         }
-        return json_encode(array_unique($all_category));
+        return $all_category;
     }
 }
