@@ -1,4 +1,4 @@
-{*
+
 <div class="row">
     <div class="col-lg-2 col-md-3">
         <div class="list-group">
@@ -118,7 +118,7 @@
             </div>
         </div>
         <div id="addRelation" class="tab-pane col-lg-9">
-            <diw class="row">*}
+            <diw class="row">
                 <form id="addRelationForm"  class="defaultForm form-horizontal"  method="post" enctype="multipart/form-data" novalidate="">
                     <input type="hidden" name="submitRelation" value="1">
                     <div class="panel" id="fieldset_0">
@@ -159,7 +159,7 @@
                         </div>
                     </div>
                 </form>
-{*</diw>
+</diw>
 </div>
 </div>
-</div>*}
+</div>

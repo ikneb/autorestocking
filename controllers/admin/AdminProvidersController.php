@@ -42,13 +42,12 @@ class AdminProvidersController extends ModuleAdminController {
     public function renderForm()
     {
         $id_provider = Tools::getValue('id_providers');
-        $all_categories = Relation::getAllCategoryByProviderId($id_provider);
+        $all_categories = $id_provider ? Relation::getAllCategoryByProviderId($id_provider) : array();
         $categories = new HelperTreeCategories('categories-tree', 'Add category');
         $categories->setUseCheckBox(true)
-//            ->setHeaderTemplate('tree_associated_header.tpl')
            ->setSelectedCategories($all_categories);
         $categories->render();
-        $my_associations = Providers::getLight($this->context->language->id,Tools::getValue('id_product'));
+
 
         $provider = $id_provider ? Providers::getCurrentProvider($id_provider) : false;
             if(!$provider){
@@ -66,7 +65,6 @@ class AdminProvidersController extends ModuleAdminController {
                     'token' => $this->token,
                     'relations' => $relations,
                     'tree' => $categories,
-                    'my_associations' => $my_associations,
                     'product_id' => (int)Tools::getValue('id_product')
                 ));
         parent::renderForm();

@@ -95,6 +95,27 @@ $( document ).ready(function() {
 
     })
 
+    $('#linkRelation').click(function(){
+        var id_provider = $("input[name='id_providers']").val();
+        if(id_provider == ''){
+            $('#ajax_confirmation').text('Please add provider and relation!').removeClass('hide alert-success').addClass('alert-danger');
+            setTimeout(function () {
+                $('#ajax_confirmation').addClass('hide');
+            }, 3000);
+            return true;
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: '/modules/autorestocking/ajax_tab.php',
+                data: {id_provider: id_provider,ajax_tab: true},
+                success: function(data){
+                    console.log(data);
+                }
+            });
+        }
+
+    })
+
     $('#linkAddRelation').click(function(){
         var id_provider = $("input[name='id_providers']").val();
         if(id_provider == ''){
@@ -102,15 +123,6 @@ $( document ).ready(function() {
             setTimeout(function () {
                 $('#ajax_confirmation').addClass('hide');
             }, 3000);
-        }else{
-            $.ajax({
-                type: 'POST',
-                url: '/modules/autorestocking/ajax_tab.php',
-                data: {id_provider: id_provider,ajax_tab: true},
-                success: function(data){
-                    
-                }
-            });
         }
 
     })
@@ -130,7 +142,7 @@ $( document ).ready(function() {
         }).result(function(e, i){
         if(i != undefined)
             addRelatedProduct(i[1], i[0]);
-        $(this).val('');
+            $(this).val(i[1]);
     });
 
     function addRelatedProduct(id_product_to_add, product_name)

@@ -4,7 +4,13 @@ require_once(dirname(__FILE__).'../../../init.php');
 require_once(dirname(__FILE__).'/classes/Relation.php');
 require_once(dirname(__FILE__).'/classes/Providers.php');
 
+
+
 if(Tools::getValue('ajax_tab')){
-//   print_r(Relation::getAllCategoryByProviderId());
+    $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+//    echo Tools::jsonEncode(Relation::getAllCategoryByProviderId(Tools::getValue('id_provider')));
+print_r(Relation::setProductByCategoryId(3,$id_lang,1));
+    /*$children = Category::getChildren(2,$id_lang);
+    print_r($children);*/
 }
 

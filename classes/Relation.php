@@ -95,6 +95,7 @@ class Relation extends ObjectModel
 
         if(!$relation_data)
             return false;
+        $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
         $boxes = Tools::getValue('box');
         $product = Tools::getValue('product') ? Tools::getValue('product') : '';
         $id_provider = Tools::getValue('id_provider') ;
@@ -117,9 +118,10 @@ class Relation extends ObjectModel
                 if(in_array($box,$all_category)){
                     continue;
                 }else{
-                    $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
+
+                    /*$sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
                  (id_category,id_provider)
-                 VALUE ('.$box.','.$id_provider.')';
+                 VALUE ('.$box.','.$id_provider.')';*/
                 }
 
                 if (!Db::getInstance()->execute($sql))
@@ -135,6 +137,32 @@ class Relation extends ObjectModel
                 return false;
         }
 
+        return true;
+    }
+
+   public static function setProductByCategoryId($id_category,$id_lang,$id_provider){
+        $children = Category::getChildren($id_category,$id_lang);
+        print_r($children);
+        foreach($children as $child ) {
+            if (isset($child)) {
+                 $sql = 'SELECT id_product FROM '._DB_PREFIX_.'product WHERE id_category_default ='.$child['id_category'];
+                 $products = Db::getInstance()->executeS($sql);
+                if(isset($products)){
+                    foreach($products as $product){
+                        $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
+                         (id_provider,id_category,id_product)
+                         VALUE ('.$id_provider.','.$child['id_category'].','.$product['id_product'].')';
+                        Db::getInstance()->execute($sql);
+                    }
+                }else{
+                    $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
+                         (id_provider,id_category)
+                         VALUE ('.$id_provider.','.$child['id_category'].')';
+                    Db::getInstance()->execute($sql);
+                }
+                Relation::setProductByCategoryId($child['id_category'], $id_lang, $id_provider);
+            }
+        }
         return true;
     }
 
