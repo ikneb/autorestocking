@@ -34,9 +34,9 @@ class Relation extends ObjectModel
         ),
     );
 
-    public static function getByProductId($id_product){
+    public static function getByProductId(){
+        $id_product = Tools::getValue('id_product');
         $db = Db::getInstance();
-
         $sql = "SELECT * FROM `"._DB_PREFIX_."autorestocking_relations` r WHERE r.`id_product` =".$id_product;
 
         if(!$result=$db->getRow($sql))
@@ -61,16 +61,16 @@ class Relation extends ObjectModel
         return $result;
     }
 
-    public static function updateRelation($relaation_data){
+    public static function saveRelationProductByProvider(){
+        $id_provider = Tools::getValue('id_provider');
+        $id_product = Tools::getValue('id_product');
 
-            $sql = "UPDATE "._DB_PREFIX_."autorestocking_relations
-                SET min_count = ".$relaation_data['min_count'].",
-                order_day =  ".$relaation_data['order_day'].",
-                product_count = ".$relaation_data['product_count']."
-                WHERE id_relations = ".$relaation_data['id_relations'];
-
-            if (!Db::getInstance()->execute($sql))
-                return false;
+        $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
+                         (id_provider,id_product)
+                         VALUE ('.$id_provider.','.$id_product.')
+                        ON DUPLICATE KEY UPDATE id_product = id_product';
+        if(!Db::getInstance()->execute($sql))
+            return false;
 
             return true;
 
@@ -91,7 +91,7 @@ class Relation extends ObjectModel
 
     }
 
-    public static function saveRelationByProvider($relation_data){
+    public static function saveRelationCategoryByProvider($relation_data){
 
         if(!$relation_data)
             return false;
@@ -172,5 +172,14 @@ class Relation extends ObjectModel
             $all_category[] = $categori['id_category'];
         }
         return $all_category;
+    }
+
+    public  static function getAllProductByProviderId($smarty){
+        $id_provider = Tools::getValue('id_provider');
+
+        $relations = Relation::getByProviderId($id_provider);
+       $smarty->assign('relations', $relations);
+
+        return $smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/view_relation.tpl');
     }
 }

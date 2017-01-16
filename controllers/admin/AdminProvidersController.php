@@ -41,13 +41,13 @@ class AdminProvidersController extends ModuleAdminController {
 
     public function renderForm()
     {
+        $root = Category::getRootCategory();
         $id_provider = Tools::getValue('id_providers');
         $all_categories = $id_provider ? Relation::getAllCategoryByProviderId($id_provider) : array();
-        $categories = new HelperTreeCategories('categories-tree', 'Add category');
+        $categories = new HelperTreeCategories('associated-categories-tree', 'Add category');
         $categories->setUseCheckBox(true)
            ->setSelectedCategories($all_categories);
         $categories->render();
-
 
         $provider = $id_provider ? Providers::getCurrentProvider($id_provider) : false;
             if(!$provider){
@@ -70,6 +70,8 @@ class AdminProvidersController extends ModuleAdminController {
         parent::renderForm();
         return $this->context->smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/provider_template.tpl');
     }
+
+
 
 
 

@@ -126,7 +126,7 @@ class AutoRestocking extends Module
         if (Tools::isSubmit('submitAddproduct')
             || Tools::isSubmit('submitAddproductAndStay')){
             $id_product = Tools::getValue('id_product');
-            $relat = Relation::getByProductId($id_product);
+            $relat = Relation::getByProductId();
             if(!$relat){
                 $relation = new Relation();
                 $relation->id_provider = Tools::getValue('id_provider');
