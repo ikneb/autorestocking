@@ -124,7 +124,6 @@ $( document ).ready(function() {
                 $('#ajax_confirmation').addClass('hide');
             }, 3000);
         }
-
     })
 
     $('#related_product_autocomplete_input')

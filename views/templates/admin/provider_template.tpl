@@ -29,7 +29,7 @@
                                 Description
                             </label>
                             <div class="col-lg-3">
-                                <textarea name="description" id="description" class="textarea-autosize" style="overflow: hidden; word-wrap: break-word; resize: none; height: 46px;">{$description|escape:'htmlall':'UTF-8'}</textarea>
+                                <textarea name="description" id="description" class="textarea-autosize">{$description|escape:'htmlall':'UTF-8'}</textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -67,25 +67,26 @@
                                         <input type="hidden" name="id_providers" id="id_provid" value="{$id_providers|escape:'htmlall':'UTF-8'}">
                                         <input type="hidden" name="id_product" id="id_product" value="{$relation.id_product|escape:'htmlall':'UTF-8'}">
                                         <input type="hidden" name="id_relations" id="id_relations" value="{$relation.id_relations|escape:'htmlall':'UTF-8'}">
-                                        <div class="form-group">
-                                            <label class="control-label col-lg-3 required">
+
+                                        <div class="row">
+                                            <label class="control-label col-lg-2 ">
                                                 Min</label>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-2 col-md-2">
                                                 <input type="text" name="min_count" id="min_count" value="{$relation.min_count|escape:'htmlall':'UTF-8'}" class="">
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-lg-3 required">
+
+
+                                            <label class="control-label col-lg-2 ">
                                                 Count</label>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-2 col-md-2">
                                                 <input type="text" name="product_count" id="product_count" value="{$relation.product_count|escape:'htmlall':'UTF-8'}" class="">
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-lg-3">
+
+
+                                            <label class="control-label col-lg-2">
                                                Send
                                             </label>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-2 col-md-2">
                                                 <select name="order_day" class="selectpicker">
                                                     <option value="0"></option>
                                                     <option value="1" {if $relation.order_day == 1}selected{/if}>Mon</option>
@@ -98,6 +99,7 @@
                                                 </select>
                                             </div>
                                         </div>
+
 
                                     </div><!-- /.form-wrapper -->
                                     <div class="panel-footer">
