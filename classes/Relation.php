@@ -97,7 +97,6 @@ class Relation extends ObjectModel
             return false;
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
         $boxes = Tools::getValue('box');
-        $product = Tools::getValue('product') ? Tools::getValue('product') : '';
         $id_provider = Tools::getValue('id_provider') ;
 
         $sql = 'SELECT id_category FROM '._DB_PREFIX_.'autorestocking_relations WHERE id_provider ='.$id_provider;
@@ -106,41 +105,29 @@ class Relation extends ObjectModel
         foreach($categories as $categori){
             $all_category[] = $categori['id_category'];
         }
-        if($product){
-            $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
-                 (id_product,id_provider)
-                 VALUE ('.$product.','.$id_provider.')';
-            if (!Db::getInstance()->execute($sql))
-                return false;
-        }
+
         if($boxes){
             foreach($boxes as $box){
                 if(in_array($box,$all_category)){
                     continue;
                 }else{
                 Relation::setProductByCategoryId($box['id_category'], $id_lang, $id_provider );
-                    /*$sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
-                 (id_category,id_provider)
-                 VALUE ('.$box.','.$id_provider.')';*/
                 }
-
-                if (!Db::getInstance()->execute($sql))
-                    return false;
             }
         }
-        foreach ($all_category as $category){
+        /*foreach ($all_category as $category){
             if(!in_array($category, $boxes)){
                 $sql = 'DELETE FROM '._DB_PREFIX_.'autorestocking_relations 
                 WHERE id_provider ='.$id_provider.' AND id_category = '.$category;
             }
             if (!Db::getInstance()->execute($sql))
                 return false;
-        }
+        }*/
 
         return true;
     }
 
-   public static  function setProductByCategoryId($id_category,$id_lang,$id_provider){
+    public static  function setProductByCategoryId($id_category,$id_lang,$id_provider){
         $children = Category::getChildren($id_category,$id_lang);
         foreach($children as $child ) {
             if (isset($child)) {
@@ -155,7 +142,10 @@ class Relation extends ObjectModel
                         Db::getInstance()->execute($sql);
                     }
                 }
-
+                $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
+                         (id_provider,id_category)
+                         VALUE ('.$id_provider.','.$child['id_category'].')';
+                Db::getInstance()->execute($sql);
                 Relation::setProductByCategoryId($child['id_category'], $id_lang, $id_provider);
             }
         }
@@ -181,5 +171,22 @@ class Relation extends ObjectModel
        $smarty->assign('relations', $relations);
 
         return $smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/view_relation.tpl');
+    }
+
+    
+    public static function updateRelation(){
+        $min_count = Tools::getValue('min_count');
+        $order_day = Tools::getValue('order_day');
+        $product_count = Tools::getValue('product_count');
+        $id_relations = Tools::getValue('id_relations');
+
+        $sql = "UPDATE "._DB_PREFIX_."autorestocking_relations
+                SET min_count = ".$min_count.",
+                order_day =  ".$order_day.",
+                product_count = ".$product_count."
+                WHERE id_relations = ".$id_relations;
+        if (!Db::getInstance()->execute($sql))
+            return false;
+        return true;
     }
 }

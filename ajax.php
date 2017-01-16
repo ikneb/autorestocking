@@ -16,7 +16,9 @@ if(Tools::getValue('tiny')){
     echo Providers::updateProvider($_POST);
   }
 }elseif(Tools::getValue('submitProductRelation')){
-  echo Relation::saveRelationProductByProvider($_POST);
+  echo Relation::saveRelationProductByProvider();
+}elseif(Tools::getValue('submitAddrelation')){
+  echo Relation::updateRelation();
 }elseif(Tools::getValue('submitRelation')){
   echo Relation::saveRelationCategoryByProvider($_POST);
 }

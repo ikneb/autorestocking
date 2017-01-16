@@ -59,27 +59,6 @@
         </div>
         <div id="addRelation" class="tab-pane col-lg-9">
                 <div class="col-lg-6">
-                    <form id="addRelationForm"  class="defaultForm form-horizontal"  method="post" enctype="multipart/form-data" novalidate="">
-                        <input type="hidden" name="submitRelation" value="1">
-                        <div class="panel" id="fieldset_0">
-                            <div class="panel-heading">
-                                <i class="icon-briefcase"></i>Check Category
-                            </div>
-                            <div class="form-group">
-                                {$tree}
-                            </div>
-                            <div class="panel-footer">
-                                <button type="submit" value="1"  name="submitRelation" class="btn btn-default pull-right">
-                                    <i class="process-icon-save"></i> Сохранить
-                                </button>
-                               {* <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa" class="btn btn-default" onclick="window.history.back();">
-                                    <i class="process-icon-cancel"></i> Отмена
-                                </a>*}
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-6">
                     <form id="addRelationProductForm"  class="defaultForm form-horizontal"  method="post" enctype="multipart/form-data" novalidate="">
                         <input type="hidden" name="submitProductRelation" value="1">
                         <div class="panel" id="fieldset_0">
@@ -100,6 +79,28 @@
                                 <button type="submit" value="1"  name="submitProductRelation" class="btn btn-default pull-right">
                                     <i class="process-icon-save"></i> Сохранить
                                 </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="col-lg-6">
+                    <form id="addRelationForm"  class="defaultForm form-horizontal"  method="post" enctype="multipart/form-data" novalidate="">
+                        <input type="hidden" name="submitRelation" value="1">
+                        <div class="panel" id="fieldset_0">
+                            <div class="panel-heading">
+                                <i class="icon-briefcase"></i>Check Category
+                            </div>
+                            <div class="form-group">
+                                {$tree}
+                            </div>
+                            <div class="panel-footer">
+                                <button type="submit" value="1"  name="submitRelation" class="btn btn-default pull-right">
+                                    <i class="process-icon-save"></i> Сохранить
+                                </button>
+                                {* <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa" class="btn btn-default" onclick="window.history.back();">
+                                     <i class="process-icon-cancel"></i> Отмена
+                                 </a>*}
                             </div>
                         </div>
                     </form>
