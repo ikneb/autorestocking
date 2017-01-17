@@ -98,15 +98,12 @@ class Relation extends ObjectModel
         $boxes = Tools::getValue('box');
         $id_provider = Tools::getValue('id_provider') ;
 
-        $sql = 'SELECT id_category FROM '._DB_PREFIX_.'autorestocking_relations WHERE id_provider ='.$id_provider;
-        $categories = Db::getInstance()->executeS($sql);
-        $all_category = array();
-        foreach($categories as $categori){
-            $all_category[] = $categori['id_category'];
-        }
+        $all_category = self::getAllCategoryByProviderId($id_provider);
         if($boxes){
             foreach($boxes as $box){
-                Relation::setProductByCategoryId($box['id_category'], $id_provider );
+                if(!in_array($box,$all_category)){
+                    self::setProductByCategoryId($box['id_category'], $id_provider );
+                }
             }
         }
         foreach ($all_category as $category){
@@ -156,7 +153,7 @@ class Relation extends ObjectModel
     public  static function getAllProductByProviderId($smarty){
         $id_provider = Tools::getValue('id_provider');
 
-        $relations = Relation::getByProviderId($id_provider);
+        $relations = self::getByProviderId($id_provider);
        $smarty->assign('relations', $relations);
 
         return $smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/view_relation.tpl');
