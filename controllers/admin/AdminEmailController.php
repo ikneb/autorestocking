@@ -32,7 +32,7 @@ class AdminEmailController extends ModuleAdminController
                 'title' => $this->l('ID'),
                 'align' => 'center'
             ),
-            'name' => array(
+            'provider_name' => array(
                 'title' => $this->l('Name'),
                 'align' => 'center'
             ),

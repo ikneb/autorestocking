@@ -20,8 +20,9 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."autorestocking_relations` (
 `min_count` int(11) NOT NULL,
 `product_count` int(11) NOT NULL,
 `order_day` enum('0','1','2','3','4','5','6','7') NOT NULL DEFAULT '0',
-PRIMARY KEY (`id_relations`)
-)";
+`status` int(11) NOT NULL,
+PRIMARY KEY (`id_relations`))
+";
 
 
 
@@ -39,3 +40,9 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'template_email` (
 `template_email` varchar(255),
 PRIMARY KEY (`id_template_email`)
 )';
+
+$sql[] = "INSERT INTO "._DB_PREFIX_."cronjobs
+(`id_module`, `description`, `task`, `hour`, `day`, `month`, `day_of_week`,
+`updated_at`, `active`, `id_shop`, `id_shop_group`)
+VALUES (" . $this->id . ",'Autorestocking module' ,'"._PS_BASE_URL_."/modules/autorestocking/cron_jobs_autorestocking.php' , 1 , 1,
+ 1 , 1 , NULL, TRUE, 1, 1)";

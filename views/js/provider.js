@@ -53,7 +53,8 @@ $( document ).ready(function() {
            $('.tree-selected input').each(function(i) {
                box[i] = $(this).val();
            });
-           
+
+           console.log(box);
            $.ajax({
                type: 'POST',
                url: '/modules/autorestocking/ajax.php',

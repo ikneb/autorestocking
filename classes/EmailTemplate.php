@@ -31,4 +31,19 @@ class EmailTemplate extends ObjectModel
             return false;
         return true;
     }
+
+
+    public static function generateMessage($id_provider,$name,$id_product){
+
+
+        $url_status = Providers::generateUrlStatus($id_provider,$id_product);
+        $sql  = 'SELECT template_email FROM '._DB_PREFIX_.'template_email WHERE id_template_email = 1';
+        $message = Db::getInstance()->getRow($sql);
+        $message = $message['template_email'];
+        $message = preg_replace('/\[name\]/',$name,$message);
+        $message = preg_replace('/\[status_url\]/',$url_status,$message);
+
+
+        return $message;
+    }
 }

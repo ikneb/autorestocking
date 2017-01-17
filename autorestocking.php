@@ -100,6 +100,7 @@ class AutoRestocking extends Module
             return false;
 
         Tab::disablingForModule($this->name);
+
         return true;
     }
 

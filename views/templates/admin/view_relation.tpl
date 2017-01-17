@@ -8,7 +8,6 @@
                         <i class="icon-briefcase"></i> {$relation.name|escape:'htmlall':'UTF-8'}
                     </div>
                     <div class="form-wrapper">
-                        <input type="hidden" name="id_providers" id="id_provid" value="{$id_providers|escape:'htmlall':'UTF-8'}">
                         <input type="hidden" name="id_product" id="id_product" value="{$relation.id_product|escape:'htmlall':'UTF-8'}">
                         <input type="hidden" name="id_relations" id="id_relations" value="{$relation.id_relations|escape:'htmlall':'UTF-8'}">
 

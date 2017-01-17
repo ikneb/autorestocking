@@ -48,17 +48,22 @@ class Providers extends ObjectModel
         return $result;
     }
 
-    public static function updateProvider($provider_data){
+    public static function updateProvider(){
+        $id_providers = Tools::getValue('id_providers');
+        $description = Tools::getValue('description');
+        $name = Tools::getValue('name');
+        $email = Tools::getValue('email');
+
 
             $sql = "INSERT INTO "._DB_PREFIX_."providers
              (id_providers, name, description, email)
-              VALUES(".$provider_data['id_providers'].",
-               '".$provider_data['name']."', '".$provider_data['description']."',
-               '".$provider_data['email']."' )
+              VALUES(".$id_providers.",
+               '".$name."', '".$description."',
+               '".$email."' )
              ON DUPLICATE KEY UPDATE
-            name='".$provider_data['name']."',
-            description='".$provider_data['description']."',
-            email='".$provider_data['email']."'
+            name='".$name."',
+            description='".$description."',
+            email='".$email."'
             ";
 
         if (!Db::getInstance()->execute($sql))
@@ -67,14 +72,17 @@ class Providers extends ObjectModel
         return true;
     }
 
-    public static  function insertProviderReturnId($provider_data)
+    public static  function insertProviderReturnId()
     {
+        $name = Tools::getValue('name');
+        $description = Tools::getValue('description');
+        $email = Tools::getValue('email');
 
         $sql = "INSERT INTO "._DB_PREFIX_."providers
              ( name, description, email)
               VALUES(
-               '".$provider_data['name']."', '".$provider_data['description']."',
-               '".$provider_data['email']."')";
+               '".$name."', '".$description."',
+               '".$email."')";
 
         if (!Db::getInstance()->execute($sql))
             return false;
@@ -85,16 +93,10 @@ class Providers extends ObjectModel
         return $id_insert;
     }
 
-    public static function getLight($id_lang, $id_product, Context $context = null)
-    {
-        if (!$context)
-            $context = Context::getContext();
 
-        $sql = 'SELECT `id_product`,`name`
-                    FROM `'._DB_PREFIX_.'product_lang`
-                    WHERE `id_lang` = '.(int)$id_lang;
+    public static function generateUrlStatus($id_provider, $id_product){
 
-        return Db::getInstance()->executeS($sql);
+        return $url = _PS_BASE_URL_.'/modules/autorestocking/status.php?provider='.$id_provider.'&product='.$id_product;
+
     }
-
 }

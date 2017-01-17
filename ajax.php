@@ -11,16 +11,16 @@ if(Tools::getValue('tiny')){
   echo EmailTemplate::updateTemplate(Tools::getValue('tiny'));
 }elseif(Tools::getValue('submitAddproviders')){
   if(Tools::getValue('id_providers') == null){
-    echo Providers::insertProviderReturnId($_POST);
+    echo Providers::insertProviderReturnId();
   }else{
-    echo Providers::updateProvider($_POST);
+    echo Providers::updateProvider();
   }
 }elseif(Tools::getValue('submitProductRelation')){
   echo Relation::saveRelationProductByProvider();
 }elseif(Tools::getValue('submitAddrelation')){
   echo Relation::updateRelation();
 }elseif(Tools::getValue('submitRelation')){
-  echo Relation::saveRelationCategoryByProvider($_POST);
+  echo Relation::saveRelationCategoryByProvider();
 }
 
 
