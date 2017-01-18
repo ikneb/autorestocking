@@ -143,7 +143,14 @@ $( document ).ready(function() {
             }, 350);
         }else{
             id_category = $(this).val();
-            console.log(id_category);
+            $('#associated-categories-tree').find(":input[type=checkbox]").each(
+                function()
+                {
+                    $(this).prop("checked", false);
+                    $(this).parent().removeClass("tree-selected");
+                }
+            );
+            $('#associated-categories-tree').tree('collapseAll');
         }
     });
 
