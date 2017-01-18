@@ -21,9 +21,9 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."autorestocking_relations` (
 `product_count` int(11) NOT NULL,
 `order_day` enum('0','1','2','3','4','5','6','7') NOT NULL DEFAULT '0',
 `status` int(11) NOT NULL,
+`token` varchar(255),
 PRIMARY KEY (`id_relations`))
 ";
-
 
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'sent_email` (
@@ -36,10 +36,11 @@ PRIMARY KEY (`id_sent_email`)
 
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'template_email` (
-`id_template_email` int(10) NOT NULL AUTO_INCREMENT,
+`id_template_email` int(11) NOT NULL AUTO_INCREMENT,
 `template_email` varchar(255),
 PRIMARY KEY (`id_template_email`)
 )';
+
 
 $sql[] = "INSERT INTO "._DB_PREFIX_."cronjobs
 (`id_module`, `description`, `task`, `hour`, `day`, `month`, `day_of_week`,

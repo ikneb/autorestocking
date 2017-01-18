@@ -15,15 +15,22 @@ if(Tools::getValue('tiny')){
   }else{
     echo Providers::updateProvider();
   }
-}elseif(Tools::getValue('submitProductRelation')){
-  echo Relation::saveRelationProductByProvider();
+/*}elseif(Tools::getValue('submitProductRelation')){ add one product
+  echo Relation::saveRelationProductByProvider();*/
 }elseif(Tools::getValue('submitAddrelation')){
   echo Relation::updateRelation();
-}elseif(Tools::getValue('submitRelation')){
+}/*elseif(Tools::getValue('submitRelation')){
   echo Relation::saveRelationCategoryByProvider();
+}*/
+
+switch (Tools::getValue('ajax')) {
+  case 1:
+    print_r(Relation::getProductsAllChildrenCategories(Tools::getValue('id_category')));
+    break;
+  case 2:
+    echo "i равно 1";
+    break;
+  case 3:
+    echo "i равно 2";
+    break;
 }
-
-
-
-
-

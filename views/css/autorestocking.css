@@ -1,0 +1,18 @@
+.search-product{
+    border-bottom: solid 1px #eee;
+    padding-bottom: 15px;
+}
+
+.panel .list-group-item.active:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+.panel .list-group-item.active {
+    background-color: #fff;
+    color: #000;
+}
+
+.remove-product{
+    color: #990000;
+}

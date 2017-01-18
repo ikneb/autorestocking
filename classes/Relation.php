@@ -1,6 +1,7 @@
 <?php
 class Relation extends ObjectModel
 {
+
     public $id_relations;
 
     public $id_product;
@@ -16,6 +17,8 @@ class Relation extends ObjectModel
     public $order_day;
 
     public $status;
+
+    public $token;
 
     /**
      * @see ObjectModel::$definition
@@ -33,6 +36,7 @@ class Relation extends ObjectModel
             'product_count'          =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'order_day'    =>    array('type' => self::TYPE_NOTHING),
             'status'    =>    array('type' => self::TYPE_INT),
+            'token'    =>    array('type' => self::TYPE_STRING),
         ),
     );
 
@@ -63,20 +67,6 @@ class Relation extends ObjectModel
         return $result;
     }
 
-    public static function saveRelationProductByProvider(){
-        $id_provider = Tools::getValue('id_provider');
-        $id_product = Tools::getValue('id_product');
-
-        $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
-                         (id_provider,id_product)
-                         VALUE ('.$id_provider.','.$id_product.')
-                        ON DUPLICATE KEY UPDATE id_product = id_product';
-        if(!Db::getInstance()->execute($sql))
-            return false;
-
-            return true;
-
-    }
 
     public static function updateRelationByProduct($relaation_data,$id_product){
 
@@ -93,51 +83,6 @@ class Relation extends ObjectModel
 
     }
 
-    public static function saveRelationCategoryByProvider(){
-
-        $boxes = Tools::getValue('box');
-        $id_provider = Tools::getValue('id_provider') ;
-
-        $all_category = self::getAllCategoryByProviderId($id_provider);
-        if($boxes){
-            foreach($boxes as $box){
-                if(!in_array($box,$all_category)){
-                    self::setProductByCategoryId($box['id_category'], $id_provider );
-                }
-            }
-        }
-        foreach ($all_category as $category){
-            if(!in_array($category, $boxes)){
-                $sql = 'DELETE FROM '._DB_PREFIX_.'autorestocking_relations 
-                WHERE id_provider ='.$id_provider.' AND id_category = '.$category;
-            }
-            if (!Db::getInstance()->execute($sql))
-                return false;
-        }
-
-        return true;
-    }
-
-    public static  function setProductByCategoryId($id_category, $id_provider){
-        $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
-                         (id_provider,id_category)
-                         VALUE ('.$id_provider.','.$id_category.')';
-        Db::getInstance()->execute($sql);
-
-        $sql = 'SELECT id_product FROM '._DB_PREFIX_.'product WHERE id_category_default ='. $id_category;
-        $products = Db::getInstance()->executeS($sql);
-        if(!empty($products)){
-            foreach($products as $product){
-                $sql = 'INSERT INTO '._DB_PREFIX_.'autorestocking_relations
-                 (id_provider,id_category,id_product)
-                 VALUE ('.$id_provider.','.$id_category.','.$product['id_product'].')';
-                Db::getInstance()->execute($sql);
-            }
-        }
-
-        return true;
-    }
-
 
     public static function getAllCategoryByProviderId($id_provider){
 
@@ -152,7 +97,6 @@ class Relation extends ObjectModel
 
     public  static function getAllProductByProviderId($smarty){
         $id_provider = Tools::getValue('id_provider');
-
         $relations = self::getByProviderId($id_provider);
        $smarty->assign('relations', $relations);
 
@@ -176,9 +120,6 @@ class Relation extends ObjectModel
         return true;
     }
 
-    public  function checkProduct(){
-
-    }
 
     public static function getAllRelation(){
         $sql = 'SELECT r.id_relations, r.id_product, r.id_provider, r.min_count,
@@ -204,4 +145,23 @@ class Relation extends ObjectModel
 
         return true;
     }
+
+    public static function getProductByCategoryId($id_category){
+
+        $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $sql = 'SELECT p.id_product, pl.name FROM '._DB_PREFIX_.'product p
+        LEFT JOIN '._DB_PREFIX_.'product_lang pl
+        ON p.id_product=pl.id_product
+        WHERE p.id_category_default='.$id_category.' AND pl.id_lang='.$id_lang;
+
+        return Db::getInstance()->executeS($sql);
+    }
+
+    public static function getProductsAllChildrenCategories($id_category){
+
+
+
+        return true;
+    }
+
 }

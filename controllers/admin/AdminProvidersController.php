@@ -37,8 +37,6 @@ class AdminProvidersController extends ModuleAdminController {
 
     }
 
-
-
     public function renderForm()
     {
         $root = Category::getRootCategory();
@@ -71,13 +69,10 @@ class AdminProvidersController extends ModuleAdminController {
         return $this->context->smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/provider_template.tpl');
     }
 
-
-
-
-
     public function setMedia()
     {
         parent::setMedia();
+        $this->context->controller->addCSS(_PS_MODULE_DIR_.'autorestocking/views/css/autorestocking.css','all');
         $this->context->controller->addJS(_PS_MODULE_DIR_.'autorestocking/views/js/provider.js');
         $this->context->controller->addJqueryPlugin('autocomplete');
 

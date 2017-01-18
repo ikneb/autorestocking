@@ -54,7 +54,6 @@ class Providers extends ObjectModel
         $name = Tools::getValue('name');
         $email = Tools::getValue('email');
 
-
             $sql = "INSERT INTO "._DB_PREFIX_."providers
              (id_providers, name, description, email)
               VALUES(".$id_providers.",
@@ -94,7 +93,7 @@ class Providers extends ObjectModel
     }
 
 
-    public static function generateUrlStatus($id_provider, $id_product){
+    public static function generateUrlStatus($id_provider, $id_product, $token){
 
         return $url = _PS_BASE_URL_.'/modules/autorestocking/status.php?provider='.$id_provider.'&product='.$id_product;
 
