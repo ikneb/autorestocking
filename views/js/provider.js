@@ -182,7 +182,7 @@ $( document ).ready(function() {
             $.ajax({
                 type: 'POST',
                 url: '/modules/autorestocking/ajax.php',
-                data: {id_provider: id_provider,ajax_tab: true},
+                data: {id_provider: id_provider,ajax: 5},
                 success: function(data){
                     $('.place-add-relation').html(data);
                 }

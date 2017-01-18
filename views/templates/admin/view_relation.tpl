@@ -1,60 +1,63 @@
-{if !empty($relations)}
-    {foreach from=$relations item=relation}
-        <div class="row">
-            <form id="relation_form" class="defaultForm form-horizontal relationForm"  method="post" enctype="multipart/form-data" novalidate="">
-                <input type="hidden" name="submitAddrelation" value="1">
-                <div class="panel" id="fieldset_0">
-                    <div class="panel-heading">
-                        <i class="icon-briefcase"></i> {$relation.name|escape:'htmlall':'UTF-8'}
-                    </div>
-                    <div class="form-wrapper">
-                        <input type="hidden" name="id_product" id="id_product" value="{$relation.id_product|escape:'htmlall':'UTF-8'}">
-                        <input type="hidden" name="id_relations" id="id_relations" value="{$relation.id_relations|escape:'htmlall':'UTF-8'}">
+<div class="panel" id="fieldset_0">
+    <div class="panel-heading">
+        <i class="icon-briefcase"></i> Relation
+    </div>
+    {if !empty($relations)}
+        <table id="table-product" class="table product">
+            <thead>
+            <tr class="nodrag nodrop">
+                <th class="fixed-width-xs center">
+                    <span class="title_box active">ID</span>
+                </th>
+                <th class="">
+                    <span class="title_box">Имя</span>
+                </th>
+                <th class="">
+                    <span class="title_box">Количество</span>
+                </th>
+                <th class=" text-right">
+                    <span class="title_box">Мин количество</span>
+                </th>
+                <th class=" text-right">
+                    <span class="title_box">Количество заказа</span>
+                </th>
+                <th class=" text-right">
+                    <span class="title_box">Статус</span>
+                </th>
+                <th class="fixed-width-xs center">
 
-                        <div class="row">
-                            <label class="control-label col-lg-2 ">
-                                Min</label>
-                            <div class="col-lg-2 col-md-2">
-                                <input type="text" name="min_count" id="min_count" value="{$relation.min_count|escape:'htmlall':'UTF-8'}" class="">
-                            </div>
-                            <label class="control-label col-lg-2 ">
-                                Count</label>
-                            <div class="col-lg-2 col-md-2">
-                                <input type="text" name="product_count" id="product_count" value="{$relation.product_count|escape:'htmlall':'UTF-8'}" class="">
-                            </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+                {foreach from=$relations item=relation}
+                    <tr id="tr__1_0" class=" odd">
+                        <td class="pointer fixed-width-xs center">
+                            1
+                        </td>
+                        {*<td class="pointer center" onclick="document.location = 'index.php?controller=AdminProducts&amp;id_product=1&amp;updateproduct&amp;token=36c7e5ca8fb2666c5ad464334185d1ce'">
+                            <img src="../img/tmp/product_mini_1_1.jpg?time=1484773205" alt="" class="imgm img-thumbnail">
+                        </td>*}
+                        <td class="pointer">
+                            Faded Short Sleeve T-shirts
+                        </td>
+                        <td class="pointer text-right">
+                        </td>
+                        <td class="pointer fixed-width-sm text-center" onclick="document.location = 'index.php?controller=AdminProducts&amp;id_product=1&amp;updateproduct&amp;token=36c7e5ca8fb2666c5ad464334185d1ce'">
 
+                        </td>
+                        <td class="text-right">
+                        </td>
+                        <td class="text-right">
+                        </td>
+                        <td class="text-right">
+                        </td>
 
-                            <label class="control-label col-lg-2">
-                                Send
-                            </label>
-                            <div class="col-lg-2 col-md-2">
-                                <select name="order_day" class="selectpicker">
-                                    <option value="0"></option>
-                                    <option value="1" {if $relation.order_day == 1}selected{/if}>Mon</option>
-                                    <option value="2" {if $relation.order_day == 2}selected{/if}>Tue</option>
-                                    <option value="3" {if $relation.order_day == 3}selected{/if}>Wed</option>
-                                    <option value="4" {if $relation.order_day == 4}selected{/if}>Thu</option>
-                                    <option value="5" {if $relation.order_day == 5}selected{/if}>Fri</option>
-                                    <option value="6" {if $relation.order_day == 6}selected{/if}>Sat</option>
-                                    <option value="7" {if $relation.order_day == 7}selected{/if}>Sun</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-                    </div><!-- /.form-wrapper -->
-                    <div class="panel-footer">
-                        <button type="submit" value="1"  name="submitAddproviders" class="relationForm btn btn-default pull-right">
-                            <i class="process-icon-save"></i> Сохранить
-                        </button>
-                        <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa" class="btn btn-default" onclick="window.history.back();">
-                            <i class="process-icon-cancel"></i> Отмена
-                        </a>
-                    </div>
-                </div>
-            </form>
-        </div>
-    {/foreach}
-{else}
-    <h4>You need add relation</h4>
-{/if}
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    {else}
+        <h4>You need add relation</h4>
+    {/if}
+</div>

@@ -7,7 +7,7 @@ $( document ).ready(function() {
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
-            data: {tiny : tiny},
+            data: {tiny : tiny, ajax: 2},
             success: function(data){
                 console.log(data);
                if(data) {

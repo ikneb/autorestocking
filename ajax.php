@@ -7,19 +7,16 @@ require_once(dirname(__FILE__).'/classes/Providers.php');
 require_once(dirname(__FILE__).'/classes/Relation.php');
 
 
-if(Tools::getValue('tiny')){
-  echo EmailTemplate::updateTemplate(Tools::getValue('tiny'));
-}elseif(Tools::getValue('submitAddproviders')){
-  if(Tools::getValue('id_providers') == null){
+if(Tools::getValue('submitAddproviders')) {
+  if (Tools::getValue('id_providers') == null) {
     echo Providers::insertProviderReturnId();
-  }else{
+  } else {
     echo Providers::updateProvider();
   }
+}
 /*}elseif(Tools::getValue('submitProductRelation')){ add one product
   echo Relation::saveRelationProductByProvider();*/
-}elseif(Tools::getValue('submitAddrelation')){
-  echo Relation::updateRelation();
-}/*elseif(Tools::getValue('submitRelation')){
+/*elseif(Tools::getValue('submitRelation')){
   echo Relation::saveRelationCategoryByProvider();
 }*/
 
@@ -28,9 +25,20 @@ switch (Tools::getValue('ajax')) {
     print_r(Relation::getProductsAllChildrenCategories(Tools::getValue('id_category')));
     break;
   case 2:
-    echo "i равно 1";
+    echo EmailTemplate::updateTemplate(Tools::getValue('tiny'));
     break;
   case 3:
-    echo "i равно 2";
+    echo Relation::updateRelation();
+    break;
+  case 4:
+    if (Tools::getValue('id_providers') == null) {
+      echo Providers::insertProviderReturnId();
+    } else {
+      echo Providers::updateProvider();
+    }
+    break;
+  case 5:
+    echo Relation::getAllProductByProviderId($smarty);
     break;
 }
+

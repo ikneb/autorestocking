@@ -1,7 +1,7 @@
 
 <div id="provider-product-tab" class="panel product-tab">
     <h3 class="tab">{l s='Product Provider' mod='autorestocking'}</h3>
-    <input type="hidden" name="provider_save" value="provider_save" >
+    <input type="hidden" name="ajax" value="3" >
     <div class="form-group">
         <div class="col-lg-1"><span class="pull-right"></span></div>
         <label class="control-label col-lg-2" for="provider">Provider</label>
