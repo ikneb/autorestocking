@@ -7,13 +7,17 @@ $( document ).ready(function() {
 
     $('#providers_form').submit(function(e){
         e.preventDefault();
-        var provider = $('#providers_form').serialize();
         var id_provider = $('#id_providers').val();
+        var name = $('#name').val();
+        var description = $('#description').val();
+        var email = $('#email').val();
+
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
-            data: provider,
+            data: {id_provider: id_provider,name: name, description: description,email: email, ajax: 4},
             success: function(data){
+                console.log(data);
                 if(id_provider == ''){
                     $('#id_providers').val(data);
                 }
@@ -164,7 +168,7 @@ $( document ).ready(function() {
         });
     }
 
-    $('body').on('click','#providers_form_submit_btn', function(e){
+    $('body').on('click','#addSubmitProduct', function(e){
         e.preventDefault();
         var products = [];
         var id_provider = $("input[name='id_providers']").val();

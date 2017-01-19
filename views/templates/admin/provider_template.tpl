@@ -90,7 +90,7 @@
                         </li>
                     </ul>
                     <div class="panel-footer">
-                        <button type="submit" value="1" id="providers_form_submit_btn" name="submitAddproviders" class="btn btn-default pull-right">
+                        <button type="submit" value="1" id="addSubmitProduct" name="submitAddproviders" class="btn btn-default pull-right">
                             <i class="process-icon-save"></i> Сохранить
                         </button>
                         <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa" class="btn btn-default" onclick="window.history.back();">

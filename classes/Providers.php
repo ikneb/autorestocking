@@ -82,13 +82,9 @@ class Providers extends ObjectModel
               VALUES(
                '".$name."', '".$description."',
                '".$email."')";
-
         if (!Db::getInstance()->execute($sql))
             return false;
-
         $id_insert = Db::getInstance()->Insert_ID();
-
-
         return $id_insert;
     }
 

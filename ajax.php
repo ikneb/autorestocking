@@ -7,13 +7,13 @@ require_once(dirname(__FILE__).'/classes/Providers.php');
 require_once(dirname(__FILE__).'/classes/Relation.php');
 
 
-if(Tools::getValue('submitAddproviders')) {
+/*if(Tools::getValue('submitAddproviders')) {
   if (Tools::getValue('id_providers') == null) {
-    echo Providers::insertProviderReturnId();
-  } else {
-    echo Providers::updateProvider();
-  }
-}
+   /* echo Providers::insertProviderReturnId();*/
+//  } else {
+//    echo Providers::updateProvider();
+//  }
+//}
 /*}elseif(Tools::getValue('submitProductRelation')){ add one product
   echo Relation::saveRelationProductByProvider();*/
 /*elseif(Tools::getValue('submitRelation')){
@@ -32,7 +32,7 @@ switch (Tools::getValue('ajax')) {
     break;
   case 4:
     if (Tools::getValue('id_providers') == null) {
-      echo Providers::insertProviderReturnId();
+      print_r(Providers::insertProviderReturnId());
     } else {
       echo Providers::updateProvider();
     }
