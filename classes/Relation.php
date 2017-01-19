@@ -80,9 +80,7 @@ class Relation extends ObjectModel
                 return false;
 
             return true;
-
     }
-
 
     public static function getAllCategoryByProviderId($id_provider){
 
@@ -173,6 +171,46 @@ class Relation extends ObjectModel
             }
         }
         return $result;
+    }
+
+    public static function saveRelationProductByProvider(){
+        $products = Tools::getValue('products');
+        $id_provider = Tools::getValue('id_provider');
+        $sql = $sql = 'SELECT id_product FROM
+        '._DB_PREFIX_.'autorestocking_relations
+        WHERE id_provider ='. $id_provider ;
+        $all_product = Db::getInstance()->executeS($sql);
+        $change_product = array();
+        foreach ($all_product as $product) {
+            $change_product[] = $product['id_product'];
+        }
+        if(!empty($products)){
+            foreach ($products as $product ) {
+                if(!in_array($product['id_product'],$change_product)) {
+                    $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'autorestocking_relations
+                    ( id_product, id_category, id_provider,token)
+                    VALUES(
+                   ' . $product['id_product'] . ', ' . $product['id_category'] . ',
+                   ' . $product['id_provider'] . ',"' . md5(uniqid(rand(), true)) . '")';
+
+                    if (!Db::getInstance()->execute($sql))
+                        return false;
+                }
+            }
+        }else{
+            return false;
+        }
+        return $change_product;
+    }
+
+    public static function getCategoryIdByProduct(){
+        $id_product = Tools::getValue('id_product');
+        $sql = $sql = 'SELECT id_category_default FROM
+        '._DB_PREFIX_.'product
+        WHERE id_product ='. $id_product ;
+        $id_category = Db::getInstance()->getRow($sql);
+
+        return $id_category['id_category_default'];
     }
 
 }

@@ -114,8 +114,6 @@ class AutoRestocking extends Module
         $providers = Providers::getAll();
         $relation = Relation::getByProductId($id_product);
 
-
-
         $this->smarty->assign(array(
             'providers' => $providers,
             'relation' => $relation

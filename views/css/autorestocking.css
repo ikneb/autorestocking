@@ -16,3 +16,16 @@
 .remove-product{
     color: #990000;
 }
+
+.name-product{
+    color: #00aff0;
+    font-weight: bold;
+    margin-left: 5px;
+}
+.product-col{
+    margin-left: 5px;
+}
+
+.product-col-name{
+    margin-left: 10px;
+}

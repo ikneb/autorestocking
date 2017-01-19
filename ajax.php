@@ -41,12 +41,15 @@ switch (Tools::getValue('ajax')) {
     echo Relation::getAllProductByProviderId($smarty);
     break;
   case 6:
-//    echo Relation::saveRelationProductByProvider();
-    print(Tools::getValue('products'));
+//   echo Relation::saveRelationProductByProvider();
+   print_r(Relation::saveRelationProductByProvider());
     break;
   case 7:
    echo Tools::jsonEncode(Relation::getProductsAllCategories());
 //    print_r(Relation::getProductsAllCategories());
+    break;
+  case 8:
+    echo Relation::getCategoryIdByProduct();
     break;
 }
 

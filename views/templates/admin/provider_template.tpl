@@ -84,7 +84,10 @@
                     <div class="panel-heading">
                         <i class="icon-briefcase"></i> Save
                     </div>
-                    <ul class="list-group product-list">
+                    <ul class="list-group product-list" id="product-list">
+                        <li class="list-group-item justify-content-between"><span class="name-product">ID</span>
+                            <span class="name-product">Name</span><span class="badge badge-default badge-pill">Save</span>
+                        </li>
                     </ul>
                     <div class="panel-footer">
                         <button type="submit" value="1" id="providers_form_submit_btn" name="submitAddproviders" class="btn btn-default pull-right">
