@@ -22,36 +22,40 @@
                     <span class="title_box">Количество заказа</span>
                 </th>
                 <th class=" text-right">
-                    <span class="title_box">Статус</span>
+                    <span class="title_box">День заказа</span>
                 </th>
-                <th class="fixed-width-xs center">
+                {*<th class="fixed-width-xs center">
 
-                </th>
+                </th>*}
             </tr>
             </thead>
             <tbody>
                 {foreach from=$relations item=relation}
                     <tr id="tr__1_0" class=" odd">
                         <td class="pointer fixed-width-xs center">
-                            1
+                            {$relation.id_product}
                         </td>
                         {*<td class="pointer center" onclick="document.location = 'index.php?controller=AdminProducts&amp;id_product=1&amp;updateproduct&amp;token=36c7e5ca8fb2666c5ad464334185d1ce'">
                             <img src="../img/tmp/product_mini_1_1.jpg?time=1484773205" alt="" class="imgm img-thumbnail">
                         </td>*}
                         <td class="pointer">
-                            Faded Short Sleeve T-shirts
+                            {$relation.name}
                         </td>
                         <td class="pointer text-right">
+                            {$relation.quantity}
                         </td>
-                        <td class="pointer fixed-width-sm text-center" onclick="document.location = 'index.php?controller=AdminProducts&amp;id_product=1&amp;updateproduct&amp;token=36c7e5ca8fb2666c5ad464334185d1ce'">
-
-                        </td>
-                        <td class="text-right">
-                        </td>
-                        <td class="text-right">
+                        <td class="pointer fixed-width-sm text-center">
+                            {$relation.min_count}
                         </td>
                         <td class="text-right">
+                            {$relation.product_count}
                         </td>
+                        <td class="text-right">
+                            {$relation.quantity}
+                        </td>
+                        {*<td class="text-right">
+                            {$relation.quantity}
+                        </td>*}
 
                     </tr>
                 {/foreach}

@@ -108,11 +108,10 @@ class AutoRestocking extends Module
         $this->context->controller->addCss($this->_path.'css/autorestocking.css');
     }
 
-    public function hookDisplayAdminProductsExtra() {
+    public function hookDisplayAdminProductsExtra($params) {
 
-        $id_product = Tools::getValue('id_product');
+        $id_product = (int)Tools::getValue('id_product',$params['id_product']);
         $providers = Providers::getAll();
-        $relation = Relation::getByProductId($id_product);
 
         $this->smarty->assign(array(
             'providers' => $providers,
@@ -126,7 +125,8 @@ class AutoRestocking extends Module
         if (Tools::isSubmit('submitAddproduct')
             || Tools::isSubmit('submitAddproductAndStay')){
             $id_product = Tools::getValue('id_product');
-            $relat = Relation::getByProductId();
+
+            $relat = Relation::getByProductId($id_product);
             if(!$relat){
                 $relation = new Relation();
                 $relation->id_provider = Tools::getValue('id_provider');

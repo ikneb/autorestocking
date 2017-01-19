@@ -40,8 +40,7 @@ class Relation extends ObjectModel
         ),
     );
 
-    public static function getByProductId(){
-        $id_product = Tools::getValue('id_product');
+    public static function getByProductId($id_product){
         $db = Db::getInstance();
         $sql = "SELECT * FROM `"._DB_PREFIX_."autorestocking_relations` r WHERE r.`id_product` =".$id_product;
 
@@ -55,11 +54,14 @@ class Relation extends ObjectModel
         $db = Db::getInstance();
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
-        $sql = "SELECT r.id_relations,r.id_product,r.id_provider,r.min_count,r.product_count,r.order_day,p.name
+        $sql = "SELECT r.id_relations,r.id_product,r.id_provider,r.min_count,
+        r.product_count,r.order_day,l.name,p.quantity
         FROM "._DB_PREFIX_."autorestocking_relations r
-        LEFT JOIN " . _DB_PREFIX_ . "product_lang p
+        LEFT JOIN " . _DB_PREFIX_ . "product p
         ON r.id_product = p.id_product
-         WHERE r.id_provider =".$id_provider." AND id_lang=".$id_lang;
+        LEFT JOIN " . _DB_PREFIX_ . "product_lang l
+        ON p.id_product = l.id_product
+        WHERE r.id_provider =".$id_provider." AND id_lang=".$id_lang;
 
         if(!$result=$db->executeS($sql))
             return false;
@@ -98,7 +100,7 @@ class Relation extends ObjectModel
         $relations = self::getByProviderId($id_provider);
        $smarty->assign('relations', $relations);
 
-        return $smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/view_relation.tpl');
+        return  $smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/view_relation.tpl');
     }
 
     
