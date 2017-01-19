@@ -116,7 +116,7 @@ $( document ).ready(function() {
                         throw new Error();
                     }
                 });
-                $('.product-list').append("<li class='list-group-item justify-content-between product' data-cat='' data-prod='" + id_product + "' data-save='1'>" + name + "<span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
+                $('.product-list').append("<li class='list-group-item justify-content-between product' data-cat='' data-prod='" + id_product + "' data-save='1' data-name = " + name + ">" + name + "<span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
             }catch(e){
                 $('#ajax_confirmation').text('This product already added in list!').removeClass('hide alert-success').addClass('alert-danger');
                 setTimeout(function () {
@@ -126,33 +126,92 @@ $( document ).ready(function() {
         }
     });
 
+    function Parida_Categories_Tree_Init(){
+        var tree = $('#associated-categories-tree');
+       $('li input[type="checkbox"]', tree).change(function(){
+            var _this = $(this);
+            var li = _this.closest('li');
+            var class_checked = 'tree-selected';
+            $('input[type="checkbox"]', li).attr({checked: _this.is(':checked')});
+            if (_this.is(':checked')){
+                $('span', li).addClass(class_checked);
+            }else{
+                $('span', li).removeClass(class_checked);
+            }
+            var ps = _this.parents('li');
+            if (ps.length){
+                for (var i = 0; i < ps.length; i++){
+                    if (!_this.is(':checked') && !jQuery('ul input[type="checkbox"]:checked', ps.eq(i)).length){
+                        $('input[type="checkbox"]', ps.eq(i)).attr({
+                            checked: false
+                        });
+                        $('span', ps.eq(i)).removeClass(class_checked);
+                    }else if (_this.is(':checked')){
+                        $('> span > input[type="checkbox"]', ps.eq(i)).attr({
+                            checked: true
+                        }).parent().addClass(class_checked);
+                    };
+                }
+            }
+        });
+    }
+
     $('body').on('change',':checkbox',function(){
         if(this.checked){
-            id_category = $(this).val();
-                $('#associated-categories-tree').tree('expandAll');
-                $('#expand-all-associated-categories-tree').hide();
-                $('#collapse-all-associated-categories-tree').show();
-            setTimeout(function () {
-                $('#associated-categories-tree').find(":input[type=checkbox]").each(
-                    function()
-                    {
-                        $(this).prop('checked', true);
-                        $(this).parent().addClass("tree-selected");
+            var categories = [];
+            Parida_Categories_Tree_Init();
+            $('.tree-selected input').each(function(i) {
+                categories[i] = $(this).val();
+            });
+            $.ajax({
+                type: 'POST',
+                url: '/modules/autorestocking/ajax.php',
+                data: {categories: categories, ajax: 7},
+                success: function(data){
+                   var products = JSON.parse(data);
+                    var product_list = [];
+                    for(i = 0; i < products.length; i++) {
+                        $('.product').each(function (i) {
+                            product_list[i] = $(this).attr('data-prod');
+                        });
+
+                        if(product_list.length == 0 || product_list.indexOf(products[i][0]['id_product']) == -1){
+                            $('.product-list').append("<li class='list-group-item justify-content-between product' data-cat='" + products[i][0]['id_cat'] + "' data-prod='" + products[i][0]['id_product'] + "' data-save='1' data-name = " + products[i][0]['name'] + ">" + products[i][0]['name'] + "<span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
+                        }
                     }
-                );
-            }, 350);
-        }else{
-            id_category = $(this).val();
-            $('#associated-categories-tree').find(":input[type=checkbox]").each(
-                function()
-                {
-                    $(this).prop("checked", false);
-                    $(this).parent().removeClass("tree-selected");
                 }
-            );
-            $('#associated-categories-tree').tree('collapseAll');
+            });
+        }else{
+            Parida_Categories_Tree_Init();
         }
     });
+
+    $('body').on('click','#providers_form_submit_btn', function(e){
+        e.preventDefault();
+        var products = [];
+
+        $('#product-list').find('.product').each(function(index){
+            if($(this).attr('data-save') == 1) {
+                products[index] = {
+                    'id_provider':  $("input[name='id_providers']").val(),
+                    'name':        $(this).attr('data-name'),
+                    'id_product':  $(this).attr('data-prod'),
+                    'id_category': $(this).attr('data-cat')
+                };
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            url: '/modules/autorestocking/ajax.php',
+            data: { products: JSON.stringify(products), ajax: 6 },
+            success: function(data){
+                console.log(data);
+                //checkReturnData(data);
+            }
+        });
+
+    });
+
 
     $('body').on('click','.check-product', function(e){
         e.preventDefault();

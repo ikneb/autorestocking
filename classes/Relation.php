@@ -149,7 +149,7 @@ class Relation extends ObjectModel
     public static function getProductByCategoryId($id_category){
 
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-        $sql = 'SELECT p.id_product, pl.name FROM '._DB_PREFIX_.'product p
+        $sql = 'SELECT p.id_product,p.id_category_default, pl.name FROM '._DB_PREFIX_.'product p
         LEFT JOIN '._DB_PREFIX_.'product_lang pl
         ON p.id_product=pl.id_product
         WHERE p.id_category_default='.$id_category.' AND pl.id_lang='.$id_lang;
@@ -157,11 +157,22 @@ class Relation extends ObjectModel
         return Db::getInstance()->executeS($sql);
     }
 
-    public static function getProductsAllChildrenCategories($id_category){
-
-
-
-        return true;
+    public static function getProductsAllCategories(){
+        $result = array();
+        $categories = Tools::getValue('categories');
+        foreach ($categories as $category ) {
+            $product = self::getProductByCategoryId($category);
+            if(!empty($product)) {
+                if(count($product)>1){
+                    foreach ($product as $prod) {
+                        $result[][0] = $prod;
+                    }
+                }else{
+                    $result[] = $product;
+               }
+            }
+        }
+        return $result;
     }
 
 }

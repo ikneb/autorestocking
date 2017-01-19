@@ -1,4 +1,3 @@
-`
 <div class="row">
     <div class="col-lg-2 col-md-3">
         <div class="list-group">
@@ -66,13 +65,13 @@
                     <div class="form-group search-product">
                         <label class="control-label col-lg-3 ">
                             Search and add product</label>
-                            <div class="input-group row">
-                                    <input type="text" id="related_product_autocomplete_input" name="product_autocomplete"/>
-                                    <span class="input-group-addon"><i class="icon-search"></i></span>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-primary add-product">Add product</button>
-                                </div>
+                        <div class="input-group row">
+                            <input type="text" id="related_product_autocomplete_input" name="product_autocomplete"/>
+                            <span class="input-group-addon"><i class="icon-search"></i></span>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary add-product">Add product</button>
                             </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         {$tree}
@@ -80,24 +79,23 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                    <input type="hidden" name="submitAddRelation" value="1">
-                    <div class="panel" id="fieldset_0">
-                        <div class="panel-heading">
-                            <i class="icon-briefcase"></i> Save
-                        </div>
-                       <ul class="list-group product-list">
-                       </ul>
-                       <div class="panel-footer">
-                            <button type="submit" value="1" id="providers_form_submit_btn" name="submitAddproviders" class="btn btn-default pull-right">
-                                <i class="process-icon-save"></i> Сохранить
-                            </button>
-                            <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa" class="btn btn-default" onclick="window.history.back();">
-                                <i class="process-icon-cancel"></i> Отмена
-                            </a>
-                       </div>
+                <input type="hidden" name="submitAddRelation" value="1">
+                <div class="panel" id="fieldset_0">
+                    <div class="panel-heading">
+                        <i class="icon-briefcase"></i> Save
                     </div>
-            </div>
+                    <ul class="list-group product-list">
+                    </ul>
+                    <div class="panel-footer">
+                        <button type="submit" value="1" id="providers_form_submit_btn" name="submitAddproviders" class="btn btn-default pull-right">
+                            <i class="process-icon-save"></i> Сохранить
+                        </button>
+                        <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa" class="btn btn-default" onclick="window.history.back();">
+                            <i class="process-icon-cancel"></i> Отмена
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-`
+</div>
