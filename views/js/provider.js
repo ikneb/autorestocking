@@ -40,61 +40,6 @@ $( document ).ready(function() {
         });
     });
 
-
-   /* $('#addRelationForm').submit(function(e){
-        e.preventDefault();
-        var box = [];
-        var submitRelation = $("input[name='submitRelation']").val();
-        var id_providers = $("input[name='id_providers']").val();
-
-       if(id_providers == ''){
-            $('#ajax_confirmation').text('Add provider please!').removeClass('hide alert-success').addClass('alert-danger');
-            setTimeout(function () {
-                $('#ajax_confirmation').addClass('hide');
-            }, 2000);
-       }else{
-           $('.tree-selected input').each(function(i) {
-               box[i] = $(this).val();
-           });
-
-           console.log(box);
-           $.ajax({
-               type: 'POST',
-               url: '/modules/autorestocking/ajax.php',
-               data: { box: box,  submitRelation: submitRelation, id_provider: id_providers},
-               success: function(data){
-                   checkReturnData(data);
-               }
-           });
-       }
-    });
-*/
-
-    /*$('#addRelationProductForm').submit(function(e){
-        e.preventDefault();
-        var id_product = $("input[name='product_autocomplete']").attr('data');
-        var id_providers = $("input[name='id_providers']").val();
-        var submitProductRelation = $("input[name='submitProductRelation']").val();
-        if(id_providers == ''){
-            $('#ajax_confirmation').text('Add provider please!').removeClass('hide alert-success').addClass('alert-danger');
-            setTimeout(function () {
-                $('#ajax_confirmation').addClass('hide');
-            }, 2000);
-            return true;
-        }else{
-            $.ajax({
-                type: 'POST',
-                url: '/modules/autorestocking/ajax.php',
-                data: { id_product: id_product, submitProductRelation: submitProductRelation, id_provider: id_providers},
-                success: function(data){
-                    console.log(data);
-                    checkReturnData(data);
-                }
-            });
-        }
-
-    });*/
-
     $('.add-product').click(function(e){
         e.preventDefault();
         var id_product = $("input[name='product_autocomplete']").attr('data');
@@ -115,26 +60,26 @@ $( document ).ready(function() {
             }, 2000);
             return true;
         }else{
-            try {
-                $.ajax({
-                    type: 'POST',
-                    url: '/modules/autorestocking/ajax.php',
-                    data: { id_product: id_product, ajax: 8  },
-                    success: function(data){
+            $.ajax({
+                type: 'POST',
+                url: '/modules/autorestocking/ajax.php',
+                data: { id_product: id_product, ajax: 8  },
+                success: function(data){
+                    try {
                         $('.product').each(function (i) {
                             if ($(this).attr('data-prod') == id_product) {
                                 throw new Error();
                             }
                         });
                         $('.product-list').append("<li class='list-group-item justify-content-between product' data-cat='" + data + "' data-prod='" + id_product + "' data-save='1' data-name = " + name + "><span class='product-col'>" + id_product + "</span><span class='product-col-name'>" + name + "</span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
+                    }catch(e){
+                        $('#ajax_confirmation').text('This product already added in list!').removeClass('hide alert-success').addClass('alert-danger');
+                        setTimeout(function () {
+                            $('#ajax_confirmation').addClass('hide');
+                        }, 2000);
                     }
-                });
-            }catch(e){
-                $('#ajax_confirmation').text('This product already added in list!').removeClass('hide alert-success').addClass('alert-danger');
-                setTimeout(function () {
-                    $('#ajax_confirmation').addClass('hide');
-                }, 2000);
-            }
+                }
+            });
         }
     });
 

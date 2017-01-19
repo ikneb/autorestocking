@@ -41,9 +41,3 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'template_email` (
 PRIMARY KEY (`id_template_email`)
 )';
 
-
-$sql[] = "INSERT INTO "._DB_PREFIX_."cronjobs
-(`id_module`, `description`, `task`, `hour`, `day`, `month`, `day_of_week`,
-`updated_at`, `active`, `id_shop`, `id_shop_group`)
-VALUES (" . $this->id . ",'Autorestocking module' ,'"._PS_BASE_URL_."/modules/autorestocking/cron_jobs_autorestocking.php' , 1 , 1,
- 1 , 1 , NULL, TRUE, 1, 1)";

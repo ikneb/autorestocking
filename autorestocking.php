@@ -116,7 +116,8 @@ class AutoRestocking extends Module
 
         $this->smarty->assign(array(
             'providers' => $providers,
-            'relation' => $relation
+            'relation' => $id_product ? Relation::getByProductId($id_product): false,
+            'version' => version_compare(_PS_VERSION_,'1.7','<')
         ));
         return $this->display(__FILE__, 'views/templates/admin/product_tab.tpl');
     }
