@@ -104,9 +104,9 @@ $( document ).ready(function() {
                         });
                         $('span', ps.eq(i)).removeClass(class_checked);
                     }else if (_this.is(':checked')){
-                        /*$('> span > input[type="checkbox"]', ps.eq(i)).attr({
+                        $('> span > input[type="checkbox"]', ps.eq(i)).attr({
                             checked: true
-                        }).parent().addClass(class_checked);*/
+                        }).parent().addClass(class_checked);
                     };
                 }
             }
@@ -368,7 +368,7 @@ $( document ).ready(function() {
     }
 
     var supervise = {};
-    $('a').each(function() {
+    $('.tree-actions a').each(function() {
         var txt = $(this).text();
         if (supervise[txt])
             $(this).remove();

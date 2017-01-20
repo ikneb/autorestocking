@@ -3,29 +3,50 @@
 class AdminProvidersController extends ModuleAdminController {
 
 
+    /** @var array providers list */
+    protected $providers_array = array();
+
     public function __construct()
     {
         $this->bootstrap = true;
         $this->required_database = true;
-        $this->required_fields = array('name', 'description', 'email');
+        $this->required_fields = array('name','email', 'order_day');
         $this->table = 'providers';
         $this->className = 'Providers';
         $this->lang = false;
         $this->context = Context::getContext();
-        $this->allow_export = true;
-        $this->explicitSelect = true;
-
-        parent::__construct();
-
-        $this->addRowAction('edit');
-                $this->addRowAction('delete');
+        /*$this->addRowAction('edit');
+        $this->addRowAction('delete');
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
                 'confirm' => $this->l('Delete selected items?'),
                 'icon' => 'icon-trash'
             )
+        );*/
+
+
+        parent::__construct();
+
+    }
+
+    public function initProcess()
+    {
+        parent::initProcess();
+
+    }
+
+    public function renderList(){
+        $this->addRowAction('edit');
+        $this->addRowAction('delete');
+        $this->bulk_actions = array(
+            'delete' => array(
+                'text' => $this->l('Delete selected'),
+                'confirm' => $this->l('Delete selected items?')
+            )
         );
+
+        $this->allow_export = false;
 
         $this->fields_list = array(
             'id_providers' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
@@ -34,17 +55,15 @@ class AdminProvidersController extends ModuleAdminController {
             'email' => array('title' => $this->l('Email')),
         );
 
-
+        return parent::renderList();
     }
 
     public function renderForm()
     {
-        $root = Category::getRootCategory();
         $id_provider = Tools::getValue('id_providers');
         $all_categories = $id_provider ? Relation::getAllCategoryByProviderId($id_provider) : array();
         $categories = new HelperTreeCategories('associated-categories-tree', 'Add category');
         $categories->setUseCheckBox(true);
-//           ->setSelectedCategories($all_categories);
         $categories->render();
 
         $provider = $id_provider ? Providers::getCurrentProvider($id_provider) : false;
@@ -71,5 +90,5 @@ class AdminProvidersController extends ModuleAdminController {
         $this->context->controller->addJqueryPlugin('autocomplete');
 
     }
-            
+
 }
