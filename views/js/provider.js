@@ -168,6 +168,27 @@ $( document ).ready(function() {
             });
         }else{
             Parida_Categories_Tree_Init();
+            $('.tree-selected input').each(function(i) {
+                categories[i] = $(this).val();
+            });
+            $.ajax({
+                type: 'POST',
+                url: '/modules/autorestocking/ajax.php',
+                data: {categories: categories, ajax: 7},
+                success: function(data){
+                    var products = JSON.parse(data);
+                    var product_list = [];
+                    for(i = 0; i < products.length; i++) {
+                        $('.product').each(function (i) {
+                            product_list[i] = $(this).attr('data-prod');
+                        });
+
+                        if(product_list.length == 0 || product_list.indexOf(products[i][0]['id_product']) == -1){
+                            $('.product-list').append("<li class='list-group-item justify-content-between product' data-cat='" + products[i][0]['id_category_default'] + "' data-prod='" + products[i][0]['id_product'] + "' data-save='1' data-name = " + products[i][0]['name'] + "><span class='product-col'>"+ products[i][0]['id_product']+"</span><span class='product-col-name'>" + products[i][0]['name'] + "</span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
+                        }
+                    }
+                }
+            });
         }
     });
 
@@ -201,13 +222,70 @@ $( document ).ready(function() {
             $.ajax({
                 type: 'POST',
                 url: '/modules/autorestocking/ajax.php',
-                data: {id_provider: id_provider,ajax: 5},
+                data: {id_provider: id_provider, ajax: 5},
                 success: function(data){
                     $('.place-add-relation').html(data);
                 }
             });
         }
 
+    });
+
+
+    $('body').on('click', '.page-link', function(){
+        var page = $(this).attr('data-page');
+        var id_provider = $("input[name='id_providers']").val();
+        var sel = $(this).closest('.pagination-sm').attr('data-sel');
+        var count = $(this).closest('.pagination-sm').attr('data-count');
+        var newPage = '';
+        if(page == '-1'){
+            if(sel != 1){
+                newPage = --sel;
+            }else{
+                return;
+            }
+        }else if(page == '+1' ){
+            if(sel != count){
+                newPage = ++sel;
+            }else{
+                return;
+            }
+        }else{
+            newPage = page;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/modules/autorestocking/ajax.php',
+            data: {id_provider: id_provider, page: newPage, ajax: 5},
+            success: function(data){
+                $('.place-add-relation').html(data);
+            }
+        });
+
+    });
+
+
+    $('body').on('click', '.update-relation', function(e){
+        e.preventDefault();
+        var parent =  $(this).closest('.items-relation');
+        var id_relation = parent.find('input[name=id_relation]').val();
+        var min_count = parent.find('input[name=min_count]').val();
+        var product_count = parent.find('input[name=product_count]').val();
+        var order_day = parent.find('select').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/modules/autorestocking/ajax.php',
+            data: {id_relations: id_relation,
+                min_count: min_count,
+                product_count: product_count,
+                order_day: order_day,
+                ajax: 3},
+            success: function(data){
+                console.log(data);
+                checkReturnData(data);
+            }
+        });
     });
 
 

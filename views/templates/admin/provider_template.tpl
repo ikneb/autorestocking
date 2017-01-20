@@ -1,13 +1,13 @@
 <div class="row">
     <div class="col-lg-2 col-md-3">
         <div class="list-group">
-            <a class="list-group-item " data-toggle="tab" id="linkProvider" href="#provider">Provider</a>
+            <a class="list-group-item active" data-toggle="tab" id="linkProvider" href="#provider">Provider</a>
             <a class="list-group-item " data-toggle="tab" id="linkRelation" href="#relation">Relation</a>
-            <a class="list-group-item active" data-toggle="tab" id="linkAddRelation" href="#addRelation">Add relation</a>
+            <a class="list-group-item " data-toggle="tab" id="linkAddRelation" href="#addRelation">Add relation</a>
         </div>
     </div>
     <div class="tab-content">
-        <div id="provider" class="tab-pane col-lg-9 ">
+        <div id="provider" class="tab-pane col-lg-9 active">
             <form id="providers_form" class="defaultForm form-horizontal AdminProviders"  method="post" enctype="multipart/form-data" novalidate="">
                 <input type="hidden" name="submitAddproviders" value="1">
                 <div class="panel" id="fieldset_0">
@@ -51,12 +51,12 @@
                 </div>
             </form>
         </div>
-        <div id="relation" class="tab-pane col-md-9">
+        <div id="relation" class="tab-pane col-md-9 ">
             <div class="col-md-12 place-add-relation">
 
             </div>
         </div>
-        <div id="addRelation" class="tab-pane col-lg-9 active">
+        <div id="addRelation" class="tab-pane col-lg-9 ">
             <div class="col-lg-6">
                 <div class="panel" id="fieldset_0">
                     <div class="panel-heading">

@@ -43,16 +43,11 @@ class AdminProvidersController extends ModuleAdminController {
         $id_provider = Tools::getValue('id_providers');
         $all_categories = $id_provider ? Relation::getAllCategoryByProviderId($id_provider) : array();
         $categories = new HelperTreeCategories('associated-categories-tree', 'Add category');
-        $categories->setUseCheckBox(true)
-           ->setSelectedCategories($all_categories);
+        $categories->setUseCheckBox(true);
+//           ->setSelectedCategories($all_categories);
         $categories->render();
 
         $provider = $id_provider ? Providers::getCurrentProvider($id_provider) : false;
-            if(!$provider){
-                $relations = array();
-            }else{
-                $relations = Relation::getByProviderId($id_provider);
-            }
 
             $this->context->smarty->assign(
                 array(
@@ -61,7 +56,6 @@ class AdminProvidersController extends ModuleAdminController {
                     'description' => $provider ? $provider['description'] : '',
                     'email' => $provider ? $provider['email'] : '',
                     'token' => $this->token,
-                    'relations' => $relations,
                     'tree' => $categories,
                     'product_id' => (int)Tools::getValue('id_product')
                 ));

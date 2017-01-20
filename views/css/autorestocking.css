@@ -1,3 +1,24 @@
+
+.icon-AdminProviders:before{
+    content: "\f1b8";
+}
+input[type="number"]{
+    display: block;
+    width: 100px;
+    height: 31px;
+    padding: 6px 8px;
+    font-size: 12px;
+    line-height: 1.42857;
+    color: #555;
+    background-color: #F5F8F9;
+    background-image: none;
+    border: 1px solid #C7D6DB;
+    border-radius: 3px;
+    -webkit-transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+    -o-transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+}
+
 .search-product{
     border-bottom: solid 1px #eee;
     padding-bottom: 15px;
@@ -28,4 +49,8 @@
 
 .product-col-name{
     margin-left: 10px;
+}
+
+.page-link{
+    cursor: pointer;
 }

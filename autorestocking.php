@@ -110,7 +110,7 @@ class AutoRestocking extends Module
 
     public function hookDisplayAdminProductsExtra($params) {
 
-        $id_product = (int)Tools::getValue('id_product',$params['id_product']);
+        /*$id_product = version_compare(_PS_VERSION_,'1.7','<') ? (int)Tools::getValue('id_product') : (int)Tools::getValue('id_product', isset($params['id_product']));
         $providers = Providers::getAll();
 
         $this->smarty->assign(array(
@@ -118,18 +118,17 @@ class AutoRestocking extends Module
             'relation' => $id_product ? Relation::getByProductId($id_product): false,
             'version' => version_compare(_PS_VERSION_,'1.7','<')
         ));
-        return $this->display(__FILE__, 'views/templates/admin/product_tab.tpl');
+        return $this->display(__FILE__, 'views/templates/admin/product_tab.tpl');*/
     }
 
     public function postProcess() {
-        if (Tools::isSubmit('submitAddproduct')
+        /*if (Tools::isSubmit('submitAddproduct')
             || Tools::isSubmit('submitAddproductAndStay')){
             $id_product = Tools::getValue('id_product');
 
             $relat = Relation::getByProductId($id_product);
             if(!$relat){
                 $relation = new Relation();
-                $relation->id_provider = Tools::getValue('id_provider');
                 $relation->min_count = Tools::getValue('min_count');
                 $relation->product_count = Tools::getValue('product_count');
                 $relation->order_day = Tools::getValue('order_day');
@@ -138,7 +137,7 @@ class AutoRestocking extends Module
             }else{
                 Relation::updateRelationByProduct($_POST,$id_product);
             }
-        }
+        }*/
     }
 
 

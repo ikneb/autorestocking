@@ -50,7 +50,7 @@ class Relation extends ObjectModel
         return $result;
     }
 
-    public static function getByProviderId($id_provider){
+    public static function getByProviderId($id_provider, $offset, $limit){
         $db = Db::getInstance();
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
@@ -61,7 +61,7 @@ class Relation extends ObjectModel
         ON r.id_product = p.id_product
         LEFT JOIN " . _DB_PREFIX_ . "product_lang l
         ON p.id_product = l.id_product
-        WHERE r.id_provider =".$id_provider." AND id_lang=".$id_lang;
+        WHERE r.id_provider =".$id_provider." AND id_lang=".$id_lang. " LIMIT ".$limit." OFFSET ".$offset;
 
         if(!$result=$db->executeS($sql))
             return false;
@@ -96,17 +96,33 @@ class Relation extends ObjectModel
     }
 
     public  static function getAllProductByProviderId($smarty){
+        $limit = 5;
         $id_provider = Tools::getValue('id_provider');
-        $relations = self::getByProviderId($id_provider);
-       $smarty->assign('relations', $relations);
+        $page = (int)(Tools::getValue('page') ? Tools::getValue('page') : 1) ;
+        $count_relation = Db::getInstance()->query(
+            'SELECT * FROM '._DB_PREFIX_.'autorestocking_relations
+             WHERE id_provider ='. $id_provider)->rowCount();
+        if($count_relation % $limit == 0){
+            $pages =$count_relation / $limit;
+        }else{
+            $pages = ceil($count_relation / $limit);
+        }
+        $offset =($page == 1) ? 0 : $limit * ($page-1);
 
-        return  $smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/view_relation.tpl');
+        $relations = self::getByProviderId($id_provider,$offset,$limit);
+        $smarty->assign(array(
+            'relations'=> $relations,
+            'pages'=>$pages,
+            'select' =>$page
+            ));
+
+            return $smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/view_relation.tpl');
     }
 
     
     public static function updateRelation(){
         $min_count = Tools::getValue('min_count');
-        $order_day = Tools::getValue('order_day');
+        $order_day = Tools::getValue('order_day') + 1;
         $product_count = Tools::getValue('product_count');
         $id_relations = Tools::getValue('id_relations');
 

@@ -7,19 +7,6 @@ require_once(dirname(__FILE__).'/classes/Providers.php');
 require_once(dirname(__FILE__).'/classes/Relation.php');
 
 
-/*if(Tools::getValue('submitAddproviders')) {
-  if (Tools::getValue('id_providers') == null) {
-   /* echo Providers::insertProviderReturnId();*/
-//  } else {
-//    echo Providers::updateProvider();
-//  }
-//}
-/*}elseif(Tools::getValue('submitProductRelation')){ add one product
-  echo Relation::saveRelationProductByProvider();*/
-/*elseif(Tools::getValue('submitRelation')){
-  echo Relation::saveRelationCategoryByProvider();
-}*/
-
 switch (Tools::getValue('ajax')) {
   case 1:
     print_r(Relation::getProductsAllChildrenCategories(Tools::getValue('id_category')));
@@ -32,7 +19,7 @@ switch (Tools::getValue('ajax')) {
     break;
   case 4:
     if (Tools::getValue('id_providers') == null) {
-      print_r(Providers::insertProviderReturnId());
+      echo Providers::insertProviderReturnId();
     } else {
       echo Providers::updateProvider();
     }
@@ -41,12 +28,10 @@ switch (Tools::getValue('ajax')) {
     echo Relation::getAllProductByProviderId($smarty);
     break;
   case 6:
-//   echo Relation::saveRelationProductByProvider();
    print_r(Relation::saveRelationProductByProvider());
     break;
   case 7:
    echo Tools::jsonEncode(Relation::getProductsAllCategories());
-//    print_r(Relation::getProductsAllCategories());
     break;
   case 8:
     echo Relation::getCategoryIdByProduct();
