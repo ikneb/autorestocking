@@ -42,7 +42,7 @@ class Relation extends ObjectModel
 
     public static function getByProductId($id_product){
         $db = Db::getInstance();
-        $sql = "SELECT * FROM `"._DB_PREFIX_."autorestocking_relations` r WHERE r.`id_product` =".$id_product;
+        $sql = "SELECT * FROM `"._DB_PREFIX_."autorestocking_relations` WHERE `id_product` =".$id_product;
 
         if(!$result=$db->getRow($sql))
             return false;

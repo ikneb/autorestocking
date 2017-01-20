@@ -18,14 +18,14 @@
             <div class="col-lg-1"><span class="pull-right"></span></div>
             <label class="control-label col-lg-2" for="min_count">Auto-order count</label>
             <div class="col-lg-1">
-                <input type="number" name="min_count" id="min_count" value="{if $relation} {$relation.min_count} {/if}">
+                <input type="number" name="min_count" id="min_count" value="{if $relation} {$relation.min_count}{else} {/if}">
             </div>
         </div>
         <div class="form-group">
             <div class="col-lg-1"><span class="pull-right"></span></div>
             <label class="control-label col-lg-2" for="product_count">Product count</label>
             <div class="col-lg-1">
-                <input type="number" name="product_count" id="product_count" value="{if $relation}{$relation.product_count}{/if}">
+                <input type="number" name="product_count" id="product_count" value="{if $relation}{$relation.product_count}{else}{/if}">
             </div>
         </div>
         <div class="form-group">

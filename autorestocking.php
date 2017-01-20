@@ -105,37 +105,51 @@ class AutoRestocking extends Module
     }
 
     public function hookDisplayBackOfficeHeader() {
-        $this->context->controller->addCss($this->_path.'css/autorestocking.css');
+        $this->context->controller->addCss($this->_path.'views/css/autorestocking.css');
     }
 
     public function hookDisplayAdminProductsExtra($params) {
-
-        /*$id_product = version_compare(_PS_VERSION_,'1.7','<') ? (int)Tools::getValue('id_product') : (int)Tools::getValue('id_product', isset($params['id_product']));
+        /*$id_product = Tools::getValue('id_product');
         $providers = Providers::getAll();
-
+        $autorestocking = Relation::getByProductId($id_product);
+        $fields_form[0]['form'] = array(
+            'input' => array(
+                array(
+                    'type' => 'text',
+                    'name' => 'shipping_method',
+                ),
+            ),
+            'submit' => array(
+                'title' => $this->l('Save'),
+                'class' => 'button'
+            )
+        );
         $this->smarty->assign(array(
             'providers' => $providers,
-            'relation' => $id_product ? Relation::getByProductId($id_product): false,
-            'version' => version_compare(_PS_VERSION_,'1.7','<')
+            'relation' => $autorestocking
         ));
         return $this->display(__FILE__, 'views/templates/admin/product_tab.tpl');*/
+
     }
 
     public function postProcess() {
+
         /*if (Tools::isSubmit('submitAddproduct')
             || Tools::isSubmit('submitAddproductAndStay')){
             $id_product = Tools::getValue('id_product');
-
-            $relat = Relation::getByProductId($id_product);
-            if(!$relat){
-                $relation = new Relation();
+            if($id_product){
+                $rel_row = Relation::getByProductId($id_product);
+                if($rel_row){
+                    $relation = new Relation($rel_row['id']);
+                } else {
+                    $relation = new Relation();
+                    $relation->product_id = $id_product;
+                }
+                $relation->id_provider= Tools::getValue('id_provider');
                 $relation->min_count = Tools::getValue('min_count');
                 $relation->product_count = Tools::getValue('product_count');
                 $relation->order_day = Tools::getValue('order_day');
-                $relation->id_product = $id_product;
                 $relation->save(true);
-            }else{
-                Relation::updateRelationByProduct($_POST,$id_product);
             }
         }*/
     }

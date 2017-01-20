@@ -18,7 +18,7 @@ class AdminProvidersController extends ModuleAdminController {
         parent::__construct();
 
         $this->addRowAction('edit');
-        $this->addRowAction('delete');
+                $this->addRowAction('delete');
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
@@ -29,10 +29,12 @@ class AdminProvidersController extends ModuleAdminController {
 
         $this->fields_list = array(
             'id_providers' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'a!name'),
+            'name' => array('title' => $this->l('Name')),
             'description' => array('title' => $this->l('Description')),
-            'email' => array('title' => $this->l('Email'), 'filter_key' => 'a!email'),
+            'email' => array('title' => $this->l('Email')),
         );
+
+
     }
 
     public function renderForm()

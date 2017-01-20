@@ -200,8 +200,7 @@ $( document ).ready(function() {
     });
 
 
-
-    /*$('body').on('click','.check-product', function(e){
+    $('body').on('click','.check-product', function(e){
         e.preventDefault();
         $(this).addClass('hidden')
         $(this).closest('.badge').find('.remove-product').removeClass('hidden');
@@ -215,7 +214,7 @@ $( document ).ready(function() {
         $(this).closest('.badge').find('.check-product').removeClass('hidden');
         $(this).closest('.product').attr('data-save', '1');
     });
-*/
+
 
     $('#linkRelation').click(function(){
         var id_provider = $("input[name='id_providers']").val();
