@@ -3,7 +3,6 @@
 class AdminProvidersController extends ModuleAdminController {
 
 
-
     public function __construct()
     {
         $this->bootstrap = true;
@@ -34,7 +33,6 @@ class AdminProvidersController extends ModuleAdminController {
             'description' => array('title' => $this->l('Description')),
             'email' => array('title' => $this->l('Email'), 'filter_key' => 'a!email'),
         );
-
     }
 
     public function renderForm()

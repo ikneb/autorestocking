@@ -231,4 +231,17 @@ class Relation extends ObjectModel
         return $id_category['id_category_default'];
     }
 
+    public static function deleteRelationByIdRelation(){
+        $id_relation = Tools::getValue('id_relation');
+
+        $sql = 'DELETE FROM ' . _DB_PREFIX_ . 'autorestocking_relations
+         WHERE id_relations ='.$id_relation;
+
+        if (!Db::getInstance()->execute($sql))
+            return false;
+
+        return true;
+    }
+
+
 }

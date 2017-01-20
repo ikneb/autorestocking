@@ -25,7 +25,8 @@
                     <span class="title_box">Order day</span>
                 </th>
                 <th class="text-center">
-                        Update
+                </th>
+                <th class="text-center">
                 </th>
             </tr>
             </thead>
@@ -60,12 +61,15 @@
                                 <option value="7" {if $relation && $relation.order_day == 7}selected{/if}>Sun</option>
                             </select>
                         </td>
-                        <td class="text-center">
+                        <td class="text-right">
                             <button type="button" class="btn-xs btn btn-primary update-relation">Update</button>
+                        </td>
+                        <td class="text-left">
+                            <button type="button" class="btn-xs btn btn-primary delete-relation">Delete</button>
                         </td>
                     </tr>
                 {/foreach}
-                {if !empty($pages)}
+                {if $pages>1}
                     <nav aria-label="...">
                         <ul class="pagination pagination-sm" data-sel="{$select}" data-count="{$pages}">
                             <li class="page-item {if $select == 1}disabled{/if}">

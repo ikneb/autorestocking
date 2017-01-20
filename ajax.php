@@ -36,5 +36,8 @@ switch (Tools::getValue('ajax')) {
   case 8:
     echo Relation::getCategoryIdByProduct();
     break;
+  case 9:
+    echo Relation::deleteRelationByIdRelation();
+    break;
 }
 
