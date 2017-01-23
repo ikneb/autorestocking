@@ -54,3 +54,13 @@ input[type="number"]{
 .page-link{
     cursor: pointer;
 }
+.list-group-item .caret{
+
+    cursor: pointer;
+    width: 9px;
+    color: #00aff0;
+}
+
+.attribute-col-name{
+    margin-left: 40px;
+}

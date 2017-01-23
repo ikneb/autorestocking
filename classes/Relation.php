@@ -10,6 +10,10 @@ class Relation extends ObjectModel
 
     public $id_provider;
 
+    public $id_attribute;
+
+    public $name_combination;
+
     public $min_count;
 
     public $product_count;
@@ -31,7 +35,9 @@ class Relation extends ObjectModel
             'id_relations'                 =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'id_product'         =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'id_category'         =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'id_provider'        =>    array('type' => self::TYPE_NOTHING, 'validate' => 'isNullOrUnsignedId'),
+            'id_provider'        =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'id_product_attribute'        =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'name_combination' =>     array('type' =>self::TYPE_STRING ),
             'min_count'          =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'product_count'          =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'order_day'    =>    array('type' => self::TYPE_NOTHING),
@@ -96,7 +102,7 @@ class Relation extends ObjectModel
     }
 
     public  static function getAllProductByProviderId($smarty){
-        $limit = 5;
+        $limit = 10;
         $id_provider = Tools::getValue('id_provider');
         $page = (int)(Tools::getValue('page') ? Tools::getValue('page') : 1) ;
         $count_relation = Db::getInstance()->query(
@@ -204,12 +210,14 @@ class Relation extends ObjectModel
         }
         if(!empty($products)){
             foreach ($products as $product ) {
+                $id_attribute = isset($product['id_attribute']) ? $product['id_attribute'] : 0;
+                $name_combination = isset($product['name_combination']) ? $product['name_combination'] : '';
                 if(!in_array($product['id_product'],$change_product)) {
                     $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'autorestocking_relations
-                    ( id_product, id_category, id_provider,token)
+                    ( id_product, id_category, id_provider, id_attribute, name_combination, token)
                     VALUES(
                    ' . $product['id_product'] . ', ' . $product['id_category'] . ',
-                   ' . $product['id_provider'] . ',"' . md5(uniqid(rand(), true)) . '")';
+                   ' . $product['id_provider'] . ','. $id_attribute .', '. $name_combination .'"' . md5(uniqid(rand(), true)) . '")';
 
                     if (!Db::getInstance()->execute($sql))
                         return false;
@@ -243,5 +251,34 @@ class Relation extends ObjectModel
         return true;
     }
 
+
+    public static function getAttributeByIdProduct(){
+        $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $id_product = Tools::getValue('id_product');
+
+        $sql = "SELECT p.id_category_default, a.id_product_attribute, ac.id_attribute,
+        attr.id_attribute_group, GROUP_CONCAT(g.name,':',na.name) AS comb FROM
+        "._DB_PREFIX_."product p
+        INNER JOIN "._DB_PREFIX_."product_attribute a
+        ON p.id_product = a.id_product
+        INNER JOIN "._DB_PREFIX_."product_attribute_combination ac
+        ON a.id_product_attribute = ac.id_product_attribute
+        INNER JOIN "._DB_PREFIX_."attribute_lang na
+        ON na.id_attribute = ac.id_attribute
+        INNER JOIN "._DB_PREFIX_."attribute attr
+        ON attr.id_attribute = ac.id_attribute
+        INNER JOIN "._DB_PREFIX_."attribute_group_lang g
+        ON g.id_attribute_group = attr.id_attribute_group
+        WHERE p.id_product =". $id_product ." AND na.id_lang =" . $id_lang ."
+        AND g.id_lang =". $id_lang."
+        GROUP BY a.id_product_attribute
+		ORDER BY a.id_product_attribute";
+
+
+        $results = Db::getInstance()->executeS($sql);
+
+        return  $results;
+
+    }
 
 }

@@ -71,13 +71,43 @@ $( document ).ready(function() {
                                 throw new Error();
                             }
                         });
-                        $('.product-list').append("<li id='" + id_product + "' class='list-group-item justify-content-between product' data-cat='" + data + "' data-prod='" + id_product + "' data-save='1' data-name = " + name + "><span class='product-col'>" + id_product + "</span><span class='product-col-name'>" + name + "</span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
+                        $('.product-list').append("<li id='" + id_product + "' class='list-group-item justify-content-between product' data-cat='" + data + "' data-prod='" + id_product + "' data-save='1' data-name = " + name + "><span class='product-col'>" + id_product + "</span><span class='product-col-name'>" + name + "</span><span class='caret'></span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
                     }catch(e){
                         $('#ajax_confirmation').text('This product already added in list!').removeClass('hide alert-success').addClass('alert-danger');
                         setTimeout(function () {
                             $('#ajax_confirmation').addClass('hide');
                         }, 2000);
                     }
+                }
+            });
+        }
+    });
+
+
+    $('body').on('click', '.caret', function(){
+
+        var id_product = $(this).closest('.product').attr('data-prod');
+        var _this = $(this);
+        if(_this.hasClass('off')){
+
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: '/modules/autorestocking/ajax.php',
+                data: { id_product: id_product, ajax: 10 },
+                success: function(data){
+                    var data_decoder = JSON.parse(data);
+                    var attr = '';
+                    for(i = 0; i < data_decoder.length; i++) {
+                        attr += "<li class='list-group-item justify-content-between product attribute ' data-cat='" +
+                            data_decoder[i]['id_category_default'] + "' data-prod='" + id_product + "' data-save='1' data-name = " +
+                            name + " data-attr=" + data_decoder[i]['id_product_attribute'] + " ><span class='product-col'></span><span class='attribute-col-name'>" +
+                            name + "(" + data_decoder[i]['comb'] + ")</span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>";
+                    }
+                    _this.addClass('off');
+                    _this.closest('li').after(function(){
+                        return attr;
+                    });
                 }
             });
         }
@@ -104,9 +134,9 @@ $( document ).ready(function() {
                         });
                         $('span', ps.eq(i)).removeClass(class_checked);
                     }else if (_this.is(':checked')){
-                        $('> span > input[type="checkbox"]', ps.eq(i)).attr({
+                        /*$('> span > input[type="checkbox"]', ps.eq(i)).attr({
                             checked: true
-                        }).parent().addClass(class_checked);
+                        }).parent().addClass(class_checked);*/
                     };
                 }
             }
@@ -122,22 +152,22 @@ $( document ).ready(function() {
             if($(this).attr('data-save') == 1) {
                 products[index] = {
                     'id_provider':  $("input[name='id_providers']").val(),
-                    'name':        $(this).attr('data-name'),
                     'id_product':  $(this).attr('data-prod'),
-                    'id_category': $(this).attr('data-cat')
+                    'id_category': $(this).attr('data-cat'),
+                    'id_attribute': $(this).attr('data-attr'),
+                    'name_combination' : $(this).children('.attribute-col-name').text()
                 };
             }
         });
+
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
             data: { products: products, ajax: 6 , id_provider: id_provider },
             success: function(data){
-                console.log(data);
                 checkReturnData(data);
             }
         });
-
     });
 
 
@@ -160,7 +190,13 @@ $( document ).ready(function() {
                             product_list[i] = $(this).attr('data-prod');
                         });
                         if(product_list.length == 0 || product_list.indexOf(products[i][0]['id_product']) == -1){
-                            $('.product-list').append("<li id='" + products[i][0]['id_product'] + "' class='list-group-item justify-content-between product' data-cat='" + products[i][0]['id_category_default'] + "' data-prod='" + products[i][0]['id_product'] + "' data-save='1' data-name = " + products[i][0]['name'] + "><span class='product-col'>"+ products[i][0]['id_product']+"</span><span class='product-col-name'>" + products[i][0]['name'] + "</span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
+                            $('.product-list').append("<li id='product_" + products[i][0]['id_product']
+                                + "' class='list-group-item justify-content-between product' data-cat='" +
+                                products[i][0]['id_category_default'] + "' data-prod='" +
+                                products[i][0]['id_product'] + "' data-save='1' data-name = " +
+                                products[i][0]['name'] + "><span class='product-col'>"+
+                                products[i][0]['id_product']+"</span><span class='product-col-name'>" +
+                                products[i][0]['name'] + "</span><span class='caret'></span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
                         }
                     }
                 }
@@ -171,7 +207,7 @@ $( document ).ready(function() {
                 categories[i] = $(this).val();
             });
             if(categories.length == 0){
-                $('#product-list').text('');
+                $('.product').remove();
             }else{
                 $.ajax({
                     type: 'POST',
