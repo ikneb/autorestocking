@@ -165,6 +165,7 @@ $( document ).ready(function() {
             url: '/modules/autorestocking/ajax.php',
             data: { products: products, ajax: 6 , id_provider: id_provider },
             success: function(data){
+                console.log(data);
                 checkReturnData(data);
             }
         });

@@ -214,10 +214,10 @@ class Relation extends ObjectModel
                 $name_combination = isset($product['name_combination']) ? $product['name_combination'] : '';
                 if(!in_array($product['id_product'],$change_product)) {
                     $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'autorestocking_relations
-                    ( id_product, id_category, id_provider, id_attribute, name_combination, token)
+                    ( id_product, id_category, id_provider, id_product_attribute, name_combination, token)
                     VALUES(
                    ' . $product['id_product'] . ', ' . $product['id_category'] . ',
-                   ' . $product['id_provider'] . ','. $id_attribute .', '. $name_combination .'"' . md5(uniqid(rand(), true)) . '")';
+                   ' . $product['id_provider'] . ','. $id_attribute .', "'. $name_combination .'","' . md5(uniqid(rand(), true)) . '")';
 
                     if (!Db::getInstance()->execute($sql))
                         return false;
