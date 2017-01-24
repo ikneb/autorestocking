@@ -38,10 +38,10 @@
                             {$relation.id_relations}
                         </td>
                         <td class="pointer text-left">
-                            {$relation.name}({$relation.name_combination})
+                            {$relation.name} {$relation.name_combination}
                         </td>
                         <td class="pointer text-center">
-                            {$relation.quantity}
+                           {if $relation.id_product_attribute == 0}{$relation.product_quantity}{else}{$relation.attribute_quantity}{/if}
                         </td>
                         <td class="pointer text-center">
                                 <input type="number" name="min_count" id="min_count" value="{$relation.min_count}">

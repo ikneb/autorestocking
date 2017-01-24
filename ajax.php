@@ -42,5 +42,9 @@ switch (Tools::getValue('ajax')) {
   case 10:
     echo Tools::jsonEncode(Relation::getAttributeByIdProduct(Tools::getValue('id_product')));
     break;
+  case 11:
+    $product = new Product(Tools::getValue('id_products'));
+    echo $product->hasAttributes();
+    break;
 }
 
