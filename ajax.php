@@ -40,7 +40,7 @@ switch (Tools::getValue('ajax')) {
     echo Relation::deleteRelationByIdRelation();
     break;
   case 10:
-    echo Tools::jsonEncode(Relation::getAttributeByIdProduct());
+    echo Tools::jsonEncode(Relation::getAttributeByIdProduct(Tools::getValue('id_product')));
     break;
 }
 

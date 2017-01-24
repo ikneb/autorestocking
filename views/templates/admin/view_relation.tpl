@@ -38,7 +38,7 @@
                             {$relation.id_relations}
                         </td>
                         <td class="pointer text-left">
-                            {$relation.name}
+                            {$relation.name}({$relation.name_combination})
                         </td>
                         <td class="pointer text-center">
                             {$relation.quantity}

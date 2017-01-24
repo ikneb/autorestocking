@@ -60,7 +60,7 @@ class Relation extends ObjectModel
         $db = Db::getInstance();
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
-        $sql = "SELECT r.id_relations,r.id_product,r.id_provider,r.min_count,
+        $sql = "SELECT r.id_relations,r.id_product,r.id_provider, r.min_count, r.name_combination,
         r.product_count,r.order_day,l.name,p.quantity
         FROM "._DB_PREFIX_."autorestocking_relations r
         LEFT JOIN " . _DB_PREFIX_ . "product p
@@ -199,34 +199,54 @@ class Relation extends ObjectModel
 
     public static function saveRelationProductByProvider(){
         $products = Tools::getValue('products');
-        $id_provider = Tools::getValue('id_provider');
-        $sql = $sql = 'SELECT id_product FROM
+        $attr = array();
+        $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $id_provider = (int)Tools::getValue('id_provider');
+        $sql = $sql = 'SELECT id_product, id_product_attribute FROM
         '._DB_PREFIX_.'autorestocking_relations
         WHERE id_provider ='. $id_provider ;
         $all_product = Db::getInstance()->executeS($sql);
         $change_product = array();
+        $change_attribute = array();
         foreach ($all_product as $product) {
             $change_product[] = $product['id_product'];
+            $change_attribute[] = $product['id_product_attribute'];
         }
         if(!empty($products)){
             foreach ($products as $product ) {
-                $id_attribute = isset($product['id_attribute']) ? $product['id_attribute'] : 0;
-                $name_combination = isset($product['name_combination']) ? $product['name_combination'] : '';
-                if(!in_array($product['id_product'],$change_product)) {
-                    $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'autorestocking_relations
-                    ( id_product, id_category, id_provider, id_product_attribute, name_combination, token)
-                    VALUES(
-                   ' . $product['id_product'] . ', ' . $product['id_category'] . ',
-                   ' . $product['id_provider'] . ','. $id_attribute .', "'. $name_combination .'","' . md5(uniqid(rand(), true)) . '")';
+                if($product['data_save'] == 1) {
+                    $id_attribute = isset($product['id_attribute']) ? $product['id_attribute'] : 0;
+                    $name_combination = isset($product['name_combination']) ? $product['name_combination'] : '';
+                    if($id_attribute == 0){
+                        $attributes = self::getAttributeByIdProduct($product['id_product']);
+                        if(!empty($attributes)){
+                            foreach ($attributes as $attribute){
+                                $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'autorestocking_relations
+                                ( id_product, id_category, id_provider, id_product_attribute, name_combination, token)
+                                VALUES(
+                                  ' . $product['id_product'] . ', ' . $product['id_category'] . ',
+                                  ' . $product['id_provider'] . ',' . $attribute['id_product_attribute'] . ',
+                                   "' . htmlspecialchars($attribute['comb']) . '","' . md5(uniqid(rand(), true)) . '")';
+                                if (!Db::getInstance()->execute($sql))
+                                    return false;
+                            }
+                        }elseif (!in_array($product['id_product'], $change_product)) {
+                            $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'autorestocking_relations
+                            ( id_product, id_category, id_provider, id_product_attribute, name_combination, token)
+                            VALUES(
+                              ' . $product['id_product'] . ', ' . $product['id_category'] . ',
+                              ' . $product['id_provider'] . ',' . $id_attribute . ', "' . htmlspecialchars($name_combination) . '","' . md5(uniqid(rand(), true)) . '")';
 
-                    if (!Db::getInstance()->execute($sql))
-                        return false;
+                            if (!Db::getInstance()->execute($sql))
+                                return false;
+                        }
+                    }
                 }
             }
         }else{
             return false;
         }
-        return $change_product;
+        return $attr;
     }
 
     public static function getCategoryIdByProduct(){
@@ -252,9 +272,8 @@ class Relation extends ObjectModel
     }
 
 
-    public static function getAttributeByIdProduct(){
+    public static function getAttributeByIdProduct($id_product){
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-        $id_product = Tools::getValue('id_product');
 
         $sql = "SELECT p.id_category_default, a.id_product_attribute, ac.id_attribute,
         attr.id_attribute_group, GROUP_CONCAT(g.name,':',na.name) AS comb FROM

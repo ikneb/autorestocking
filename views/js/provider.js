@@ -89,7 +89,7 @@ $( document ).ready(function() {
         var id_product = $(this).closest('.product').attr('data-prod');
         var _this = $(this);
         if(_this.hasClass('off')){
-
+            _this.closest('.product').attr('data-save', '1');
         }else{
             $.ajax({
                 type: 'POST',
@@ -101,13 +101,14 @@ $( document ).ready(function() {
                     for(i = 0; i < data_decoder.length; i++) {
                         attr += "<li class='list-group-item justify-content-between product attribute ' data-cat='" +
                             data_decoder[i]['id_category_default'] + "' data-prod='" + id_product + "' data-save='1' data-name = " +
-                            name + " data-attr=" + data_decoder[i]['id_product_attribute'] + " ><span class='product-col'></span><span class='attribute-col-name'>" +
+                            data_decoder[i]['comb'] + " data-attr=" + data_decoder[i]['id_product_attribute'] + " ><span class='product-col'></span><span class='attribute-col-name'>" +
                             name + "(" + data_decoder[i]['comb'] + ")</span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>";
                     }
                     _this.addClass('off');
                     _this.closest('li').after(function(){
                         return attr;
                     });
+                    _this.closest('.product').attr('data-save', '0');
                 }
             });
         }
@@ -149,17 +150,17 @@ $( document ).ready(function() {
         var id_provider = $("input[name='id_providers']").val();
 
         $('#product-list').find('.product').each(function(index){
-            if($(this).attr('data-save') == 1) {
+
                 products[index] = {
                     'id_provider':  $("input[name='id_providers']").val(),
                     'id_product':  $(this).attr('data-prod'),
                     'id_category': $(this).attr('data-cat'),
                     'id_attribute': $(this).attr('data-attr'),
-                    'name_combination' : $(this).children('.attribute-col-name').text()
+                    'name_combination' : $(this).children('.attribute-col-name').text(),
+                    'data_save' : $(this).attr('data-save')
                 };
-            }
-        });
 
+        });
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
@@ -241,7 +242,7 @@ $( document ).ready(function() {
         e.preventDefault();
         $(this).addClass('hidden')
         $(this).closest('.badge').find('.remove-product').removeClass('hidden');
-        $(this).closest('.product').attr('data-save', '0');
+        $(this).closest('.product').attr('data-save', 0);
 
     });
 
@@ -249,7 +250,7 @@ $( document ).ready(function() {
         e.preventDefault();
         $(this).addClass('hidden')
         $(this).closest('.badge').find('.check-product').removeClass('hidden');
-        $(this).closest('.product').attr('data-save', '1');
+        $(this).closest('.product').attr('data-save', 1);
     });
 
 
