@@ -106,34 +106,44 @@ class AutoRestocking extends Module
 
     public function hookDisplayBackOfficeHeader() {
         $this->context->controller->addCss($this->_path.'views/css/autorestocking.css');
+        $this->context->controller->addJquery();
         $this->context->controller->addJS($this->_path.'views/js/product_tab.js');
     }
 
     public function hookDisplayAdminProductsExtra($params) {
-        $id_product = Tools::getValue('id_product');
+
+        if(version_compare(_PS_VERSION_,'1.7','<')){
+            $id_product = Tools::getValue('id_product');
+        }else{
+            $id_product = Tools::getValue('id_product',$params['id_product']);
+        }
+
         $product  = new Product($id_product);
         $has_combination = $product->hasAttributes();
         $providers = Providers::getAll();
+
         $autorestocking = $has_combination ? Relation::getAllByProductId($id_product) : Relation::getRowByProductId($id_product);
         $combination = $autorestocking ? Relation::getCombinationAndReelation($id_product) : Relation::getAttributeByIdProduct($id_product);
-//        var_dump($combination);exit;
         $this->smarty->assign(array(
             'providers' => $providers,
             'relations' => $autorestocking,
             'has_combination' => $has_combination,
             'has_comb_tpl' => _PS_MODULE_DIR_.'autorestocking/views/templates/admin/has_comb.tpl',
             'not_comb_tpl' => _PS_MODULE_DIR_.'autorestocking/views/templates/admin/not_comb.tpl',
-            'combinations' => $combination
+            'has_comb_tpl_new' => _PS_MODULE_DIR_.'autorestocking/views/templates/admin/has_comb_new.tpl',
+            'not_comb_tpl_new' => _PS_MODULE_DIR_.'autorestocking/views/templates/admin/not_comb_new.tpl',
+            'combinations' => $combination,
+            'version' => version_compare(_PS_VERSION_,'1.7','<')
         ));
+
         return $this->display(__FILE__, 'views/templates/admin/product_tab.tpl');
 
     }
 
     public function postProcess() {
-
         if (Tools::isSubmit('submitAddproduct')
             || Tools::isSubmit('submitAddproductAndStay')){
-            $id_product = Tools::getValue('id_product');
+                $id_product = Tools::getValue('id_product');
             if($id_product){
                 $product = new Product($id_product);
                 $has_combination = $product->hasAttributes();

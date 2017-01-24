@@ -68,3 +68,7 @@ input[type="number"]{
 .no-active{
     display: none !important;
 }
+
+#module_autorestocking .save-relation-new{
+    margin-top: 32px;
+}
