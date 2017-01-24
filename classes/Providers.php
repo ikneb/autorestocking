@@ -49,7 +49,7 @@ class Providers extends ObjectModel
     }
 
     public static function updateProvider(){
-        $id_providers = Tools::getValue('id_providers');
+        $id_providers = Tools::getValue('id_provider');
         $description = Tools::getValue('description');
         $name = Tools::getValue('name');
         $email = Tools::getValue('email');

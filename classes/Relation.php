@@ -46,11 +46,21 @@ class Relation extends ObjectModel
         ),
     );
 
-    public static function getByProductId($id_product){
+    public static function getRowByProductId($id_product){
         $db = Db::getInstance();
         $sql = "SELECT * FROM `"._DB_PREFIX_."autorestocking_relations` WHERE `id_product` =".$id_product;
 
         if(!$result=$db->getRow($sql))
+            return false;
+
+        return $result;
+    }
+
+    public static function getAllByProductId($id_product){
+        $db = Db::getInstance();
+        $sql = "SELECT * FROM `"._DB_PREFIX_."autorestocking_relations` WHERE `id_product` =".$id_product;
+
+        if(!$result=$db->executeS($sql))
             return false;
 
         return $result;
@@ -281,7 +291,7 @@ class Relation extends ObjectModel
     public static function getAttributeByIdProduct($id_product){
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
-        $sql = "SELECT p.id_category_default, a.id_product_attribute, ac.id_attribute,
+        $sql = "SELECT p.id_category_default,p.id_product, a.id_product_attribute, ac.id_attribute,
         attr.id_attribute_group, GROUP_CONCAT(g.name,':',na.name) AS comb FROM
         "._DB_PREFIX_."product p
         INNER JOIN "._DB_PREFIX_."product_attribute a
@@ -303,7 +313,82 @@ class Relation extends ObjectModel
         $results = Db::getInstance()->executeS($sql);
 
         return  $results;
-
     }
 
+    public static function getCombinationAndReelation($id_product){
+        $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+
+        $sql = "SELECT p.id_category_default, r.id_provider, r.id_relations, r.min_count,
+        r.product_count, r.order_day,p.id_product, a.id_product_attribute, ac.id_attribute,
+        attr.id_attribute_group, GROUP_CONCAT(g.name,':',na.name) AS comb FROM
+        "._DB_PREFIX_."product p
+        LEFT JOIN "._DB_PREFIX_."product_attribute a
+        ON p.id_product = a.id_product
+        LEFT JOIN "._DB_PREFIX_."product_attribute_combination ac
+        ON a.id_product_attribute = ac.id_product_attribute
+        LEFT JOIN "._DB_PREFIX_."autorestocking_relations r
+        ON ac.id_product_attribute = r.id_product_attribute
+        LEFT JOIN "._DB_PREFIX_."attribute_lang na
+        ON na.id_attribute = ac.id_attribute
+        LEFT JOIN "._DB_PREFIX_."attribute attr
+        ON attr.id_attribute = ac.id_attribute
+        LEFT JOIN "._DB_PREFIX_."attribute_group_lang g
+        ON g.id_attribute_group = attr.id_attribute_group
+        WHERE p.id_product =". $id_product ." AND na.id_lang =" . $id_lang ."
+        AND g.id_lang =". $id_lang."
+        GROUP BY a.id_product_attribute
+		ORDER BY a.id_product_attribute";
+
+
+        $results = Db::getInstance()->executeS($sql);
+
+        return  $results;
+    }
+
+    public static function saveRelationCombination(){
+        $id_product = Tools::getValue('id_product');
+        $id_provider = Tools::getValue('id_provider');
+        $min_count = Tools::getValue('min_count');
+        $product_count = Tools::getValue('product_count');
+        $order_day = Tools::getValue('order_day');
+        $id_attribute = Tools::getValue('id_attribute');
+        $name_combination = Tools::getValue('name_combination');
+        $id_category = Tools::getValue('id_category');
+        $id_relation = Tools::getValue('id_relation');
+
+        /*return $name_combination;*/
+
+        if($id_relation){
+            $sql = "UPDATE "._DB_PREFIX_."autorestocking_relations
+                SET min_count = ".$min_count.",
+                id_product = ".$id_product.",
+                id_provider = ".$id_provider.",
+                id_product_attribute = ".$id_attribute.",
+                name_combination = '".htmlspecialchars($name_combination)."',
+                id_category = ".$id_category.",
+                order_day =  ".$order_day.",
+                product_count = ".$product_count."
+                WHERE id_relations = " . $id_relation;
+
+            if (!Db::getInstance()->execute($sql))
+                return false;
+
+            return true;
+        }else{
+            $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'autorestocking_relations
+                ( id_product, id_category, id_provider, min_count,
+                product_count , order_day,
+                id_product_attribute, name_combination, token)
+                VALUES(' . $id_product . ',' . $id_category . ',
+                       ' . $id_provider . ',' . $min_count . ',
+                       ' . $product_count . ',' . $order_day . ',
+                       ' . $id_attribute . ', "' . htmlspecialchars($name_combination) . '","' . md5(uniqid(rand(), true)) . '")';
+
+            if (!Db::getInstance()->execute($sql))
+                return false;
+            $id_insert = Db::getInstance()->Insert_ID();
+            return $id_insert;
+        }
+
+    }
 }

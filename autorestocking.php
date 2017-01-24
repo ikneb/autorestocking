@@ -106,52 +106,58 @@ class AutoRestocking extends Module
 
     public function hookDisplayBackOfficeHeader() {
         $this->context->controller->addCss($this->_path.'views/css/autorestocking.css');
+        $this->context->controller->addJS($this->_path.'views/js/product_tab.js');
     }
 
     public function hookDisplayAdminProductsExtra($params) {
-        /*$id_product = Tools::getValue('id_product');
+        $id_product = Tools::getValue('id_product');
+        $product  = new Product($id_product);
+        $has_combination = $product->hasAttributes();
         $providers = Providers::getAll();
-        $autorestocking = Relation::getByProductId($id_product);
-        $fields_form[0]['form'] = array(
-            'input' => array(
-                array(
-                    'type' => 'text',
-                    'name' => 'shipping_method',
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->l('Save'),
-                'class' => 'button'
-            )
-        );
+        $autorestocking = $has_combination ? Relation::getAllByProductId($id_product) : Relation::getRowByProductId($id_product);
+        $combination = $autorestocking ? Relation::getCombinationAndReelation($id_product) : Relation::getAttributeByIdProduct($id_product);
+//        var_dump($combination);exit;
         $this->smarty->assign(array(
             'providers' => $providers,
-            'relation' => $autorestocking
+            'relations' => $autorestocking,
+            'has_combination' => $has_combination,
+            'has_comb_tpl' => _PS_MODULE_DIR_.'autorestocking/views/templates/admin/has_comb.tpl',
+            'not_comb_tpl' => _PS_MODULE_DIR_.'autorestocking/views/templates/admin/not_comb.tpl',
+            'combinations' => $combination
         ));
-        return $this->display(__FILE__, 'views/templates/admin/product_tab.tpl');*/
+        return $this->display(__FILE__, 'views/templates/admin/product_tab.tpl');
 
     }
 
     public function postProcess() {
 
-        /*if (Tools::isSubmit('submitAddproduct')
+        if (Tools::isSubmit('submitAddproduct')
             || Tools::isSubmit('submitAddproductAndStay')){
             $id_product = Tools::getValue('id_product');
             if($id_product){
-                $rel_row = Relation::getByProductId($id_product);
-                if($rel_row){
-                    $relation = new Relation($rel_row['id']);
-                } else {
-                    $relation = new Relation();
-                    $relation->product_id = $id_product;
+                $product = new Product($id_product);
+                $has_combination = $product->hasAttributes();
+                if($has_combination){
+
+
+                }else{
+                    $rel_row = Relation::getRowByProductId($id_product);
+                    if($rel_row){
+                        $relation = new Relation($rel_row['id_relations']);
+                    } else {
+                        $relation = new Relation();
+                        $relation->id_product = $id_product;
+                    }
+                    $relation->id_provider= Tools::getValue('id_provider');
+                    $relation->min_count = Tools::getValue('min_count');
+                    $relation->product_count = Tools::getValue('product_count');
+                    $relation->order_day = Tools::getValue('order_day');
+                    $relation->name_combination = 0;
+                    $relation->token = md5(uniqid(rand(), true));
+                    $relation->save(true);
                 }
-                $relation->id_provider= Tools::getValue('id_provider');
-                $relation->min_count = Tools::getValue('min_count');
-                $relation->product_count = Tools::getValue('product_count');
-                $relation->order_day = Tools::getValue('order_day');
-                $relation->save(true);
             }
-        }*/
+        }
     }
 
 

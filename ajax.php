@@ -18,7 +18,7 @@ switch (Tools::getValue('ajax')) {
     echo Relation::updateRelation();
     break;
   case 4:
-    if (Tools::getValue('id_providers') == null) {
+    if (Tools::getValue('id_provider') == null) {
       echo Providers::insertProviderReturnId();
     } else {
       echo Providers::updateProvider();
@@ -43,8 +43,11 @@ switch (Tools::getValue('ajax')) {
     echo Tools::jsonEncode(Relation::getAttributeByIdProduct(Tools::getValue('id_product')));
     break;
   case 11:
-    $product = new Product(Tools::getValue('id_products'));
-    echo $product->hasAttributes();
+    /*$product = new Product(Tools::getValue('id_products'));
+    echo $product->hasAttributes();*/
+    break;
+  case 12:
+    echo Relation::saveRelationCombination();
     break;
 }
 
