@@ -1,4 +1,8 @@
-<div class="row">
+<div class="row product-tab" data-atrt="0"
+     data-cat="{$relations.id_category}"
+     data-rel="{if $relations.id_relations}{$relations.id_relations}{/if}"
+     data-comb="{$relations.comb}"
+     data-prod="{$relations.id_product}">
     <div class="col-md-3">
         <label class="form-control-label">Provider</label>
         <select id="id_provider" name="id_provider" class="form-control select2-hidden-accessible" data-toggle="select2" tabindex="-1" aria-hidden="true">
@@ -22,7 +26,7 @@
 
     <div class="col-md-3">
         <label class="form-control-label">Send</label>
-        <select id="order_day" name="order_day" class="form-control select2-hidden-accessible" data-toggle="select2" aria-hidden="true">
+        <select id="order_day" name="order_day" class="form-control select2-hidden-accessible selectpicker" data-toggle="select2" aria-hidden="true">
             <option value="0"></option>
             <option value="1" {if $relations && $relations.order_day == 1}selected{/if}>Mon</option>
             <option value="2" {if $relations && $relations.order_day == 2}selected{/if}>Tue</option>
@@ -35,6 +39,6 @@
     </div>
     <div class="col-md-2">
         <label class="form-control-label"></label>
-        <input  type="submit" class="btn btn-primary save uppercase save-relation-new" value="Save" >
+        <input  type="submit" class="btn btn-primary save uppercase save-relation-new submitCombination" value="Save" >
     </div>
 </div>

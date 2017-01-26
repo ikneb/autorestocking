@@ -33,7 +33,6 @@ $( document ).ready(function() {
                 checkReturnData(data);
             }
         });
-
     });
 
     function checkReturnData(data){

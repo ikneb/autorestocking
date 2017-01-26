@@ -123,6 +123,7 @@ class AutoRestocking extends Module
         $providers = Providers::getAll();
 
         $autorestocking = $has_combination ? Relation::getAllByProductId($id_product) : Relation::getRowByProductId($id_product);
+
         $combination = $autorestocking ? Relation::getCombinationAndReelation($id_product) : Relation::getAttributeByIdProduct($id_product);
         $this->smarty->assign(array(
             'providers' => $providers,

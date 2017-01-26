@@ -350,13 +350,12 @@ class Relation extends ObjectModel
         $id_provider = Tools::getValue('id_provider');
         $min_count = Tools::getValue('min_count');
         $product_count = Tools::getValue('product_count');
-        $order_day = Tools::getValue('order_day');
+        $order_day = Tools::getValue('order_day')+1;
         $id_attribute = Tools::getValue('id_attribute');
         $name_combination = Tools::getValue('name_combination');
         $id_category = Tools::getValue('id_category');
         $id_relation = Tools::getValue('id_relation');
 
-        /*return $name_combination;*/
 
         if($id_relation){
             $sql = "UPDATE "._DB_PREFIX_."autorestocking_relations
@@ -368,7 +367,7 @@ class Relation extends ObjectModel
                 id_category = ".$id_category.",
                 order_day =  ".$order_day.",
                 product_count = ".$product_count."
-                WHERE id_relations = " . $id_relation;
+                WHERE id_relations = ". $id_relation;
 
             if (!Db::getInstance()->execute($sql))
                 return false;
