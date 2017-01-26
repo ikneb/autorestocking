@@ -137,7 +137,7 @@ class Relation extends ObjectModel
             return $smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/view_relation.tpl');
     }
 
-    
+
     public static function updateRelation(){
         $min_count = Tools::getValue('min_count');
         $order_day = Tools::getValue('order_day') + 1;
@@ -187,8 +187,8 @@ class Relation extends ObjectModel
         LEFT JOIN '._DB_PREFIX_.'product_lang pl
         ON p.id_product=pl.id_product
         WHERE p.id_category_default='.$id_category.' AND pl.id_lang='.$id_lang;
-
         return Db::getInstance()->executeS($sql);
+
     }
 
     public static function getProductsAllCategories(){
@@ -202,8 +202,10 @@ class Relation extends ObjectModel
                         $result[][0] = $prod;
                     }
                 }else{
+
                     $result[] = $product;
                }
+
             }
         }
         return $result;
@@ -211,7 +213,6 @@ class Relation extends ObjectModel
 
     public static function saveRelationProductByProvider(){
         $products = Tools::getValue('products');
-        $attr = array();
         $id_provider = (int)Tools::getValue('id_provider');
         $sql = $sql = 'SELECT id_product, id_product_attribute FROM
         '._DB_PREFIX_.'autorestocking_relations
@@ -219,13 +220,16 @@ class Relation extends ObjectModel
         $all_product = Db::getInstance()->executeS($sql);
         $check_product = array();
         $check_attribute = array();
+        $check_delete = array();
         foreach ($all_product as $product) {
             $check_product[] = $product['id_product'];
             $check_attribute[] = $product['id_product_attribute'];
         }
+
         if(!empty($products)){
             foreach ($products as $product ) {
                 if($product['data_save'] == 1) {
+                    $check_delete[]=isset($product['id_attribute']);
                     $id_attribute = isset($product['id_attribute']) ? $product['id_attribute'] : 0;
                     $name_combination = isset($product['name_combination']) ? $product['name_combination'] : '';
                     if($id_attribute == 0){
@@ -233,8 +237,8 @@ class Relation extends ObjectModel
                         if(!empty($attributes)){
                             foreach ($attributes as $attribute){
                                 if(!in_array($attribute['id_product_attribute'], $check_attribute)) {
-                                    self::insertRelationWithAttribute($product['id_product'], $product['id_category'], $product['id_provider'], $attribute['id_product_attribute'], $attribute['comb']
-                                    );
+                                    self::insertRelationWithAttribute($product['id_product'], $product['id_category'],
+                                        $product['id_provider'], $attribute['id_product_attribute'], $attribute['comb']);
                                 }
                             }
                         }elseif (!in_array($product['id_product'], $check_product)) {
@@ -246,19 +250,29 @@ class Relation extends ObjectModel
                         );
                     }
                 }
+                if($product['data_save'] == 0 && $product['id_attribute'] != 0){
+                    $sql = 'DELETE FROM ' . _DB_PREFIX_ . 'autorestocking_relations
+                     WHERE id_product_attribute ='.$product['id_attribute'];
+
+                    if (!Db::getInstance()->execute($sql))
+                        return false;
+                }
+
             }
+
         }else{
             return false;
         }
-        return $attr;
+        return $products;
     }
 
     public static function insertRelationWithAttribute($id_product, $id_category, $id_provider, $id_attribute, $name_combination){
         $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'autorestocking_relations
-                            ( id_product, id_category, id_provider, id_product_attribute, name_combination, token)
-                            VALUES(
-                              ' . $id_product . ', ' . $id_category . ',
-                              ' . $id_provider . ',' . $id_attribute . ', "' . htmlspecialchars($name_combination) . '","' . md5(uniqid(rand(), true)) . '")';
+                ( id_product, id_category, id_provider, id_product_attribute, name_combination, token)
+                  VALUES(
+                 ' . $id_product . ', ' . $id_category . ',
+                 ' . $id_provider . ',' . $id_attribute . ',
+                 "' . htmlspecialchars($name_combination) . '","' . md5(uniqid(rand(), true)) . '")';
 
         if (!Db::getInstance()->execute($sql))
             return false;

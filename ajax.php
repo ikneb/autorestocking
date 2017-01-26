@@ -31,10 +31,10 @@ switch (Tools::getValue('ajax')) {
    print_r(Relation::saveRelationProductByProvider());
     break;
   case 7:
-   echo Tools::jsonEncode(Relation::getProductsAllCategories());
+   print_r(Tools::jsonEncode(Relation::getProductsAllCategories()));
     break;
   case 8:
-    echo Relation::getCategoryIdByProduct();
+    echo Tools::jsonEncode(Relation::getCategoryIdByProduct());
     break;
   case 9:
     echo Relation::deleteRelationByIdRelation();

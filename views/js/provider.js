@@ -65,20 +65,21 @@ $( document ).ready(function() {
                 url: '/modules/autorestocking/ajax.php',
                 data: { id_product: id_product, ajax: 8  },
                 success: function(data){
+                    console.log(data);
+                    data = JSON.parse(data);
                     try {
                         $('.product').each(function (i) {
                             if ($(this).attr('data-prod') == id_product) {
                                 throw new Error();
                             }
                         });
-                        var attributeSpan = "<span class='caret'></span>";
                         $('.product-list').append("<li id='" +
                             id_product + "' class='list-group-item justify-content-between product' data-cat='" +
                             data + "' data-prod='" +
                             id_product + "' data-save='1' data-name = " +
                             name + "><span class='product-col'>" +
                             id_product + "</span><span class='product-col-name'>" +
-                            name + "</span>"+ attributeSpan +"<span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
+                            name + "</span><span class='caret-attr'></span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
                     }catch(e){
                         $('#ajax_confirmation').text('This product already added in list!').removeClass('hide alert-success').addClass('alert-danger');
                         setTimeout(function () {
@@ -90,24 +91,8 @@ $( document ).ready(function() {
         }
     });
 
-    /*function checkAttribute(id_products){
 
-        $.ajax({
-            type: 'POST',
-            url: '/modules/autorestocking/ajax.php',
-            data: { id_products: id_products, ajax: 11},
-            success: function(data){
-                if(data){
-                    window.attributeSpan =   "<span class='caret'></span>";
-                }
-            }
-        });
-        console.log(attributeSpan);
-        return attributeSpan;
-    }*/
-
-    $('body').on('click', '.caret', function(){
-
+    $('body').on('click', '.caret-attr', function(){
         var id_product = $(this).closest('.product').attr('data-prod');
         var _this = $(this);
         if(_this.hasClass('off')){
@@ -135,17 +120,23 @@ $( document ).ready(function() {
                     success: function(data){
                         var data_decoder = JSON.parse(data);
                         var attr = '';
-                        for(i = 0; i < data_decoder.length; i++) {
-                            attr += "<li class='list-group-item justify-content-between product attribute ' data-cat='" +
-                                data_decoder[i]['id_category_default'] + "' data-prod='" + id_product + "' data-save='1' data-name = " +
-                                data_decoder[i]['comb'] + " data-attr=" + data_decoder[i]['id_product_attribute'] + " ><span class='product-col'></span><span class='attribute-col-name'>" +
-                                name + "(" + data_decoder[i]['comb'] + ")</span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>";
+                        if(data_decoder.length == 0){
+                            attr = "<li class='list-group-item justify-content-between product attribute' data-prod='" + id_product + "'><span class='not-attribute'>You need add attributes and combinations</span></li>";
+                        }else {
+                            for (i = 0; i < data_decoder.length; i++) {
+                                attr += "<li class='list-group-item justify-content-between product attribute ' data-cat='" +
+                                    data_decoder[i]['id_category_default'] + "' data-prod='" + id_product + "' data-save='1' data-name = " +
+                                    data_decoder[i]['comb'] + " data-attr=" + data_decoder[i]['id_product_attribute'] + " ><span class='product-col'></span><span class='attribute-col-name'>" +
+                                    name + "(" + data_decoder[i]['comb'] + ")</span><span class='badge badge-default badge-pill'><i class='icon-check check-attribute'></i><i class='icon-remove remove-attribute hidden'></i></span></li>";
+                            }
+
                         }
                         _this.addClass('off');
                         _this.closest('li').after(function(){
                             return attr;
                         });
                         _this.closest('.product').attr('data-save', '0');
+                        _this.closest('.product').find('.check-product').addClass('no-active');
                     }
                 });
             }
@@ -217,20 +208,28 @@ $( document ).ready(function() {
                 url: '/modules/autorestocking/ajax.php',
                 data: {categories: categories, ajax: 7},
                 success: function(data){
-                   var products = JSON.parse(data);
+                    var products = JSON.parse(data);
+                    console.log(products);
                     var product_list = [];
                     for(i = 0; i < products.length; i++) {
-                        $('.product').each(function (i) {
-                            product_list[i] = $(this).attr('data-prod');
-                        });
-                        if(product_list.length == 0 || product_list.indexOf(products[i][0]['id_product']) == -1){
-                            $('.product-list').append("<li id='product_" + products[i][0]['id_product']
-                                + "' class='list-group-item justify-content-between product' data-cat='" +
-                                products[i][0]['id_category_default'] + "' data-prod='" +
-                                products[i][0]['id_product'] + "' data-save='1' data-name = " +
-                                products[i][0]['name'] + "><span class='product-col'>"+
-                                products[i][0]['id_product']+"</span><span class='product-col-name'>" +
-                                products[i][0]['name'] + "</span><span class='caret'></span><span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
+                        if(products[i][0]['id_product'] != null) {
+                            if (products[i][0]['count'] != 0) {
+                                var attributeSpan = "<span class='caret-attr'></span>";
+                            } else {
+                                var attributeSpan = "";
+                            }
+                            $('.product').each(function (i) {
+                                product_list[i] = $(this).attr('data-prod');
+                            });
+                            if (product_list.length == 0 || product_list.indexOf(products[i][0]['id_product']) == -1) {
+                                $('.product-list').append("<li id='product_" + products[i][0]['id_product']
+                                    + "' class='list-group-item justify-content-between product' data-cat='" +
+                                    products[i][0]['id_category_default'] + "' data-prod='" +
+                                    products[i][0]['id_product'] + "' data-save='1' data-name = " +
+                                    products[i][0]['name'] + "><span class='product-col'>" +
+                                    products[i][0]['id_product'] + "</span><span class='product-col-name'>" +
+                                    products[i][0]['name'] + "</span>" + attributeSpan + "<span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
+                            }
                         }
                     }
                 }
@@ -278,11 +277,27 @@ $( document ).ready(function() {
 
     });
 
+
     $('body').on('click', '.remove-product', function(e){
         e.preventDefault();
         $(this).addClass('hidden')
         $(this).closest('.badge').find('.check-product').removeClass('hidden');
         $(this).closest('.product').attr('data-save', 1);
+    });
+
+    $('body').on('click','.check-attribute', function(e){
+        e.preventDefault();
+        $(this).addClass('hidden')
+        $(this).closest('.badge').find('.remove-product').removeClass('hidden');
+        $(this).closest('.product').attr('data-save', 0);
+    });
+
+    $('body').on('click','.remove-attribute', function(e){
+        e.preventDefault();
+        $(this).addClass('hidden')
+        $(this).closest('.badge').find('.remove-product').removeClass('hidden');
+        $(this).closest('.product').attr('data-save', 0);
+
     });
 
 

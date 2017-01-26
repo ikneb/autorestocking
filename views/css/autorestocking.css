@@ -54,11 +54,23 @@ input[type="number"]{
 .page-link{
     cursor: pointer;
 }
-.list-group-item .caret{
-
+.list-group-item .caret-attr{
+    display: block;
     cursor: pointer;
-    width: 9px;
+    width: 10px;
+    margin-left: 6px;
     color: #00aff0;
+    display: inline-block;
+    height: 0;
+    vertical-align: middle;
+    border-top: 8px solid;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+}
+
+.not-attribute{
+    color: #b61c19;
+    margin-left: 100px;
 }
 
 .attribute-col-name{
