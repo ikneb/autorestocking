@@ -101,6 +101,7 @@ $( document ).ready(function() {
                     $(this).addClass('no-active');
                 }
             });
+            _this.closest('.product').find('.check-product').removeClass('no-active');
             _this.addClass('on');
             _this.removeClass('off');
         }else{
@@ -110,6 +111,7 @@ $( document ).ready(function() {
                         $(this).removeClass('no-active');
                     }
                 });
+                _this.closest('.product').find('.check-product').addClass('no-active');
                 _this.addClass('off');
                 _this.removeClass('on');
             }else{
@@ -285,20 +287,6 @@ $( document ).ready(function() {
         $(this).closest('.product').attr('data-save', 1);
     });
 
-    $('body').on('click','.check-attribute', function(e){
-        e.preventDefault();
-        $(this).addClass('hidden')
-        $(this).closest('.badge').find('.remove-product').removeClass('hidden');
-        $(this).closest('.product').attr('data-save', 0);
-    });
-
-    $('body').on('click','.remove-attribute', function(e){
-        e.preventDefault();
-        $(this).addClass('hidden')
-        $(this).closest('.badge').find('.remove-product').removeClass('hidden');
-        $(this).closest('.product').attr('data-save', 0);
-
-    });
 
 
     $('#linkRelation').click(function(){
