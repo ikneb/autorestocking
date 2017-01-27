@@ -35,7 +35,6 @@ class AutoRestocking extends Module
 
     public function install()
     {
-
         if (!parent::install()
             || !$this->registerHook('displayBackOfficeHeader')
             || !$this->registerHook('displayAdminProductsExtra')
@@ -136,7 +135,7 @@ class AutoRestocking extends Module
         $dif = $current_time - $time;
         if ($dif > 10 && Configuration::get('PS_CRON_AUTORESTOCKING_METHOD') == 1) {
             $time = Configuration::updateValue('PS_AUTOCRON_TIME', time());
-            $this->autoCron();
+            self::autoCron();
         }
     }
 
@@ -242,7 +241,7 @@ class AutoRestocking extends Module
         return true;
     }
 
-    protected function autoCron()
+    public static function autoCron()
     {
 
         $all_provider = Providers::getAll();
@@ -254,13 +253,13 @@ class AutoRestocking extends Module
                     $product_list = array();
                     foreach ($relations as $relation) {
                         if ($relation['id_product_attribute'] != 0) {
-                            if (/*$relation['min_count'] >= $relation['attribute_quantity'] || $relation['min_count'] == date('w')*/
-                            true
-                            ) {
+                            if ($relation['min_count'] >= $relation['attribute_quantity']
+                                || $relation['min_count'] == date('w')) {
                                 $product_list[] = $relation;
                             }
                         } else {
-                            if ($relation['min_count'] >= $relation['product_quantity'] || $relation['min_count'] == date('w')) {
+                            if ($relation['min_count'] >= $relation['product_quantity']
+                                || $relation['min_count'] == date('w')) {
                                 $product_list[] = $relation;
                             }
                         }
@@ -270,38 +269,33 @@ class AutoRestocking extends Module
                         $token = md5(uniqid(rand(), true));
                         $prov->token;
                         $prov->save();
-                        $message = $this->generateMessage($provider['id_providers'], $provider['name'], $product_list,
+                        $message = self::generateMessage($provider['id_providers'], $provider['name'], $product_list,
                             $token);
-
+                        print_r($message);
                         $send = Email::sendEmail($provider['email'], $message);
 
-                        $order = new Order();
-//                        $order->id_shop = 1;
-//                        $order->id_cart = 12;
-//                        $order->id_customer = 23;
-//                        $order->payment = "COD";
-//                        $order->total_paid = 24500;
-                        $order->current_state = 15;
-                        $order->id_address_delivery = 0;
-                        $order->id_address_invoice = 0;
-                        $order->id_cart = 0;
-                        $order->id_currency = 0;
-                        $order->id_customer = 0;
-                        $order->id_carrier = 0;
-                        $order->payment = 'Payment by check';
-                        $order->module = 'cheque';
-                        $order->total_paid = 0;
-                        $order->total_paid_real = 0;
-                        $order->total_products = 0;
-                        $order->total_products_wt = 0;
-                        $order->conversion_rate = 0;
-                        $order->secure_key = 0;
-
-                        $order->add();
-
                         if ($send) {
+                            $order = new Order();
+                            $order->current_state = 15;
+                            $order->id_address_delivery = 0;
+                            $order->id_address_invoice = 0;
+                            $order->id_cart = 0;
+                            $order->id_currency = 0;
+                            $order->id_customer = 0;
+                            $order->id_carrier = 0;
+                            $order->payment = 'Payment by check';
+                            $order->module = 'cheque';
+                            $order->total_paid = 0;
+                            $order->total_paid_real = 0;
+                            $order->total_products = 0;
+                            $order->total_products_wt = 0;
+                            $order->conversion_rate = 0;
+                            $order->secure_key = 0;
+
+                            $order->add();
+
                             $email = new Email();
-                            $email->$provider = $provider['name'];
+                            $email->provider = $provider['name'];
                             $email->email = $provider['email'];
                             $email->send_date = date("Y-m-d H:i:s");
                             $email->save();
@@ -312,17 +306,12 @@ class AutoRestocking extends Module
         }
     }
 
-    protected function sendMail($relation)
-    {
-
-    }
-
-    public function generateUrlStatus($id_provider, $token)
+    public static function generateUrlStatus($id_provider, $token)
     {
         return $url = _PS_BASE_URL_ . '/modules/autorestocking/status.php?provider=' . $id_provider . '&token=' . $token;
     }
 
-    public function generateMessage($id_provider, $name, $product_list, $token)
+    public static function generateMessage($id_provider, $name, $product_list, $token)
     {
 
         $list = '';
@@ -332,7 +321,7 @@ class AutoRestocking extends Module
             $list .= "<p>" . $product['name'] . $combination . "   count order : " . $product['product_count'] . " </p>";
         }
 
-        $url_status = $this->generateUrlStatus($id_provider, $token);
+        $url_status = self::generateUrlStatus($id_provider, $token);
         $message = EmailTemplate::getMailTemplate();
         $message = preg_replace('/\[name\]/', $name, $message);
         $message = preg_replace('/\[status_url\]/', $url_status, $message);
