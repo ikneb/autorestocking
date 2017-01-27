@@ -9,6 +9,8 @@ class Providers extends ObjectModel
 
     public $email;
 
+    public $token;
+
 
     /**
      * @see ObjectModel::$definition
@@ -22,6 +24,7 @@ class Providers extends ObjectModel
             'name'         =>    array('type' => self::TYPE_STRING),
             'description'  =>    array('type' => self::TYPE_STRING),
             'email'        =>    array('type' => self::TYPE_STRING),
+            'token'        =>    array('type' => self::TYPE_STRING),
         ),
     );
 
@@ -89,9 +92,4 @@ class Providers extends ObjectModel
     }
 
 
-    public static function generateUrlStatus($id_provider, $id_product, $token){
-
-        return $url = _PS_BASE_URL_.'/modules/autorestocking/status.php?provider='.$id_provider.'&product='.$id_product;
-
-    }
 }

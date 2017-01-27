@@ -13,8 +13,6 @@ class AdminEmailTemplateController extends ModuleAdminController
         $this->lang = false;
         $this->context = Context::getContext();
 
-
-
         parent::__construct();
 
     }
@@ -49,7 +47,7 @@ class AdminEmailTemplateController extends ModuleAdminController
                         'required' => false,
                         'autoload_rte' => true,
                         'col' => '5',
-                        'desc' => $this->module->l('If you want insert name provider and status URL in the mail, you need use shortcode [name] and [status_url]!'),
+                        'desc' => $this->module->l('If you want insert name provider, status URL or product list in the mail, you need use shortcode [name],[status_url] or [product_list]!'),
                     ),
                 ),
                 'submit' => array(
@@ -79,23 +77,4 @@ class AdminEmailTemplateController extends ModuleAdminController
 
     }
 
-
-    public function ajaxProcessUpdatePositions()
-    {
-
-        echo 'test';
-        /*$id_template_email = (int)Tools::getValue('id_template_email');
-        $template_email = (int)Tools::getValue('template_email');
-
-        $template = new EmailTemplate($id_template_email);
-        if (Validate::isLoadedObject($template)) {
-            if ($template->updateTemplate($id_template_email, $template_email)) {
-                die(true);
-            } else {
-                die('{"hasError" : true, errors : "Cannot update template"}');
-            }
-        } else {
-            die('{"hasError" : true, "errors" : "This template cannot be loaded"}');
-        }*/
-    }
 }

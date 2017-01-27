@@ -34,20 +34,20 @@ class AutoRestocking extends Module
 
     public function install()
     {
-        $mail_config = array(
-            'shop_name' => Configuration::get('PS_SHOP_NAME'),
-            'mail_text' => 'Hello'
-        );
 
         if (!parent::install()
             || !$this->registerHook('displayBackOfficeHeader')
-            || !$this->registerHook('displayAdminProductsExtra'))
+            || !$this->registerHook('displayAdminProductsExtra')
+            || !$this->registerHook('displayHeader')
+            || !Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD', 1)
+            || !Configuration::updateValue('PS_AUTOCRON_TIME', time())
+            || !$this->addOrderState($this->l('In process(Autorestockin)'),'#FF8C00')
+            || !$this->addOrderState($this->l('Order sent(Autorestockin)'),'#32CD32'))
             return false;
 
         $this->installDb();
 
             $parent_tab = new Tab();
-            // Need a foreach for the language
             $parent_tab->name[$this->context->language->id] = $this->l('Autorestocking');
             $parent_tab->class_name = 'AdminProviders';
             $parent_tab->id_parent = 0; // Home tab
@@ -75,6 +75,13 @@ class AutoRestocking extends Module
             $tab->module = $this->name;
             $tab->add();
 
+            $tab = new Tab();
+            $tab->name[$this->context->language->id] = $this->l('Settings');
+            $tab->class_name = 'SettingsAutorestocking';
+            $tab->id_parent = $parent_tab->id;
+            $tab->module = $this->name;
+            $tab->add();
+
         return true;
     }
 
@@ -96,7 +103,9 @@ class AutoRestocking extends Module
             if (!Db::getInstance()->execute($s))
                 return false;
 
-        if (!parent::uninstall())
+        if (!parent::uninstall()
+        || !Configuration::deleteByName('PS_CRON_AUTORESTOCKING_METHOD')
+        || !Configuration::deleteByName('PS_AUTOCRON_TIME'))
             return false;
 
         Tab::disablingForModule($this->name);
@@ -108,6 +117,16 @@ class AutoRestocking extends Module
         $this->context->controller->addCss($this->_path.'views/css/autorestocking.css');
         $this->context->controller->addJquery();
         $this->context->controller->addJS($this->_path.'views/js/product_tab.js');
+    }
+
+    public function hookDisplayHeader() {
+        $time = Configuration::get('PS_AUTOCRON_TIME');
+        $current_time = time();
+        $dif = $current_time - $time;
+        if($dif > 10 && Configuration::get('PS_CRON_AUTORESTOCKING_METHOD') == 1){
+            $time = Configuration::updateValue('PS_AUTOCRON_TIME', time());
+            $this->autoCron();
+        }
     }
 
     public function hookDisplayAdminProductsExtra($params) {
@@ -171,5 +190,131 @@ class AutoRestocking extends Module
         }
     }
 
+    public static function updateConfig(){
+
+       if(!Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD',Tools::getValue('method_value')))
+             return false;
+        return true;
+    }
+
+
+    public function addOrderState($name, $color)
+    {
+        $state_exist = false;
+        $states = OrderState::getOrderStates((int)$this->context->language->id);
+
+
+        foreach ($states as $state) {
+            if (in_array($name, $state)) {
+                $state_exist = true;
+                break;
+            }
+        }
+
+        if (!$state_exist) {
+            $order_state = new OrderState();
+            $order_state->color = $color;
+            $order_state->module_name = 'autorestocking';
+            $order_state->name = array();
+            $languages = Language::getLanguages(false);
+            foreach ($languages as $language)
+                $order_state->name[ $language['id_lang'] ] = $name;
+            $order_state->add();
+        }
+
+        return true;
+    }
+
+    protected function autoCron(){
+
+        $all_provider = Providers::getAll();
+
+        if(is_array($all_provider)) {
+            foreach ($all_provider as $provider) {
+                $relations = Relation::getByProviderId($provider['id_providers'],0,1000);
+                if(!empty($relations)){
+                    $product_list = array();
+                    foreach($relations as $relation){
+                        if($relation['id_product_attribute'] != 0){
+                            if(/*$relation['min_count'] >= $relation['attribute_quantity'] || $relation['min_count'] == date('w')*/true){
+                                $product_list[] = $relation;
+                            }
+                        }else{
+                            if($relation['min_count'] >= $relation['product_quantity'] || $relation['min_count'] == date('w')){
+                                $product_list[] = $relation;
+                            }
+                        }
+                    }
+                    if(!empty($product_list)){
+                        $prov = new Providers($provider['id_providers']);
+                        $token = md5(uniqid(rand(), true));
+                        $prov->token;
+                        $prov->save();
+                        $message = $this->generateMessage($provider['id_providers'], $provider['name'], $product_list, $token);
+
+                        $send = Email::sendEmail($provider['email'], $message);
+
+                        $order = new Order();
+//                        $order->id_shop = 1;
+//                        $order->id_cart = 12;
+//                        $order->id_customer = 23;
+//                        $order->payment = "COD";
+//                        $order->total_paid = 24500;
+                        $order->current_state = 15;
+                        $order->id_address_delivery = 0;
+                        $order->id_address_invoice = 0;
+                        $order->id_cart = 0;
+                        $order->id_currency = 0;
+                        $order->id_customer = 0;
+                        $order->id_carrier = 0;
+                        $order->payment = 'Payment by check';
+                        $order->module = 'cheque';
+                        $order->total_paid = 0;
+                        $order->total_paid_real = 0;
+                        $order->total_products = 0;
+                        $order->total_products_wt = 0;
+                        $order->conversion_rate = 0;
+                        $order->secure_key = 0;
+
+                        $order->add();
+
+                        if($send){
+                            $email = new Email();
+                            $email->$provider = $provider['name'];
+                            $email->email = $provider['email'];
+                            $email->send_date = date("Y-m-d H:i:s");
+                            $email->save();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected function sendMail($relation){
+
+    }
+
+    public function generateUrlStatus($id_provider, $token){
+        return $url = _PS_BASE_URL_.'/modules/autorestocking/status.php?provider='.$id_provider.'&token='.$token;
+    }
+
+    public function generateMessage($id_provider, $name, $product_list, $token){
+
+        $list = '';
+
+        foreach($product_list as $product){
+            $combination = $product['id_product_attribute'] ? ':('.$product['name_combination'] .')' : '';
+            $list  .= "<p>". $product['name']. $combination ."   count order : ".$product['product_count'] ." </p>";
+        }
+
+        $url_status = $this->generateUrlStatus($id_provider, $token);
+        $message = EmailTemplate::getMailTemplate();
+        $message = preg_replace('/\[name\]/', $name, $message);
+        $message = preg_replace('/\[status_url\]/', $url_status, $message);
+        $message = preg_replace('/\[product_list\]/', $list, $message);
+
+        return $message;
+    }
 
 }

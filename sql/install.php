@@ -8,6 +8,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."providers` (
 `name` varchar(36) NOT NULL,
 `description` varchar(255) NOT NULL,
 `email` varchar(36) NOT NULL,
+`token` varchar(36) NOT NULL,
 PRIMARY KEY (`id_providers`)
 )";
 
@@ -41,5 +42,12 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'template_email` (
 `id_template_email` int(11) NOT NULL AUTO_INCREMENT,
 `template_email` varchar(255),
 PRIMARY KEY (`id_template_email`)
+)';
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'setting_autorestocking` (
+`id_setting` int(11) NOT NULL AUTO_INCREMENT,
+`name_setting` varchar(255),
+`value_setting` int(11),
+PRIMARY KEY (`id_setting`)
 )';
 
