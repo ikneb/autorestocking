@@ -1,16 +1,18 @@
 
-body{
+body {
 
 }
-.wrapper{
+
+.wrapper {
     margin-top: 10%;
     text-align: center;
 }
 
-#myModal{
+#myModal {
     opacity: 1;
     margin-top: 100px;
 }
-.modal-open .modal-backdrop{
+
+.modal-open .modal-backdrop {
     opacity: 0.5;
 }

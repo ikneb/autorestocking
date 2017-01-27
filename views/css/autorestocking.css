@@ -1,8 +1,9 @@
 
-.icon-AdminProviders:before{
+.icon-AdminProviders:before {
     content: "\f1b8";
 }
-input[type="number"]{
+
+input[type="number"] {
     display: block;
     width: 100px;
     height: 31px;
@@ -14,12 +15,12 @@ input[type="number"]{
     background-image: none;
     border: 1px solid #C7D6DB;
     border-radius: 3px;
-    -webkit-transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
-    -o-transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
-    transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+    -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 
-.search-product{
+.search-product {
     border-bottom: solid 1px #eee;
     padding-bottom: 15px;
 }
@@ -34,27 +35,29 @@ input[type="number"]{
     color: #000;
 }
 
-.remove-product{
+.remove-product {
     color: #990000;
 }
 
-.name-product{
+.name-product {
     color: #00aff0;
     font-weight: bold;
     margin-left: 5px;
 }
-.product-col{
+
+.product-col {
     margin-left: 5px;
 }
 
-.product-col-name{
+.product-col-name {
     margin-left: 10px;
 }
 
-.page-link{
+.page-link {
     cursor: pointer;
 }
-.list-group-item .caret-attr{
+
+.list-group-item .caret-attr {
     display: block;
     cursor: pointer;
     width: 10px;
@@ -68,19 +71,19 @@ input[type="number"]{
     border-left: 10px solid transparent;
 }
 
-.not-attribute{
+.not-attribute {
     color: #b61c19;
     margin-left: 100px;
 }
 
-.attribute-col-name{
+.attribute-col-name {
     margin-left: 40px;
 }
 
-.no-active{
+.no-active {
     display: none !important;
 }
 
-#module_autorestocking .save-relation-new{
+#module_autorestocking .save-relation-new {
     margin-top: 32px;
 }

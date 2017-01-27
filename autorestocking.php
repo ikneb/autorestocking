@@ -1,10 +1,11 @@
 <?php
-if (!defined('_PS_VERSION_'))
+if (!defined('_PS_VERSION_')) {
     exit;
-include_once(_PS_MODULE_DIR_.'autorestocking/classes/Providers.php');
-include_once(_PS_MODULE_DIR_.'autorestocking/classes/Relation.php');
-include_once(_PS_MODULE_DIR_.'autorestocking/classes/Email.php');
-include_once(_PS_MODULE_DIR_.'autorestocking/classes/EmailTemplate.php');
+}
+include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/Providers.php');
+include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/Relation.php');
+include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/Email.php');
+include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/EmailTemplate.php');
 
 class AutoRestocking extends Module
 {
@@ -41,46 +42,48 @@ class AutoRestocking extends Module
             || !$this->registerHook('displayHeader')
             || !Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD', 1)
             || !Configuration::updateValue('PS_AUTOCRON_TIME', time())
-            || !$this->addOrderState($this->l('In process(Autorestockin)'),'#FF8C00')
-            || !$this->addOrderState($this->l('Order sent(Autorestockin)'),'#32CD32'))
+            || !$this->addOrderState($this->l('In process(Autorestockin)'), '#FF8C00')
+            || !$this->addOrderState($this->l('Order sent(Autorestockin)'), '#32CD32')
+        ) {
             return false;
+        }
 
         $this->installDb();
 
-            $parent_tab = new Tab();
-            $parent_tab->name[$this->context->language->id] = $this->l('Autorestocking');
-            $parent_tab->class_name = 'AdminProviders';
-            $parent_tab->id_parent = 0; // Home tab
-            $parent_tab->module = $this->name;
-            $parent_tab->add();
+        $parent_tab = new Tab();
+        $parent_tab->name[$this->context->language->id] = $this->l('Autorestocking');
+        $parent_tab->class_name = 'AdminProviders';
+        $parent_tab->id_parent = 0; // Home tab
+        $parent_tab->module = $this->name;
+        $parent_tab->add();
 
-            $tab = new Tab();
-            $tab->name[$this->context->language->id] = $this->l('Providers');
-            $tab->class_name = 'AdminProviders';
-            $tab->id_parent = $parent_tab->id;
-            $tab->module = $this->name;
-            $tab->add();
+        $tab = new Tab();
+        $tab->name[$this->context->language->id] = $this->l('Providers');
+        $tab->class_name = 'AdminProviders';
+        $tab->id_parent = $parent_tab->id;
+        $tab->module = $this->name;
+        $tab->add();
 
-            $tab = new Tab();
-            $tab->name[$this->context->language->id] = $this->l('Sent email');
-            $tab->class_name = 'AdminEmail';
-            $tab->id_parent = $parent_tab->id;
-            $tab->module = $this->name;
-            $tab->add();
+        $tab = new Tab();
+        $tab->name[$this->context->language->id] = $this->l('Sent email');
+        $tab->class_name = 'AdminEmail';
+        $tab->id_parent = $parent_tab->id;
+        $tab->module = $this->name;
+        $tab->add();
 
-            $tab = new Tab();
-            $tab->name[$this->context->language->id] = $this->l('Template email');
-            $tab->class_name = 'AdminEmailTemplate';
-            $tab->id_parent = $parent_tab->id;
-            $tab->module = $this->name;
-            $tab->add();
+        $tab = new Tab();
+        $tab->name[$this->context->language->id] = $this->l('Template email');
+        $tab->class_name = 'AdminEmailTemplate';
+        $tab->id_parent = $parent_tab->id;
+        $tab->module = $this->name;
+        $tab->add();
 
-            $tab = new Tab();
-            $tab->name[$this->context->language->id] = $this->l('Settings');
-            $tab->class_name = 'SettingsAutorestocking';
-            $tab->id_parent = $parent_tab->id;
-            $tab->module = $this->name;
-            $tab->add();
+        $tab = new Tab();
+        $tab->name[$this->context->language->id] = $this->l('Settings');
+        $tab->class_name = 'SettingsAutorestocking';
+        $tab->id_parent = $parent_tab->id;
+        $tab->module = $this->name;
+        $tab->add();
 
         return true;
     }
@@ -89,9 +92,11 @@ class AutoRestocking extends Module
     {
         $sql = array();
         include(dirname(__FILE__) . '/sql/install.php');
-        foreach ($sql as $s)
-            if (!Db::getInstance()->execute($s))
+        foreach ($sql as $s) {
+            if (!Db::getInstance()->execute($s)) {
                 return false;
+            }
+        }
         return true;
     }
 
@@ -99,45 +104,52 @@ class AutoRestocking extends Module
     {
         $sql = array();
         include(dirname(__FILE__) . '/sql/uninstall.php');
-        foreach ($sql as $s)
-            if (!Db::getInstance()->execute($s))
+        foreach ($sql as $s) {
+            if (!Db::getInstance()->execute($s)) {
                 return false;
+            }
+        }
 
         if (!parent::uninstall()
-        || !Configuration::deleteByName('PS_CRON_AUTORESTOCKING_METHOD')
-        || !Configuration::deleteByName('PS_AUTOCRON_TIME'))
+            || !Configuration::deleteByName('PS_CRON_AUTORESTOCKING_METHOD')
+            || !Configuration::deleteByName('PS_AUTOCRON_TIME')
+        ) {
             return false;
+        }
 
         Tab::disablingForModule($this->name);
 
         return true;
     }
 
-    public function hookDisplayBackOfficeHeader() {
-        $this->context->controller->addCss($this->_path.'views/css/autorestocking.css');
+    public function hookDisplayBackOfficeHeader()
+    {
+        $this->context->controller->addCss($this->_path . 'views/css/autorestocking.css');
         $this->context->controller->addJquery();
-        $this->context->controller->addJS($this->_path.'views/js/product_tab.js');
+        $this->context->controller->addJS($this->_path . 'views/js/product_tab.js');
     }
 
-    public function hookDisplayHeader() {
+    public function hookDisplayHeader()
+    {
         $time = Configuration::get('PS_AUTOCRON_TIME');
         $current_time = time();
         $dif = $current_time - $time;
-        if($dif > 10 && Configuration::get('PS_CRON_AUTORESTOCKING_METHOD') == 1){
+        if ($dif > 10 && Configuration::get('PS_CRON_AUTORESTOCKING_METHOD') == 1) {
             $time = Configuration::updateValue('PS_AUTOCRON_TIME', time());
             $this->autoCron();
         }
     }
 
-    public function hookDisplayAdminProductsExtra($params) {
+    public function hookDisplayAdminProductsExtra($params)
+    {
 
-        if(version_compare(_PS_VERSION_,'1.7','<')){
+        if (version_compare(_PS_VERSION_, '1.7', '<')) {
             $id_product = Tools::getValue('id_product');
-        }else{
-            $id_product = Tools::getValue('id_product',$params['id_product']);
+        } else {
+            $id_product = Tools::getValue('id_product', $params['id_product']);
         }
 
-        $product  = new Product($id_product);
+        $product = new Product($id_product);
         $has_combination = $product->hasAttributes();
         $providers = Providers::getAll();
 
@@ -148,37 +160,39 @@ class AutoRestocking extends Module
             'providers' => $providers,
             'relations' => $autorestocking,
             'has_combination' => $has_combination,
-            'has_comb_tpl' => _PS_MODULE_DIR_.'autorestocking/views/templates/admin/has_comb.tpl',
-            'not_comb_tpl' => _PS_MODULE_DIR_.'autorestocking/views/templates/admin/not_comb.tpl',
-            'has_comb_tpl_new' => _PS_MODULE_DIR_.'autorestocking/views/templates/admin/has_comb_new.tpl',
-            'not_comb_tpl_new' => _PS_MODULE_DIR_.'autorestocking/views/templates/admin/not_comb_new.tpl',
+            'has_comb_tpl' => _PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/has_comb.tpl',
+            'not_comb_tpl' => _PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/not_comb.tpl',
+            'has_comb_tpl_new' => _PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/has_comb_new.tpl',
+            'not_comb_tpl_new' => _PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/not_comb_new.tpl',
             'combinations' => $combination,
-            'version' => version_compare(_PS_VERSION_,'1.7','<')
+            'version' => version_compare(_PS_VERSION_, '1.7', '<')
         ));
 
         return $this->display(__FILE__, 'views/templates/admin/product_tab.tpl');
 
     }
 
-    public function postProcess() {
+    public function postProcess()
+    {
         if (Tools::isSubmit('submitAddproduct')
-            || Tools::isSubmit('submitAddproductAndStay')){
-                $id_product = Tools::getValue('id_product');
-            if($id_product){
+            || Tools::isSubmit('submitAddproductAndStay')
+        ) {
+            $id_product = Tools::getValue('id_product');
+            if ($id_product) {
                 $product = new Product($id_product);
                 $has_combination = $product->hasAttributes();
-                if($has_combination){
+                if ($has_combination) {
 
 
-                }else{
+                } else {
                     $rel_row = Relation::getRowByProductId($id_product);
-                    if($rel_row){
+                    if ($rel_row) {
                         $relation = new Relation($rel_row['id_relations']);
                     } else {
                         $relation = new Relation();
                         $relation->id_product = $id_product;
                     }
-                    $relation->id_provider= Tools::getValue('id_provider');
+                    $relation->id_provider = Tools::getValue('id_provider');
                     $relation->min_count = Tools::getValue('min_count');
                     $relation->product_count = Tools::getValue('product_count');
                     $relation->order_day = Tools::getValue('order_day');
@@ -190,10 +204,12 @@ class AutoRestocking extends Module
         }
     }
 
-    public static function updateConfig(){
+    public static function updateConfig()
+    {
 
-       if(!Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD',Tools::getValue('method_value')))
-             return false;
+        if (!Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD', Tools::getValue('method_value'))) {
+            return false;
+        }
         return true;
     }
 
@@ -217,40 +233,45 @@ class AutoRestocking extends Module
             $order_state->module_name = 'autorestocking';
             $order_state->name = array();
             $languages = Language::getLanguages(false);
-            foreach ($languages as $language)
-                $order_state->name[ $language['id_lang'] ] = $name;
+            foreach ($languages as $language) {
+                $order_state->name[$language['id_lang']] = $name;
+            }
             $order_state->add();
         }
 
         return true;
     }
 
-    protected function autoCron(){
+    protected function autoCron()
+    {
 
         $all_provider = Providers::getAll();
 
-        if(is_array($all_provider)) {
+        if (is_array($all_provider)) {
             foreach ($all_provider as $provider) {
-                $relations = Relation::getByProviderId($provider['id_providers'],0,1000);
-                if(!empty($relations)){
+                $relations = Relation::getByProviderId($provider['id_providers'], 0, 1000);
+                if (!empty($relations)) {
                     $product_list = array();
-                    foreach($relations as $relation){
-                        if($relation['id_product_attribute'] != 0){
-                            if(/*$relation['min_count'] >= $relation['attribute_quantity'] || $relation['min_count'] == date('w')*/true){
+                    foreach ($relations as $relation) {
+                        if ($relation['id_product_attribute'] != 0) {
+                            if (/*$relation['min_count'] >= $relation['attribute_quantity'] || $relation['min_count'] == date('w')*/
+                            true
+                            ) {
                                 $product_list[] = $relation;
                             }
-                        }else{
-                            if($relation['min_count'] >= $relation['product_quantity'] || $relation['min_count'] == date('w')){
+                        } else {
+                            if ($relation['min_count'] >= $relation['product_quantity'] || $relation['min_count'] == date('w')) {
                                 $product_list[] = $relation;
                             }
                         }
                     }
-                    if(!empty($product_list)){
+                    if (!empty($product_list)) {
                         $prov = new Providers($provider['id_providers']);
                         $token = md5(uniqid(rand(), true));
                         $prov->token;
                         $prov->save();
-                        $message = $this->generateMessage($provider['id_providers'], $provider['name'], $product_list, $token);
+                        $message = $this->generateMessage($provider['id_providers'], $provider['name'], $product_list,
+                            $token);
 
                         $send = Email::sendEmail($provider['email'], $message);
 
@@ -278,7 +299,7 @@ class AutoRestocking extends Module
 
                         $order->add();
 
-                        if($send){
+                        if ($send) {
                             $email = new Email();
                             $email->$provider = $provider['name'];
                             $email->email = $provider['email'];
@@ -291,21 +312,24 @@ class AutoRestocking extends Module
         }
     }
 
-    protected function sendMail($relation){
+    protected function sendMail($relation)
+    {
 
     }
 
-    public function generateUrlStatus($id_provider, $token){
-        return $url = _PS_BASE_URL_.'/modules/autorestocking/status.php?provider='.$id_provider.'&token='.$token;
+    public function generateUrlStatus($id_provider, $token)
+    {
+        return $url = _PS_BASE_URL_ . '/modules/autorestocking/status.php?provider=' . $id_provider . '&token=' . $token;
     }
 
-    public function generateMessage($id_provider, $name, $product_list, $token){
+    public function generateMessage($id_provider, $name, $product_list, $token)
+    {
 
         $list = '';
 
-        foreach($product_list as $product){
-            $combination = $product['id_product_attribute'] ? ':('.$product['name_combination'] .')' : '';
-            $list  .= "<p>". $product['name']. $combination ."   count order : ".$product['product_count'] ." </p>";
+        foreach ($product_list as $product) {
+            $combination = $product['id_product_attribute'] ? ':(' . $product['name_combination'] . ')' : '';
+            $list .= "<p>" . $product['name'] . $combination . "   count order : " . $product['product_count'] . " </p>";
         }
 
         $url_status = $this->generateUrlStatus($id_provider, $token);

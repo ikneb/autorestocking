@@ -20,7 +20,7 @@ class AdminEmailTemplateController extends ModuleAdminController
     public function setMedia()
     {
         parent::setMedia();
-        $this->context->controller->addJS(_PS_MODULE_DIR_.'autorestocking/views/js/autorest.js');
+        $this->context->controller->addJS(_PS_MODULE_DIR_ . 'autorestocking/views/js/autorest.js');
     }
 
     public function renderList()
@@ -28,11 +28,12 @@ class AdminEmailTemplateController extends ModuleAdminController
         $form = $this->renderForm();
         // To load form inside your template
         $this->context->smarty->assign('form_tpl', $form);
-        return $this->context->smarty->fetch(_PS_MODULE_DIR_.'autorestocking/views/templates/admin/email_template.tpl');
+        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/email_template.tpl');
 
     }
 
-    public function renderForm(){
+    public function renderForm()
+    {
 
         $fields_form = array(
             'form' => array(
@@ -53,7 +54,7 @@ class AdminEmailTemplateController extends ModuleAdminController
                 'submit' => array(
                     'title' => $this->module->l('Save'),
                     'id' => 'template_email'
-                    ),
+                ),
             ),
         );
 
@@ -64,7 +65,7 @@ class AdminEmailTemplateController extends ModuleAdminController
 
         $helper = new HelperForm();
         $helper->table = 'template_email';
-        $helper->default_form_language = (int) Configuration::get('PS_LANG_DEFAULT');
+        $helper->default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
             'fields_value' => array(

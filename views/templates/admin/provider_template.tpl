@@ -8,19 +8,22 @@
     </div>
     <div class="tab-content">
         <div id="provider" class="tab-pane col-lg-9 active">
-            <form id="providers_form" class="defaultForm form-horizontal AdminProviders"  method="post" enctype="multipart/form-data" novalidate="">
+            <form id="providers_form" class="defaultForm form-horizontal AdminProviders" method="post"
+                  enctype="multipart/form-data" novalidate="">
                 <input type="hidden" name="submitAddproviders" value="1">
                 <div class="panel" id="fieldset_0">
                     <div class="panel-heading">
                         <i class="icon-briefcase"></i>Providers
                     </div>
                     <div class="form-wrapper">
-                        <input type="hidden" name="id_providers" id="id_providers" value="{$id_providers|escape:'htmlall':'UTF-8'}">
+                        <input type="hidden" name="id_providers" id="id_providers"
+                               value="{$id_providers|escape:'htmlall':'UTF-8'}">
                         <div class="form-group">
                             <label class="control-label col-lg-3 required">
                                 Name</label>
                             <div class="col-lg-3">
-                                <input type="text" name="name" id="name" value="{$name|escape:'htmlall':'UTF-8'}" class="" required="required">
+                                <input type="text" name="name" id="name" value="{$name|escape:'htmlall':'UTF-8'}"
+                                       class="" required="required">
                             </div>
                         </div>
                         <div class="form-group">
@@ -28,23 +31,27 @@
                                 Description
                             </label>
                             <div class="col-lg-3">
-                                <textarea name="description" id="description" class="textarea-autosize">{$description|escape:'htmlall':'UTF-8'}</textarea>
+                                <textarea name="description" id="description"
+                                          class="textarea-autosize">{$description|escape:'htmlall':'UTF-8'}</textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-lg-3 required">
-                                <span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" >Email</span>
+                                <span class="label-tooltip" data-toggle="tooltip" data-html="true" title="">Email</span>
                             </label>
                             <div class="col-lg-3">
-                                <input type="text" name="email" id="email" value="{$email|escape:'htmlall':'UTF-8'}" class="" required="required">
+                                <input type="text" name="email" id="email" value="{$email|escape:'htmlall':'UTF-8'}"
+                                       class="" required="required">
                             </div>
                         </div>
                     </div><!-- /.form-wrapper -->
                     <div class="panel-footer">
-                        <button type="submit" value="1" id="providers_form_submit_btn" name="submitAddproviders" class="btn btn-default pull-right">
+                        <button type="submit" value="1" id="providers_form_submit_btn" name="submitAddproviders"
+                                class="btn btn-default pull-right">
                             <i class="process-icon-save"></i> Сохранить
                         </button>
-                        <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa" class="btn btn-default" onclick="window.history.back();">
+                        <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa"
+                           class="btn btn-default" onclick="window.history.back();">
                             <i class="process-icon-cancel"></i> Отмена
                         </a>
                     </div>
@@ -86,14 +93,17 @@
                     </div>
                     <ul class="list-group product-list" id="product-list">
                         <li class="list-group-item justify-content-between"><span class="name-product">ID</span>
-                            <span class="name-product">Name</span><span class="badge badge-default badge-pill">Save</span>
+                            <span class="name-product">Name</span><span
+                                    class="badge badge-default badge-pill">Save</span>
                         </li>
                     </ul>
                     <div class="panel-footer">
-                        <button type="submit" value="1" id="addSubmitProduct" name="submitAddproviders" class="btn btn-default pull-right">
+                        <button type="submit" value="1" id="addSubmitProduct" name="submitAddproviders"
+                                class="btn btn-default pull-right">
                             <i class="process-icon-save"></i> Сохранить
                         </button>
-                        <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa" class="btn btn-default" onclick="window.history.back();">
+                        <a href="index.php?controller=AdminProviders&amp;token=0f0bb702af1521fecfae53fdd682e2aa"
+                           class="btn btn-default" onclick="window.history.back();">
                             <i class="process-icon-cancel"></i> Отмена
                         </a>
                     </div>
