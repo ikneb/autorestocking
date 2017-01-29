@@ -12,6 +12,13 @@ class Email extends ObjectModel
 
     public $email;
 
+    public $token;
+
+    public $id_order;
+
+    public $id_state;
+
+
     /**
      * @see ObjectModel::$definition
      */
@@ -23,14 +30,16 @@ class Email extends ObjectModel
             'id_sent_email' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'provider_name' => array('type' => self::TYPE_STRING,),
             'send_date' => array('type' => self::TYPE_STRING),
-            'email' => array('type' => self::TYPE_STRING)
+            'email' => array('type' => self::TYPE_STRING),
+            'token' => array('type' => self::TYPE_STRING),
+            'id_order' => array('type' => self::TYPE_INT),
+            'id_state' => array('type' => self::TYPE_INT),
         ),
     );
 
 
     public static function sendEmail($to, $message)
     {
-
         $shop_email = Configuration::get('PS_SHOP_EMAIL');
         $shop_name = Configuration::get('PS_SHOP_NAME');
         $subject = 'New order';
@@ -39,7 +48,6 @@ class Email extends ObjectModel
         mail($to, $subject, $message, $headers);
 
         return true;
-
     }
 
 }

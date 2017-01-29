@@ -10,7 +10,6 @@ class Providers extends ObjectModel
 
     public $email;
 
-    public $token;
 
 
     /**
@@ -25,7 +24,6 @@ class Providers extends ObjectModel
             'name' => array('type' => self::TYPE_STRING),
             'description' => array('type' => self::TYPE_STRING),
             'email' => array('type' => self::TYPE_STRING),
-            'token' => array('type' => self::TYPE_STRING),
         ),
     );
 

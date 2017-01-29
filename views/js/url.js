@@ -5,12 +5,19 @@ $(document).ready(function () {
         var status = $(this).attr('data-status');
         var id_provider = $(this).attr('data-provider');
         var id_product = $(this).attr('data-product');
+        var id_order = $(this).attr('data-order');
 
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/status_ajax.php',
-            data: {status: status, id_provider: id_provider, id_product: id_product},
+            data: {
+                id_order: id_order,
+                status: status,
+                id_provider: id_provider,
+                id_product: id_product
+            },
             success: function (data) {
+                console.log(data);
                 if (data) {
                     $('#myModal').modal('show');
                 }

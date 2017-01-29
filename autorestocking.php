@@ -41,6 +41,7 @@ class AutoRestocking extends Module
             || !$this->registerHook('displayHeader')
             || !Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD', 1)
             || !Configuration::updateValue('PS_AUTOCRON_TIME', time())
+            || !$this->addOrderState($this->l('Email sent(Autorestockin)'), '#4169E1')
             || !$this->addOrderState($this->l('In process(Autorestockin)'), '#FF8C00')
             || !$this->addOrderState($this->l('Order sent(Autorestockin)'), '#32CD32')
         ) {
@@ -205,7 +206,6 @@ class AutoRestocking extends Module
 
     public static function updateConfig()
     {
-
         if (!Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD', Tools::getValue('method_value'))) {
             return false;
         }
@@ -243,7 +243,6 @@ class AutoRestocking extends Module
 
     public static function autoCron()
     {
-
         $all_provider = Providers::getAll();
 
         if (is_array($all_provider)) {
@@ -254,51 +253,56 @@ class AutoRestocking extends Module
                     foreach ($relations as $relation) {
                         if ($relation['id_product_attribute'] != 0) {
                             if ($relation['min_count'] >= $relation['attribute_quantity']
-                                || $relation['min_count'] == date('w')) {
+                                /*|| $relation['min_count'] == date('w')*/
+                            ) {
                                 $product_list[] = $relation;
                             }
                         } else {
                             if ($relation['min_count'] >= $relation['product_quantity']
-                                || $relation['min_count'] == date('w')) {
+                                /*|| $relation['min_count'] == date('w')*/
+                            ) {
                                 $product_list[] = $relation;
                             }
                         }
                     }
                     if (!empty($product_list)) {
-                        $prov = new Providers($provider['id_providers']);
                         $token = md5(uniqid(rand(), true));
-                        $prov->token;
-                        $prov->save();
+                        $order = new Order();
+                        $order->current_state = 15;
+                        $order->id_address_delivery = 0;
+                        $order->id_address_invoice = 0;
+                        $order->id_cart = 0;
+                        $order->id_currency = 0;
+                        $order->id_customer = 0;
+                        $order->id_carrier = 0;
+                        $order->payment = 'Payment by check';
+                        $order->module = 'cheque';
+                        $order->total_paid = 0;
+                        $order->total_paid_real = 0;
+                        $order->total_products = 0;
+                        $order->total_products_wt = 0;
+                        $order->conversion_rate = 0;
+                        $order->secure_key = 0;
+//                      $order->reference = $provider['name'].'(autorestoking)';
+                        $order->add();
+
+                        $email = new Email();
+                        $email->provider_name = $provider['name'];
+                        $email->email = $provider['email'];
+                        $email->send_date = date("Y-m-d H:i:s");
+                        $email->token = $token;
+                        $email->id_order = $order->getFields()['id_order'];
+                        $email->id_state = $order->getFields()['current_state'];
+                        $email->save();
+
                         $message = self::generateMessage($provider['id_providers'], $provider['name'], $product_list,
-                            $token);
-                        print_r($message);
+                            $token, $order->getFields()['id_order']);
                         $send = Email::sendEmail($provider['email'], $message);
-
+                        print_r($message);
                         if ($send) {
-                            $order = new Order();
-                            $order->current_state = 15;
-                            $order->id_address_delivery = 0;
-                            $order->id_address_invoice = 0;
-                            $order->id_cart = 0;
-                            $order->id_currency = 0;
-                            $order->id_customer = 0;
-                            $order->id_carrier = 0;
-                            $order->payment = 'Payment by check';
-                            $order->module = 'cheque';
-                            $order->total_paid = 0;
-                            $order->total_paid_real = 0;
-                            $order->total_products = 0;
-                            $order->total_products_wt = 0;
-                            $order->conversion_rate = 0;
-                            $order->secure_key = 0;
 
-                            $order->add();
+                        } else {
 
-                            $email = new Email();
-                            $email->provider = $provider['name'];
-                            $email->email = $provider['email'];
-                            $email->send_date = date("Y-m-d H:i:s");
-                            $email->save();
                         }
                     }
                 }
@@ -306,14 +310,14 @@ class AutoRestocking extends Module
         }
     }
 
-    public static function generateUrlStatus($id_provider, $token)
+    public static function generateUrlStatus($id_provider, $token, $id_order)
     {
-        return $url = _PS_BASE_URL_ . '/modules/autorestocking/status.php?provider=' . $id_provider . '&token=' . $token;
+        return $url = _PS_BASE_URL_ . '/modules/autorestocking/status.php?provider=' . $id_provider
+            . '&token=' . $token . '&id_order=' . $id_order;
     }
 
-    public static function generateMessage($id_provider, $name, $product_list, $token)
+    public static function generateMessage($id_provider, $name, $product_list, $token, $id_order)
     {
-
         $list = '';
 
         foreach ($product_list as $product) {
@@ -321,7 +325,7 @@ class AutoRestocking extends Module
             $list .= "<p>" . $product['name'] . $combination . "   count order : " . $product['product_count'] . " </p>";
         }
 
-        $url_status = self::generateUrlStatus($id_provider, $token);
+        $url_status = self::generateUrlStatus($id_provider, $token, $id_order);
         $message = EmailTemplate::getMailTemplate();
         $message = preg_replace('/\[name\]/', $name, $message);
         $message = preg_replace('/\[status_url\]/', $url_status, $message);
@@ -330,4 +334,44 @@ class AutoRestocking extends Module
         return $message;
     }
 
+    public static function changeStatus()
+    {
+        $status = Tools::getValue('status');
+        $id_povider = Tools::getValue('id_povider');
+        $id_product = Tools::getValue('id_product');
+        $id_order = Tools::getValue('id_order');
+        $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+
+
+        switch ($status) {
+            case 1:
+
+                $sql = "SELECT id_order_state FROM ". _DB_PREFIX_ ."order_state_lang WHERE id_lang ="
+                    . $id_lang . " AND name ='In process(Autorestockin)'";
+                $id_order_state = Db::getInstance()->getValue($sql);
+
+                $history = new OrderHistory();
+                $history->id_order = (int)$id_order;
+                $history->changeIdOrderState($id_order_state, (int)$id_order);
+
+                return 1;
+
+                break;
+            case 2:
+                $sql = "SELECT id_order_state FROM ". _DB_PREFIX_ ."order_state_lang WHERE id_lang ="
+                    . $id_lang . " AND name ='Order sent(Autorestockin)'";
+                $id_order_state = Db::getInstance()->getValue($sql);
+
+                $history = new OrderHistory();
+                $history->id_order = (int)$id_order;
+                $history->changeIdOrderState($id_order_state, (int)$id_order);
+
+
+                return 2;
+
+                break;
+        }
+
+        return false;
+    }
 }

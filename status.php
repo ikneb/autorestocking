@@ -3,6 +3,15 @@
 require_once(dirname(__FILE__) . '../../../config/config.inc.php');
 require_once(dirname(__FILE__) . '../../../init.php');
 require_once(dirname(__FILE__) . '/classes/Relation.php');
+
+$sql = 'SELECT id_sent_email FROM `' . _DB_PREFIX_ . 'sent_email` WHERE token = "'. Tools::getValue('token').'"';
+
+if(!Db::getInstance()->execute($sql)){
+    header("HTTP/1.1 404 Not Found");
+    header("Status: 404 Not Found");
+    die();
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,11 +31,15 @@ require_once(dirname(__FILE__) . '/classes/Relation.php');
 <body>
 <div class="wrapper">
     <button type="button" class="btn btn-primary btn-lg status" data-status="1"
-            data-provider="<?= Tools::getValue('provider') ?>" data-product="<?= Tools::getValue('product') ?>">Order in
+            data-order="<?= Tools::getValue('id_order') ?>"
+            data-provider="<?= Tools::getValue('provider') ?>"
+            data-product="<?= Tools::getValue('product') ?>">Order in
         processing
     </button>
     <button type="button" class="btn btn-secondary btn-lg status" data-status="2"
-            data-provider="<?= Tools::getValue('provider') ?>" data-product="<?= Tools::getValue('product') ?>">Order
+            data-order="<?= Tools::getValue('id_order') ?>"
+            data-provider="<?= Tools::getValue('provider') ?>"
+            data-product="<?= Tools::getValue('product') ?>">Order
         send
     </button>
 </div>

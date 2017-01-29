@@ -24,7 +24,6 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "autorestocking_relation
 `product_count` int(11) NOT NULL,
 `order_day` enum('0','1','2','3','4','5','6','7') NOT NULL DEFAULT '0',
 `status` int(11) NOT NULL,
-`token` varchar(255),
 PRIMARY KEY (`id_relations`))
 ";
 
@@ -34,6 +33,9 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'sent_email` (
 `provider_name` varchar(50) NOT NULL,
 `send_date` varchar(50) NOT NULL,
 `email` varchar(255),
+`token` varchar(255),
+`id_order` int(10),
+`id_state` int(10),
 PRIMARY KEY (`id_sent_email`)
 )';
 
