@@ -15,7 +15,7 @@ switch (Tools::getValue('ajax')) {
     case 2:
         echo EmailTemplate::updateTemplate(Tools::getValue('tiny'));
         break;
-    case 3:
+    case 'update_relation':
         echo Relation::updateRelation();
         break;
     case 4:
@@ -25,7 +25,7 @@ switch (Tools::getValue('ajax')) {
             echo Providers::updateProvider();
         }
         break;
-    case 5:
+    case 'render_relation':
         echo Relation::getAllProductByProviderId($smarty);
         break;
     case 6:
@@ -46,7 +46,7 @@ switch (Tools::getValue('ajax')) {
     case 11:
         echo AutoRestocking::updateConfig();
         break;
-    case 12:
+    case 'update_relation_for_product_tab':
         echo Relation::saveRelationCombination();
         break;
 }

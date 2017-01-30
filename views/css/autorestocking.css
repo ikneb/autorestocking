@@ -87,3 +87,74 @@ input[type="number"] {
 #module_autorestocking .save-relation-new {
     margin-top: 32px;
 }
+
+.weekday-select > div {
+    display: inline-block;
+    vertical-align: top
+}
+.weekday-select > div > label {
+    display: block;
+}
+
+.select-days-week{
+    position: absolute;
+    width: 200px;
+    border: solid 1px;
+    border-radius: 3px;
+    padding: 10px;
+    background-color: #fff;
+    z-index: 1;
+}
+.select-days-month{
+    position: absolute;
+    width: 330px;
+    border: solid 1px;
+    border-radius: 3px;
+    padding: 10px;
+    background-color: #fff;
+    z-index: 1;
+}
+
+.weekday-select input{
+    float: left;
+}
+.weekday-select label{
+    margin-left: 8px;
+}
+
+.ui-datepicker table {
+    width: 100%;
+    font-size: .9em;
+    border-collapse: collapse;
+    margin: 0 0 .4em;
+}
+
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+
+.ui-widget {
+    font-family: Verdana,Arial,sans-serif;
+    font-size: 1.1em;
+}
+
+.ui-datepicker td {
+    border: 0;
+    padding: 1px;
+    display: table-cell;
+    vertical-align: inherit;
+    font-size: .9em;
+    border-collapse: collapse;
+}
+.ui-datepicker-calendar td a {
+     width: 30px;
+     position: relative;
+    display: block;
+    padding: .2em;
+    text-align: right;
+    text-decoration: none;
+
+}

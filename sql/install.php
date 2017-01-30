@@ -22,7 +22,8 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "autorestocking_relation
 `name_combination` varchar(100) NOT NULL,
 `min_count` int(11) NOT NULL,
 `product_count` int(11) NOT NULL,
-`order_day` enum('0','1','2','3','4','5','6','7') NOT NULL DEFAULT '0',
+`type_order_day` int(11) NOT NULL,
+`order_day` varchar(100) NOT NULL,
 `status` int(11) NOT NULL,
 PRIMARY KEY (`id_relations`))
 ";

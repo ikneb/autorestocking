@@ -155,7 +155,7 @@ $(document).ready(function () {
 
     function Parida_Categories_Tree_Init() {
         var tree = $('#associated-categories-tree');
-        $('li input[type="checkbox"]', tree).change(function () {
+        $('.panel li input[type="checkbox"]', tree).change(function () {
             var _this = $(this);
             var li = _this.closest('li');
             var class_checked = 'tree-selected';
@@ -206,7 +206,7 @@ $(document).ready(function () {
     });
 
 
-    $('body').on('change', ':checkbox', function () {
+    $('body').on('change', '.tree-folder-name :checkbox', function () {
         var categories = [];
         if (this.checked) {
             Parida_Categories_Tree_Init();
@@ -308,7 +308,8 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/modules/autorestocking/ajax.php',
-                data: {id_provider: id_provider, ajax: 5},
+                data: {id_provider: id_provider,
+                    ajax: 'render_relation'},
                 success: function (data) {
                     $('.place-add-relation').html(data);
                 }
@@ -357,7 +358,21 @@ $(document).ready(function () {
         var id_relation = parent.find('input[name=id_relation]').val();
         var min_count = parent.find('input[name=min_count]').val();
         var product_count = parent.find('input[name=product_count]').val();
-        var order_day = parent.find('select').val();
+        var  type_order_day = parent.find('select').val();
+        var order_day  = [];
+
+        if(type_order_day == 1){
+            var days = Array.apply(null, document.getElementById('days_' + id_relation).querySelectorAll('.days [type=checkbox]'));
+            $(days).each(function (i) {
+                if($(this).prop('checked'))
+                order_day[i] = $(this).val();
+            });
+        }else if(type_order_day == 2){
+            var selectElement = $('#month_days_' + id_relation +', .ui-state-active');
+            $(selectElement).each(function (i) {
+                order_day[i] = $(this).html();
+            });
+        }
 
         $.ajax({
             type: 'POST',
@@ -366,8 +381,9 @@ $(document).ready(function () {
                 id_relations: id_relation,
                 min_count: min_count,
                 product_count: product_count,
+                type_order_day: type_order_day,
                 order_day: order_day,
-                ajax: 3
+                ajax: 'update_relation'
             },
             success: function (data) {
                 console.log(data);
@@ -384,8 +400,6 @@ $(document).ready(function () {
         var count = $(this).closest('.panel').find('.pagination-sm').attr('data-count');
         var parent = $(this).closest('.items-relation');
         var id_relation = parent.find('input[name=id_relation]').val();
-
-        console.log(sel, count, id_provider, page);
 
         $.ajax({
             type: 'POST',
@@ -407,7 +421,6 @@ $(document).ready(function () {
             }
         });
     });
-
 
     $('#linkAddRelation').click(function () {
         var id_provider = $("input[name='id_providers']").val();
@@ -456,7 +469,6 @@ $(document).ready(function () {
             supervise[txt] = true;
     });
 
-
     function checkReturnData(data) {
         if (data) {
             $('#ajax_confirmation').text('Update successfully!').removeClass('hide alert-danger').addClass('alert-success');
@@ -471,5 +483,109 @@ $(document).ready(function () {
         }
     }
 
+    $('body').on('change', '.selectpicker', function(e){
+        e.preventDefault();
+        var id_relation = $(this).closest('.items-relation').find(("input[name='id_relation']")).val();
+
+        if($(this).val() == 1){
+            $(this).closest('.text-center').find('.select-days-week').removeClass('no-active');
+            $(this).closest('.text-center').find('.select-days-week').addClass('select-group');
+
+            $(this).closest('.text-center').find('.select-days-month').addClass('no-active');
+            $(this).closest('.text-center').find('.select-days-month').removeClass('select-group');
+
+            function isChecked(element) {
+                return element.checked;
+            }
+
+            function getValue(element) {
+                return element.value;
+            }
+
+            function WeekdayWidget(element) {
+                var parts = Array.apply(null, element.querySelectorAll('.week-parts [type=checkbox]'));
+                var days = Array.apply(null, element.querySelectorAll('.days [type=checkbox]'));
+
+                function value() {
+                    return days.filter(isChecked).map(getValue);
+                }
+
+                this.value = value;
+
+                function updateParts(selected) {
+
+                    function notSelected(val) {
+                        return selected.indexOf(val) === -1;
+                    }
+
+                    parts.forEach(function(part) {
+                        var partDays = part.dataset.values.split(',');
+                        var notSelectedParts = partDays.filter(notSelected);
+                        if (notSelectedParts.length === 0) {
+                            part.checked = true;
+                            part.indeterminate = false;
+                        } else if (notSelectedParts.length === partDays.length) {
+                            part.checked = false;
+                            part.indeterminate = false;
+                        } else {
+                            part.indeterminate = true;
+                        }
+                        if (partDays.length === partDays.filter(notSelected).length)
+                            part.checked = partDays.filter(notSelected).length === 0;
+                    });
+                }
+
+                function updateDays(values, checked) {
+                    days.forEach(function(ele) {
+                        if (values.indexOf(ele.value) > -1) {
+                            ele.checked = checked;
+                        }
+                    });
+                }
+
+                element.addEventListener('change', function(event) {
+                    if (event.target.tagName === 'INPUT') {
+                        if (event.target.name === element.dataset.name) {
+                            updateParts(value());
+                        } else {
+                            updateDays(event.target.dataset.values.split(','), event.target.checked);
+                            updateParts(value());
+                        }
+                    }
+                });
+            }
+
+            var widget = new WeekdayWidget(document.getElementById('days_' + id_relation));
+
+        }else if($(this).val() == 2){
+            $(this).closest('.text-center').find('.select-days-week').addClass('no-active');
+            $(this).closest('.text-center').find('.select-days-week').removeClass('select-group');
+
+            $(this).closest('.text-center').find('.select-days-month').removeClass('no-active');
+            $(this).closest('.text-center').find('.select-days-month').addClass('select-group');
+        }
+
+    });
+
+    $('body').on('click', '.ui-state-default', function(e){
+        e.preventDefault();
+        if($(this).hasClass('ui-state-active')){
+            $(this).removeClass('ui-state-active');
+
+        }else{
+            $(this).addClass('ui-state-active');
+        }
+    });
+
+  /*  $("body").click(function(e) {
+        if($(e.target).children(".select-days-week").length===0)
+            $(".select-days-week").addClass('no-action');
+    });*/
 
 });
+
+
+
+
+
+
