@@ -67,7 +67,7 @@ $(document).ready(function () {
         }
     }
 
-    $('body').on('change', '.selectpicker', function(e){
+    $('body').on('click', '.selectpicker', function(e){
         e.preventDefault();
         var id_attr_comb = $(this).closest('.product-tab').attr('data-atrt');
 
@@ -159,6 +159,10 @@ $(document).ready(function () {
         }else{
             $(this).addClass('ui-state-active');
         }
+    });
+
+    $('body').on('mouseleave', '.select-days-week, .select-days-month',function () {
+        $(this).addClass('no-active');
     });
 
 });

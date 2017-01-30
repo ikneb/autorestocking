@@ -36,7 +36,7 @@ class AutoRestocking extends Module
     public function install()
     {
         if (!parent::install()
-            || !$this->registerHook('displayBackOfficeHeader')
+            || !$this->registerHook('actionAdminControllerSetMedia')
             || !$this->registerHook('displayAdminProductsExtra')
             || !$this->registerHook('displayHeader')
             || !Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD', 1)
@@ -122,11 +122,14 @@ class AutoRestocking extends Module
         return true;
     }
 
-    public function hookDisplayBackOfficeHeader()
+    public function hookActionAdminControllerSetMedia($params)
     {
-        $this->context->controller->addCss($this->_path . 'views/css/autorestocking.css');
-        $this->context->controller->addJquery();
-        $this->context->controller->addJS($this->_path . 'views/js/product_tab.js');
+        if ($this->context->controller->controller_name == 'AdminProducts') {
+            $this->context->controller->addCss($this->_path . 'views/css/autorestocking.css');
+            $this->context->controller->addJquery();
+            $this->context->controller->addJS($this->_path . 'views/js/product_tab.js');
+        }
+
     }
 
     public function hookDisplayHeader()
@@ -143,6 +146,10 @@ class AutoRestocking extends Module
     public function hookDisplayAdminProductsExtra($params)
     {
 
+        $this->context->controller->addCss($this->_path . 'views/css/autorestocking.css');
+        $this->context->controller->addJquery();
+        $this->context->controller->addJS($this->_path . 'views/js/product_tab.js');
+
         if (version_compare(_PS_VERSION_, '1.7', '<')) {
             $id_product = Tools::getValue('id_product');
         } else {
@@ -150,6 +157,7 @@ class AutoRestocking extends Module
         }
 
         $product = new Product($id_product);
+        $id_category_default = $product->id_category_default;
         $has_combination = $product->hasAttributes();
         $providers = Providers::getAll();
 
@@ -165,7 +173,10 @@ class AutoRestocking extends Module
             'has_comb_tpl_new' => _PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/has_comb_new.tpl',
             'not_comb_tpl_new' => _PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/not_comb_new.tpl',
             'combinations' => $combination,
-            'version' => version_compare(_PS_VERSION_, '1.7', '<')
+            'version' => version_compare(_PS_VERSION_, '1.7', '<'),
+            'id_product' => $id_product,
+            'id_category_default' => $id_category_default
+
         ));
 
         return $this->display(__FILE__, 'views/templates/admin/product_tab.tpl');
@@ -251,27 +262,31 @@ class AutoRestocking extends Module
                 if (!empty($relations)) {
                     $product_list = array();
                     foreach ($relations as $relation) {
-                        if ($relation['id_product_attribute'] != 0) {
+                        $order_day = Tools::jsonDecode($relation['order_day']);
+                        $type_data_order = $relation['type_order_day'];
+                        $type_data = ($type_data_order == 1) ? date('w') : date('j');
+                        if ($relation['id_product_attribute'] != 0 && $relation['id_product_attribute'] != 999999999) {
                             if ($relation['min_count'] >= $relation['attribute_quantity']
-                                /*|| $relation['min_count'] == date('w')*/
+                                || $order_day == $type_data
                             ) {
                                 $product_list[] = $relation;
                             }
                         } else {
                             if ($relation['min_count'] >= $relation['product_quantity']
-                                /*|| $relation['min_count'] == date('w')*/
+                                || $order_day == $type_data
                             ) {
                                 $product_list[] = $relation;
                             }
                         }
                     }
                     $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-                    $sql = "SELECT id_order_state FROM ". _DB_PREFIX_ ."order_state_lang WHERE id_lang ="
+                    $sql = "SELECT id_order_state FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_lang ="
                         . $id_lang . " AND name ='Email sent(Autorestockin)'";
                     $id_order_state = Db::getInstance()->getValue($sql);
 
+
                     if (!empty($product_list)) {
-                        $token = md5(uniqid(rand(), true));
+                        /*$token = md5(uniqid(rand(), true));
                         $order = new Order();
                         $order->current_state = $id_order_state;
                         $order->id_address_delivery = 0;
@@ -312,7 +327,7 @@ class AutoRestocking extends Module
                         }else {
                             $email->delete();
                             $order->delete();
-                        }
+                        }*/
                     }
                 }
             }
@@ -337,7 +352,7 @@ class AutoRestocking extends Module
         $url_status = self::generateUrlStatus($id_provider, $token, $id_order, $id_sent_email);
         $message = EmailTemplate::getMailTemplate();
 
-        if($message){
+        if ($message) {
             $message = preg_replace('/\[name\]/', $name, $message);
             $message = preg_replace('/\[status_url\]/', $url_status, $message);
             $message = preg_replace('/\[product_list\]/', $list, $message);
@@ -361,7 +376,7 @@ class AutoRestocking extends Module
         switch ($status) {
             case 1:
 
-                $sql = "SELECT id_order_state FROM ". _DB_PREFIX_ ."order_state_lang WHERE id_lang ="
+                $sql = "SELECT id_order_state FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_lang ="
                     . $id_lang . " AND name ='In process(Autorestockin)'";
                 $id_order_state = Db::getInstance()->getValue($sql);
 
@@ -373,7 +388,7 @@ class AutoRestocking extends Module
 
                 break;
             case 2:
-                $sql = "SELECT id_order_state FROM ". _DB_PREFIX_ ."order_state_lang WHERE id_lang ="
+                $sql = "SELECT id_order_state FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_lang ="
                     . $id_lang . " AND name ='Order sent(Autorestockin)'";
                 $id_order_state = Db::getInstance()->getValue($sql);
 

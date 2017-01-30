@@ -276,7 +276,7 @@ class Relation extends ObjectModel
         } else {
             return false;
         }
-        return $products;
+        return true;
     }
 
     public static function insertRelationWithAttribute($id_product, $id_category, $id_provider, $id_attribute, $name_combination)

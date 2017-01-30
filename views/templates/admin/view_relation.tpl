@@ -185,7 +185,7 @@
                                 " href="#">10</a>
                             </td>
                             <td class=" ">
-                                <a class="ui-state-default]
+                                <a class="ui-state-default
                                 {if $relation.type_order_day ==2 &&
                                 preg_match('/"11"/',$relation.order_day)}ui-state-active{/if}
                                 " href="#">11</a>

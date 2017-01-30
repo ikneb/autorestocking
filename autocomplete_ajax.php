@@ -10,7 +10,9 @@ $sql = 'SELECT `id_product`, `name`
 		FROM `' . _DB_PREFIX_ . 'product_lang` WHERE id_lang = ' . $id_lang;
 $items = Db::getInstance()->executeS($sql);
 
+$result = '';
 foreach ($items as $item) {
-    echo trim($item['name']) . '|' . (int)($item['id_product']) . "\n";
+    $result .=  trim($item['name']) . '|' . (int)($item['id_product']) . "\n";
 }
 
+echo $result;

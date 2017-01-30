@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="col-lg-1"><span class="pull-right"></span></div>
-                <label class="control-label col-lg-2" for="provider">Provider</label>
+                <label class="control-label col-lg-2" for="provider">{l s='Provider'}</label>
                 <div class="col-lg-3 col-md-3 col-sm-3">
                     <select name="id_provider" id="id_provider">
                         <option value=""></option>
@@ -18,7 +18,7 @@
                     </select>
                 </div>
                 <div class="col-lg-1"><span class="pull-right"></span></div>
-                <label class="control-label col-lg-2 col-md-2 col-sm-2" for="min_count">Auto-order count</label>
+                <label class="control-label col-lg-2 col-md-2 col-sm-2" for="min_count">{l s='Auto-order count'}</label>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <input type="number" name="min_count" id="min_count"
                            value="{if $combination.min_count}{$combination.min_count}{/if}">
@@ -26,70 +26,71 @@
             </div>
             <div class="col-md-6">
                 <div class="col-lg-1"><span class="pull-right"></span></div>
-                <label class="control-label col-lg-2 col-md-2 col-sm-2" for="product_count">Product count</label>
+                <label class="control-label col-lg-2 col-md-2 col-sm-2"
+                       for="product_count">{l s='Product count'}</label>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <input type="number" name="product_count" id="product_count"
                            value="{if $combination.product_count}{$combination.product_count}{/if}">
                 </div>
 
                 <label class="control-label col-lg-3">
-                    Send
+                    {l s='Send'}
                 </label>
                 <div class="col-lg-2 col-md-2 col-sm-2 text-center">
                     <select name="type_order_day" class="selectpicker">
-                        <option>Select</option>
-                        <option value="1" {if $combination.type_order_day == 1}selected{/if}>Days week</option>
-                        <option value="2" {if $combination.type_order_day == 2}selected{/if}>Days month</option>
+                        <option>{l s='Select'}</option>
+                        <option value="1" {if $combination.type_order_day == 1}selected{/if}>{l s='Days week'}</option>
+                        <option value="2" {if $combination.type_order_day == 2}selected{/if}>{l s='Days month'}</option>
                     </select>
 
                     <div class="select-days-week no-active">
                         <div class="weekday-select" data-name="order_day" id="days_{$combination.id_product_attribute}">
                             <div class="week-parts">
                                 <label>
-                                    <input type="checkbox" data-values="0,1,2,3,4,5,6"> Any day
+                                    <input type="checkbox" data-values="0,1,2,3,4,5,6"> {l s='Any day'}
                                 </label>
                                 <label>
-                                    <input type="checkbox" data-values="0,6"> Weekends
+                                    <input type="checkbox" data-values="0,6"> {l s='Weekends'}
                                 </label>
                                 <label>
-                                    <input type="checkbox" data-values="1,2,3,4,5"> Weekdays
+                                    <input type="checkbox" data-values="1,2,3,4,5"> {l s='Weekdays'}
                                 </label>
                             </div>
                             <div class="days">
                                 <label>
                                     <input type="checkbox" value="1" name="order_day"
                                            {if $combination.type_order_day ==1 && preg_match('/"1"/',$combination.order_day)}checked{/if}
-                                            > Monday
+                                    > {l s='Monday'}
                                 </label>
                                 <label>
                                     <input type="checkbox" value="2"
                                            {if $combination.type_order_day ==1 && preg_match('/"2"/',$combination.order_day)}checked{/if}
-                                           name="order_day"> Tuesday
+                                           name="order_day"> {l s='Tuesday'}
                                 </label>
                                 <label>
                                     <input type="checkbox" value="3"
                                            {if $combination.type_order_day ==1 && preg_match('/"3"/',$combination.order_day)}checked{/if}
-                                           name="order_day"> Wednesday
+                                           name="order_day"> {l s='Wednesday'}
                                 </label>
                                 <label>
                                     <input type="checkbox" value="4"
                                            {if $combination.type_order_day ==1 && preg_match('/"4"/',$combination.order_day)}checked{/if}
-                                           name="order_day"> Thursday
+                                           name="order_day"> {l s='Thursday'}
                                 </label>
                                 <label>
                                     <input type="checkbox" value="5"
                                            {if $combination.type_order_day ==1 && preg_match('/"5"/',$combination.order_day)}checked{/if}
-                                           name="order_day"> Friday
+                                           name="order_day"> {l s='Friday'}
                                 </label>
                                 <label>
                                     <input type="checkbox" value="6"
                                            {if $combination.type_order_day ==1 && preg_match('/"6"/',$combination.order_day)}checked{/if}
-                                           name="order_day"> Saturday
+                                           name="order_day"> {l s='Saturday'}
                                 </label>
                                 <label>
                                     <input type="checkbox" value="7"
                                            {if $combination.type_order_day ==1 && preg_match('/"7"/',$combination.order_day)}checked{/if}
-                                           name="order_day"> Sunday
+                                           name="order_day"> {l s='Sunday'}
                                 </label>
                             </div>
                         </div>
@@ -224,11 +225,13 @@
                                 <td class=" ui-datepicker-week-end ">
                                     <a class="ui-state-default
                                     {if $combination.type_order_day ==2 &&
-                                    preg_match('/"22"/',$combination.order_day)}ui-state-active{/if}" href="#">22</a></td>
+                                    preg_match('/"22"/',$combination.order_day)}ui-state-active{/if}" href="#">22</a>
+                                </td>
                                 <td class=" ">
                                     <a class="ui-state-default
                                     {if $combination.type_order_day ==2 &&
-                                    preg_match('/"23"/',$combination.order_day)}ui-state-active{/if}" href="#">23</a></td>
+                                    preg_match('/"23"/',$combination.order_day)}ui-state-active{/if}" href="#">23</a>
+                                </td>
                                 <td class=" ">
                                     <a class="ui-state-default
                                     {if $combination.type_order_day ==2 &&
@@ -237,15 +240,18 @@
                                 <td class=" ">
                                     <a class="ui-state-default
                                     {if $combination.type_order_day ==2 &&
-                                    preg_match('/"25"/',$combination.order_day)}ui-state-active{/if}" href="#">25</a></td>
+                                    preg_match('/"25"/',$combination.order_day)}ui-state-active{/if}" href="#">25</a>
+                                </td>
                                 <td class=" ">
                                     <a class="ui-state-default
                                     {if $combination.type_order_day ==2 &&
-                                    preg_match('/"26"/',$combination.order_day)}ui-state-active{/if}" href="#">26</a></td>
+                                    preg_match('/"26"/',$combination.order_day)}ui-state-active{/if}" href="#">26</a>
+                                </td>
                                 <td class=" ">
                                     <a class="ui-state-default
                                     {if $combination.type_order_day ==2 &&
-                                    preg_match('/"27"/',$combination.order_day)}ui-state-active{/if}" href="#">27</a></td>
+                                    preg_match('/"27"/',$combination.order_day)}ui-state-active{/if}" href="#">27</a>
+                                </td>
                                 <td class=" ui-datepicker-week-end ">
                                     <a class="ui-state-default
                                     {if $combination.type_order_day ==2 &&
@@ -261,7 +267,8 @@
                                 <td class=" ">
                                     <a class="ui-state-default
                                     {if $combination.type_order_day ==2 &&
-                                    preg_match('/"30"/',$combination.order_day)}ui-state-active{/if}" href="#">30</a></td>
+                                    preg_match('/"30"/',$combination.order_day)}ui-state-active{/if}" href="#">30</a>
+                                </td>
                                 <td class="">
                                     <a class="ui-state-default
                                     {if $combination.type_order_day ==2 &&
@@ -282,7 +289,7 @@
 
                 </div>
                 <button type="button" class="btn btn-default pull-right submitCombination"><i
-                            class="process-icon-save"></i> {l s='Save' mod='wtproductadditionalfields'}</button>
+                            class="process-icon-save"></i> {l s='Save' mod='autorestocking'}</button>
             </div>
         </div>
     </div>

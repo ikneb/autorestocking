@@ -13,7 +13,6 @@ $(document).ready(function () {
         var email = $('#email').val();
         var r = /^\w+@\w+\.\w{2,4}$/i;
         if (!r.test(email)){
-            console.log('Email!');
             $('#ajax_confirmation').text('Not valid email!').removeClass('hide alert-success').addClass('alert-danger');
             setTimeout(function () {
                 $('#ajax_confirmation').addClass('hide');
@@ -24,25 +23,11 @@ $(document).ready(function () {
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
-            data: {id_provider: id_provider, name: name, description: description, email: email, ajax: 4},
+            data: {id_provider: id_provider, name: name, description: description, email: email, ajax: 'save_update_provider'},
             success: function (data) {
                 if (id_provider == '') {
                     $('#id_providers').val(data);
                 }
-                checkReturnData(data);
-            }
-        });
-    })
-
-
-    $("body").on("submit", ".relationForm", function (e) {
-        e.preventDefault();
-        var provider = $(this).serialize();
-        $.ajax({
-            type: 'POST',
-            url: '/modules/autorestocking/ajax.php',
-            data: provider,
-            success: function (data) {
                 checkReturnData(data);
             }
         });
@@ -71,7 +56,7 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/modules/autorestocking/ajax.php',
-                data: {id_product: id_product, ajax: 8},
+                data: {id_product: id_product, ajax: 'add_product_autocomplete'},
                 success: function (data) {
                     console.log(data);
                     data = JSON.parse(data);
@@ -126,7 +111,7 @@ $(document).ready(function () {
                 $.ajax({
                     type: 'POST',
                     url: '/modules/autorestocking/ajax.php',
-                    data: {id_product: id_product, ajax: 10},
+                    data: {id_product: id_product, ajax: 'get_product_attr'},
                     success: function (data) {
                         var data_decoder = JSON.parse(data);
                         var attr = '';
@@ -155,7 +140,7 @@ $(document).ready(function () {
 
     function Parida_Categories_Tree_Init() {
         var tree = $('#associated-categories-tree');
-        $('.panel li input[type="checkbox"]', tree).change(function () {
+        $('li input[type="checkbox"]', tree).change(function () {
             var _this = $(this);
             var li = _this.closest('li');
             var class_checked = 'tree-selected';
@@ -197,9 +182,8 @@ $(document).ready(function () {
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
-            data: {products: products, ajax: 6, id_provider: id_provider},
+            data: {products: products, ajax: 'add_product_for_relation', id_provider: id_provider},
             success: function (data) {
-                console.log(data);
                 checkReturnData(data);
             }
         });
@@ -216,10 +200,10 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/modules/autorestocking/ajax.php',
-                data: {categories: categories, ajax: 7},
+                data: {categories: categories, ajax: 'add_product_tree'},
                 success: function (data) {
+                    console.log(data);
                     var products = JSON.parse(data);
-                    console.log(products);
                     var product_list = [];
                     for (i = 0; i < products.length; i++) {
                         if (products[i][0]['id_product'] != null) {
@@ -255,7 +239,7 @@ $(document).ready(function () {
                 $.ajax({
                     type: 'POST',
                     url: '/modules/autorestocking/ajax.php',
-                    data: {categories: categories, ajax: 7},
+                    data: {categories: categories, ajax: 'add_product_tree'},
                     success: function (data) {
                         var products = JSON.parse(data);
                         var product_new = [];
@@ -287,7 +271,6 @@ $(document).ready(function () {
 
     });
 
-
     $('body').on('click', '.remove-product', function (e) {
         e.preventDefault();
         $(this).addClass('hidden')
@@ -295,6 +278,20 @@ $(document).ready(function () {
         $(this).closest('.product').attr('data-save', 1);
     });
 
+    $('body').on('click', '.check-attribute', function (e) {
+        e.preventDefault();
+        $(this).addClass('hidden')
+        $(this).closest('.badge').find('.remove-attribute').removeClass('hidden');
+        $(this).closest('.product').attr('data-save', 0);
+
+    });
+
+    $('body').on('click', '.remove-attribute', function (e) {
+        e.preventDefault();
+        $(this).addClass('hidden')
+        $(this).closest('.badge').find('.check-attribute').removeClass('hidden');
+        $(this).closest('.product').attr('data-save', 1);
+    });
 
     $('#linkRelation').click(function () {
         var id_provider = $("input[name='id_providers']").val();
@@ -343,7 +340,7 @@ $(document).ready(function () {
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
-            data: {id_provider: id_provider, page: newPage, ajax: 5},
+            data: {id_provider: id_provider, page: newPage, ajax: 'render_relation'},
             success: function (data) {
                 $('.place-add-relation').html(data);
             }
@@ -406,14 +403,14 @@ $(document).ready(function () {
             url: '/modules/autorestocking/ajax.php',
             data: {
                 id_relation: id_relation,
-                ajax: 9
+                ajax: 'delete_relation'
             },
             success: function (data) {
                 checkReturnData(data);
                 $.ajax({
                     type: 'POST',
                     url: '/modules/autorestocking/ajax.php',
-                    data: {id_provider: id_provider, page: page, ajax: 5},
+                    data: {id_provider: id_provider, page: page, ajax: 'render_relation'},
                     success: function (data) {
                         $('.place-add-relation').html(data);
                     }
@@ -444,6 +441,7 @@ $(document).ready(function () {
             mustMatch: false,
             scroll: false,
             formatItem: function (item) {
+                item;
                 return item[0] + ' - ' + item[1];
             }
         }).result(function (e, i) {
@@ -483,7 +481,7 @@ $(document).ready(function () {
         }
     }
 
-    $('body').on('change', '.selectpicker', function(e){
+    $('body').on('click', '.selectpicker', function(e){
         e.preventDefault();
         var id_relation = $(this).closest('.items-relation').find(("input[name='id_relation']")).val();
 
@@ -577,15 +575,11 @@ $(document).ready(function () {
         }
     });
 
-  /*  $("body").click(function(e) {
-        if($(e.target).children(".select-days-week").length===0)
-            $(".select-days-week").addClass('no-action');
-    });*/
+    $('body').on('mouseleave', '.select-days-week, .select-days-month',function () {
+        $(this).addClass('no-active');
+    });
 
 });
-
-
-
 
 
 

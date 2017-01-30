@@ -9,16 +9,14 @@ require_once(_PS_MODULE_DIR_ . 'autorestocking/autorestocking.php');
 
 
 switch (Tools::getValue('ajax')) {
-    case 1:
-        print_r(Relation::getProductsAllChildrenCategories(Tools::getValue('id_category')));
-        break;
-    case 2:
+
+    case 'save_update_template_email':
         echo EmailTemplate::updateTemplate(Tools::getValue('tiny'));
         break;
     case 'update_relation':
         echo Relation::updateRelation();
         break;
-    case 4:
+    case 'save_update_provider':
         if (Tools::getValue('id_provider') == null) {
             echo Providers::insertProviderReturnId();
         } else {
@@ -28,22 +26,22 @@ switch (Tools::getValue('ajax')) {
     case 'render_relation':
         echo Relation::getAllProductByProviderId($smarty);
         break;
-    case 6:
-        print_r(Relation::saveRelationProductByProvider());
+    case 'add_product_for_relation':
+        echo Relation::saveRelationProductByProvider();
         break;
-    case 7:
-        print_r(Tools::jsonEncode(Relation::getProductsAllCategories()));
+    case 'add_product_tree':
+        echo Tools::jsonEncode(Relation::getProductsAllCategories());
         break;
-    case 8:
+    case 'add_product_autocomplete':
         echo Tools::jsonEncode(Relation::getCategoryIdByProduct());
         break;
-    case 9:
+    case 'delete_relation':
         echo Relation::deleteRelationByIdRelation();
         break;
-    case 10:
+    case 'get_product_attr':
         echo Tools::jsonEncode(Relation::getAttributeByIdProduct(Tools::getValue('id_product')));
         break;
-    case 11:
+    case 'save_configuration':
         echo AutoRestocking::updateConfig();
         break;
     case 'update_relation_for_product_tab':

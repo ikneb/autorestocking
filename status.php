@@ -32,18 +32,18 @@ if($token == 0){
 <body>
 <div class="wrapper">
     <button type="button" class="btn btn-primary btn-lg status" data-status="1"
-            data-order="<?= Tools::getValue('id_order') ?>"
-            data-provider="<?= Tools::getValue('provider') ?>"
-            data-product="<?= Tools::getValue('product') ?>"
-            data-email="<?= Tools::getValue('id_email') ?>"
+            data-order="<?php echo Tools::getValue('id_order') ?>"
+            data-provider="<?php echo Tools::getValue('provider') ?>"
+            data-product="<?php echo Tools::getValue('product') ?>"
+            data-email="<?php echo Tools::getValue('id_email') ?>"
         >Order in
         processing
     </button>
     <button type="button" class="btn btn-secondary btn-lg status" data-status="2"
-            data-order="<?= Tools::getValue('id_order') ?>"
-            data-provider="<?= Tools::getValue('provider') ?>"
-            data-product="<?= Tools::getValue('product') ?>"
-            data-email="<?= Tools::getValue('id_email') ?>"
+            data-order="<?php echo Tools::getValue('id_order') ?>"
+            data-provider="<?php echo Tools::getValue('provider') ?>"
+            data-product="<?php echo Tools::getValue('product') ?>"
+            data-email="<?php echo Tools::getValue('id_email') ?>"
         >Order
         send
     </button>

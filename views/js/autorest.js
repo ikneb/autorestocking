@@ -7,7 +7,7 @@ $(document).ready(function () {
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
-            data: {tiny: tiny, ajax: 2},
+            data: {tiny: tiny, ajax: 'save_update_template_email'},
             success: function (data) {
                 checkReturnData(data);
             }
@@ -28,7 +28,7 @@ $(document).ready(function () {
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
-            data: {method_value: method_value, name: name, ajax: 11},
+            data: {method_value: method_value, name: name, ajax: 'save_configuration'},
             success: function (data) {
                 checkReturnData(data);
             }
