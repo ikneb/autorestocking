@@ -6,6 +6,7 @@ $(document).ready(function () {
         var id_provider = $(this).attr('data-provider');
         var id_product = $(this).attr('data-product');
         var id_order = $(this).attr('data-order');
+        var id_email = $(this).attr('data-email');
 
         $.ajax({
             type: 'POST',
@@ -14,7 +15,8 @@ $(document).ready(function () {
                 id_order: id_order,
                 status: status,
                 id_provider: id_provider,
-                id_product: id_product
+                id_product: id_product,
+                id_email: id_email
             },
             success: function (data) {
                 console.log(data);

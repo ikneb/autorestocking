@@ -5,8 +5,9 @@ require_once(dirname(__FILE__) . '../../../init.php');
 require_once(dirname(__FILE__) . '/classes/Relation.php');
 
 $sql = 'SELECT id_sent_email FROM `' . _DB_PREFIX_ . 'sent_email` WHERE token = "'. Tools::getValue('token').'"';
+$token = Db::getInstance()->getValue($sql);
 
-if(!Db::getInstance()->execute($sql)){
+if($token == 0){
     header("HTTP/1.1 404 Not Found");
     header("Status: 404 Not Found");
     die();
@@ -25,7 +26,7 @@ if(!Db::getInstance()->execute($sql)){
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
-
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
     <script src="/modules/autorestocking/views/js/url.js"></script>
 </head>
 <body>
@@ -33,16 +34,21 @@ if(!Db::getInstance()->execute($sql)){
     <button type="button" class="btn btn-primary btn-lg status" data-status="1"
             data-order="<?= Tools::getValue('id_order') ?>"
             data-provider="<?= Tools::getValue('provider') ?>"
-            data-product="<?= Tools::getValue('product') ?>">Order in
+            data-product="<?= Tools::getValue('product') ?>"
+            data-email="<?= Tools::getValue('id_email') ?>"
+        >Order in
         processing
     </button>
     <button type="button" class="btn btn-secondary btn-lg status" data-status="2"
             data-order="<?= Tools::getValue('id_order') ?>"
             data-provider="<?= Tools::getValue('provider') ?>"
-            data-product="<?= Tools::getValue('product') ?>">Order
+            data-product="<?= Tools::getValue('product') ?>"
+            data-email="<?= Tools::getValue('id_email') ?>"
+        >Order
         send
     </button>
 </div>
+
 <div id="myModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">

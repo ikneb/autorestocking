@@ -265,10 +265,15 @@ class AutoRestocking extends Module
                             }
                         }
                     }
+                    $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+                    $sql = "SELECT id_order_state FROM ". _DB_PREFIX_ ."order_state_lang WHERE id_lang ="
+                        . $id_lang . " AND name ='Email sent(Autorestockin)'";
+                    $id_order_state = Db::getInstance()->getValue($sql);
+
                     if (!empty($product_list)) {
                         $token = md5(uniqid(rand(), true));
                         $order = new Order();
-                        $order->current_state = 15;
+                        $order->current_state = $id_order_state;
                         $order->id_address_delivery = 0;
                         $order->id_address_invoice = 0;
                         $order->id_cart = 0;
@@ -283,7 +288,6 @@ class AutoRestocking extends Module
                         $order->total_products_wt = 0;
                         $order->conversion_rate = 0;
                         $order->secure_key = 0;
-//                      $order->reference = $provider['name'].'(autorestoking)';
                         $order->add();
 
                         $email = new Email();
@@ -295,14 +299,19 @@ class AutoRestocking extends Module
                         $email->id_state = $order->getFields()['current_state'];
                         $email->save();
 
+                        $email->getID($token);
+
                         $message = self::generateMessage($provider['id_providers'], $provider['name'], $product_list,
-                            $token, $order->getFields()['id_order']);
+                            $token, $order->getFields()['id_order'],  $email->getID($token));
+
                         $send = Email::sendEmail($provider['email'], $message);
+
                         print_r($message);
-                        if ($send) {
-
-                        } else {
-
+                        if($message && $send){
+                            return true;
+                        }else {
+                            $email->delete();
+                            $order->delete();
                         }
                     }
                 }
@@ -310,13 +319,13 @@ class AutoRestocking extends Module
         }
     }
 
-    public static function generateUrlStatus($id_provider, $token, $id_order)
+    public static function generateUrlStatus($id_provider, $token, $id_order, $id_sent_email)
     {
         return $url = _PS_BASE_URL_ . '/modules/autorestocking/status.php?provider=' . $id_provider
-            . '&token=' . $token . '&id_order=' . $id_order;
+            . '&token=' . $token . '&id_order=' . $id_order . '&id_email=' . $id_sent_email;
     }
 
-    public static function generateMessage($id_provider, $name, $product_list, $token, $id_order)
+    public static function generateMessage($id_provider, $name, $product_list, $token, $id_order, $id_sent_email)
     {
         $list = '';
 
@@ -325,13 +334,18 @@ class AutoRestocking extends Module
             $list .= "<p>" . $product['name'] . $combination . "   count order : " . $product['product_count'] . " </p>";
         }
 
-        $url_status = self::generateUrlStatus($id_provider, $token, $id_order);
+        $url_status = self::generateUrlStatus($id_provider, $token, $id_order, $id_sent_email);
         $message = EmailTemplate::getMailTemplate();
-        $message = preg_replace('/\[name\]/', $name, $message);
-        $message = preg_replace('/\[status_url\]/', $url_status, $message);
-        $message = preg_replace('/\[product_list\]/', $list, $message);
 
-        return $message;
+        if($message){
+            $message = preg_replace('/\[name\]/', $name, $message);
+            $message = preg_replace('/\[status_url\]/', $url_status, $message);
+            $message = preg_replace('/\[product_list\]/', $list, $message);
+            return $message;
+        }
+
+        return false;
+
     }
 
     public static function changeStatus()
@@ -340,6 +354,7 @@ class AutoRestocking extends Module
         $id_povider = Tools::getValue('id_povider');
         $id_product = Tools::getValue('id_product');
         $id_order = Tools::getValue('id_order');
+        $id_email = Tools::getValue('id_email');
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
 
@@ -366,6 +381,11 @@ class AutoRestocking extends Module
                 $history->id_order = (int)$id_order;
                 $history->changeIdOrderState($id_order_state, (int)$id_order);
 
+                $sql = "UPDATE " . _DB_PREFIX_ . "sent_email
+                SET token = 0
+                WHERE id_sent_email = " . $id_email;
+
+                Db::getInstance()->execute($sql);
 
                 return 2;
 

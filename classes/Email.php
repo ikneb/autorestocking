@@ -50,4 +50,14 @@ class Email extends ObjectModel
         return true;
     }
 
+    public function getID($token){
+
+        $sql = $sql = 'SELECT id_sent_email FROM
+        ' . _DB_PREFIX_ . 'sent_email
+        WHERE token ="' . $token.'"';
+        $id_sent_email = Db::getInstance()->getValue($sql);
+
+        return $id_sent_email;
+
+    }
 }

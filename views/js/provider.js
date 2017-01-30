@@ -11,13 +11,21 @@ $(document).ready(function () {
         var name = $('#name').val();
         var description = $('#description').val();
         var email = $('#email').val();
+        var r = /^\w+@\w+\.\w{2,4}$/i;
+        if (!r.test(email)){
+            console.log('Email!');
+            $('#ajax_confirmation').text('Not valid email!').removeClass('hide alert-success').addClass('alert-danger');
+            setTimeout(function () {
+                $('#ajax_confirmation').addClass('hide');
+            }, 2000);
+            return;
+        }
 
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
             data: {id_provider: id_provider, name: name, description: description, email: email, ajax: 4},
             success: function (data) {
-                console.log(data);
                 if (id_provider == '') {
                     $('#id_providers').val(data);
                 }
