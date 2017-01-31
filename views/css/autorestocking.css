@@ -98,7 +98,7 @@ input[type="number"] {
 
 .select-days-week{
     position: absolute;
-    width: 200px;
+    width: 250px;
     padding: 10px;
     z-index: 1;
 }
@@ -166,4 +166,15 @@ tbody {
     text-align: right;
     text-decoration: none;
 
+}
+.ui-state-default{
+    border: 1px solid #d3d3d3;
+    background: #e6e6e6  50% 50% repeat-x;
+    font-weight: normal;
+}
+
+.ui-state-active{
+    border: 1px solid #aaaaaa;
+    background: #ffffff 50% 50% repeat-x;
+    font-weight: normal;
 }

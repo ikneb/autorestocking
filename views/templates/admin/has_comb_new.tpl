@@ -37,8 +37,8 @@
                 <label class="form-control-label">{l s='Send'  mod=autorestocking}</label>
                 <select name="type_order_day" class="selectpicker">
                     <option>Select</option>
-                    <option value="1" {if $combination.type_order_day == 1}selected{/if}>Days week</option>
-                    <option value="2" {if $combination.type_order_day == 2}selected{/if}>Days month</option>
+                    <option value="1" {if $combination.type_order_day == 1}selected{/if}>{l s='Days week' mod=autorestocking}</option>
+                    <option value="2" {if $combination.type_order_day == 2}selected{/if}>{l s='Days month' mod=autorestocking}</option>
                 </select>
 
                 <div class="select-days-week no-active">

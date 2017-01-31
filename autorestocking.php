@@ -259,12 +259,16 @@ class AutoRestocking extends Module
         if (is_array($all_provider)) {
             foreach ($all_provider as $provider) {
                 $relations = Relation::getByProviderId($provider['id_providers'], 0, 1000);
+                $count_current_month = date('t');
                 if (!empty($relations)) {
                     $product_list = array();
                     foreach ($relations as $relation) {
                         $order_day = Tools::jsonDecode($relation['order_day']);
                         $type_data_order = $relation['type_order_day'];
                         $type_data = ($type_data_order == 1) ? date('w') : date('j');
+                        if($type_data > $count_current_month ){
+                            $type_data = $count_current_month;
+                        }
                         if ($relation['id_product_attribute'] != 0 && $relation['id_product_attribute'] != 999999999) {
                             if ($relation['min_count'] >= $relation['attribute_quantity']
                                 || $order_day == $type_data
@@ -286,13 +290,15 @@ class AutoRestocking extends Module
 
 
                     if (!empty($product_list)) {
-                        /*$token = md5(uniqid(rand(), true));
-                        $order = new Order();
+                        $token = md5(uniqid(rand(), true));
+
+                        $order = new OrderCore();
                         $order->current_state = $id_order_state;
                         $order->id_address_delivery = 0;
+                        $order->id_shop = 1;
                         $order->id_address_invoice = 0;
                         $order->id_cart = 0;
-                        $order->id_currency = 0;
+                        $order->id_currency = Configuration::get('PS_CURRENCY_DEFAULT');
                         $order->id_customer = 0;
                         $order->id_carrier = 0;
                         $order->payment = 'Payment by check';
@@ -318,16 +324,16 @@ class AutoRestocking extends Module
 
                         $message = self::generateMessage($provider['id_providers'], $provider['name'], $product_list,
                             $token, $order->getFields()['id_order'],  $email->getID($token));
+                        print_r($message);
 
                         $send = Email::sendEmail($provider['email'], $message);
 
-                        print_r($message);
                         if($message && $send){
                             return true;
                         }else {
                             $email->delete();
                             $order->delete();
-                        }*/
+                        }
                     }
                 }
             }

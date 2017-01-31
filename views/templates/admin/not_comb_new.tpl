@@ -1,8 +1,7 @@
-<div class="row product-tab" data-atrt="0"
-     data-atrt=""
+<div class="row product-tab" data-atrt="9999999999"
      data-cat="{$id_category_default|escape:'htmlall':'UTF-8'}"
      data-rel="{if $relations.id_relations}{$relations.id_relations|escape:'htmlall':'UTF-8'}{/if}"
-     data-comb="{$relations.comb|escape:'htmlall':'UTF-8'}"
+     data-comb="--"
      data-prod="{$id_product|escape:'htmlall':'UTF-8'}">
     <div class="col-md-3">
         <label class="form-control-label">{l s='Provider'  mod=autorestocking}</label>
@@ -38,7 +37,7 @@
         </select>
 
         <div class="select-days-week no-active">
-            <div class="weekday-select" data-name="order_day" id="days_">
+            <div class="weekday-select" data-name="order_day" id="days_9999999999">
                 <div class="week-parts">
                     <label>
                         <input type="checkbox" data-values="0,1,2,3,4,5,6"> {l s='Any day'  mod=autorestocking}

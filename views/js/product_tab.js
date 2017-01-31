@@ -43,6 +43,7 @@ $(document).ready(function () {
                 id_category: id_category,
                 ajax: 'update_relation_for_product_tab'
             },
+
             success: function (data) {
                 console.log(data)
                 if (id_relations == 0 && data.length < 10) {

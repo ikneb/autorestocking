@@ -394,7 +394,7 @@ class Relation extends ObjectModel
                 name_combination = '" . htmlspecialchars(Tools::getValue('name_combination')) . "',
                 id_category = " . Tools::getValue('id_category') . ",
                 type_order_day = " . Tools::getValue('type_order_day') . ",
-                order_day =  '" . $order_day . "',
+                order_day =  '" . Tools::jsonDecode($order_day) . "',
                 product_count = " . Tools::getValue('product_count') . "
                 WHERE id_relations = " . $id_relation;
 
