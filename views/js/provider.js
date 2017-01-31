@@ -12,7 +12,7 @@ $(document).ready(function () {
         var description = $('#description').val();
         var email = $('#email').val();
         var r = /^\w+@\w+\.\w{2,4}$/i;
-        if (!r.test(email)){
+        if (!r.test(email)) {
             $('#ajax_confirmation').text('Not valid email!').removeClass('hide alert-success').addClass('alert-danger');
             setTimeout(function () {
                 $('#ajax_confirmation').addClass('hide');
@@ -23,7 +23,13 @@ $(document).ready(function () {
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',
-            data: {id_provider: id_provider, name: name, description: description, email: email, ajax: 'save_update_provider'},
+            data: {
+                id_provider: id_provider,
+                name: name,
+                description: description,
+                email: email,
+                ajax: 'save_update_provider'
+            },
             success: function (data) {
                 if (id_provider == '') {
                     $('#id_providers').val(data);
@@ -190,7 +196,7 @@ $(document).ready(function () {
     });
 
 
-    $('body').on('change', '.tree-folder-name :checkbox', function () {
+    $('body').on('change', '.tree-folder-name :checkbox, .tree-item-name :checkbox', function () {
         var categories = [];
         if (this.checked) {
             Parida_Categories_Tree_Init();
@@ -305,8 +311,10 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/modules/autorestocking/ajax.php',
-                data: {id_provider: id_provider,
-                    ajax: 'render_relation'},
+                data: {
+                    id_provider: id_provider,
+                    ajax: 'render_relation'
+                },
                 success: function (data) {
                     $('.place-add-relation').html(data);
                 }
@@ -355,17 +363,17 @@ $(document).ready(function () {
         var id_relation = parent.find('input[name=id_relation]').val();
         var min_count = parent.find('input[name=min_count]').val();
         var product_count = parent.find('input[name=product_count]').val();
-        var  type_order_day = parent.find('select').val();
-        var order_day  = [];
+        var type_order_day = parent.find('select').val();
+        var order_day = [];
 
-        if(type_order_day == 1){
+        if (type_order_day == 1) {
             var days = Array.apply(null, document.getElementById('days_' + id_relation).querySelectorAll('.days [type=checkbox]'));
             $(days).each(function (i) {
-                if($(this).prop('checked'))
-                order_day[i] = $(this).val();
+                if ($(this).prop('checked'))
+                    order_day[i] = $(this).val();
             });
-        }else if(type_order_day == 2){
-            var selectElement = $('#month_days_' + id_relation +', .ui-state-active');
+        } else if (type_order_day == 2) {
+            var selectElement = $('#month_days_' + id_relation + ', .ui-state-active');
             $(selectElement).each(function (i) {
                 order_day[i] = $(this).html();
             });
@@ -445,11 +453,11 @@ $(document).ready(function () {
                 return item[0] + ' - ' + item[1];
             }
         }).result(function (e, i) {
-        if (i != undefined)
-            addRelatedProduct(i[1], i[0]);
-        $(this).val(i[0]);
-        $(this).attr('data', i[1])
-    });
+            if (i != undefined)
+                addRelatedProduct(i[1], i[0]);
+            $(this).val(i[0]);
+            $(this).attr('data', i[1])
+        });
 
     function addRelatedProduct(id_product_to_add, product_name) {
         if (!id_product_to_add)
@@ -481,11 +489,11 @@ $(document).ready(function () {
         }
     }
 
-    $('body').on('click', '.selectpicker', function(e){
+    $('body').on('click', '.selectpicker', function (e) {
         e.preventDefault();
         var id_relation = $(this).closest('.items-relation').find(("input[name='id_relation']")).val();
 
-        if($(this).val() == 1){
+        if ($(this).val() == 1) {
             $(this).closest('.text-center').find('.select-days-week').removeClass('no-active');
             $(this).closest('.text-center').find('.select-days-week').addClass('select-group');
 
@@ -516,7 +524,7 @@ $(document).ready(function () {
                         return selected.indexOf(val) === -1;
                     }
 
-                    parts.forEach(function(part) {
+                    parts.forEach(function (part) {
                         var partDays = part.dataset.values.split(',');
                         var notSelectedParts = partDays.filter(notSelected);
                         if (notSelectedParts.length === 0) {
@@ -534,14 +542,14 @@ $(document).ready(function () {
                 }
 
                 function updateDays(values, checked) {
-                    days.forEach(function(ele) {
+                    days.forEach(function (ele) {
                         if (values.indexOf(ele.value) > -1) {
                             ele.checked = checked;
                         }
                     });
                 }
 
-                element.addEventListener('change', function(event) {
+                element.addEventListener('change', function (event) {
                     if (event.target.tagName === 'INPUT') {
                         if (event.target.name === element.dataset.name) {
                             updateParts(value());
@@ -555,7 +563,7 @@ $(document).ready(function () {
 
             var widget = new WeekdayWidget(document.getElementById('days_' + id_relation));
 
-        }else if($(this).val() == 2){
+        } else if ($(this).val() == 2) {
             $(this).closest('.text-center').find('.select-days-week').addClass('no-active');
             $(this).closest('.text-center').find('.select-days-week').removeClass('select-group');
 
@@ -565,17 +573,17 @@ $(document).ready(function () {
 
     });
 
-    $('body').on('click', '.ui-state-default', function(e){
+    $('body').on('click', '.ui-state-default', function (e) {
         e.preventDefault();
-        if($(this).hasClass('ui-state-active')){
+        if ($(this).hasClass('ui-state-active')) {
             $(this).removeClass('ui-state-active');
 
-        }else{
+        } else {
             $(this).addClass('ui-state-active');
         }
     });
 
-    $('body').on('mouseleave', '.select-days-week, .select-days-month',function () {
+    $('body').on('mouseleave', '.select-days-week, .select-days-month', function () {
         $(this).addClass('no-active');
     });
 

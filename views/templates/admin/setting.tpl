@@ -1,1 +1,1 @@
-{$form_tpl}
+{$form_tpl|escape:'htmlall':'UTF-8'}

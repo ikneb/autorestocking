@@ -1,12 +1,12 @@
 <div id="provider-product-tab" class="panel product-tab"
      data-atrt=""
-     data-comb="0" data-cat="{$id_category_default}"
-     data-rel="{if $relations.id_relations}{$relations.id_relations}{/if}"
-     data-prod="{$id_product}">
+     data-comb="0" data-cat="{$id_category_default|escape:'htmlall':'UTF-8'}"
+     data-rel="{if $relations.id_relations}{$relations.id_relations|escape:'htmlall':'UTF-8'}{/if}"
+     data-prod="{$id_product|escape:'htmlall':'UTF-8'}">
     <h3 class="tab">{l s='Product Provider' mod='autorestocking'}</h3>
     <div class="form-group">
         <div class="col-lg-1"><span class="pull-right"></span></div>
-        <label class="control-label col-lg-2" for="provider">Provider</label>
+        <label class="control-label col-lg-2" for="provider">{l s='Provider'  mod=autorestocking}</label>
         <div class="col-lg-3">
             <select name="id_provider" id="id_provider">
                 <option value=""></option>
@@ -19,42 +19,42 @@
     </div>
     <div class="form-group">
         <div class="col-lg-1"><span class="pull-right"></span></div>
-        <label class="control-label col-lg-2" for="min_count">Auto-order count</label>
+        <label class="control-label col-lg-2" for="min_count">{l s='Auto-order count'  mod=autorestocking}</label>
         <div class="col-lg-1">
             <input type="number" name="min_count" id="min_count"
-                   value="{if $relations}{$relations.min_count}{else}{/if}">
+                   value="{if $relations}{$relations.min_count|escape:'htmlall':'UTF-8'}{else}{/if}">
         </div>
     </div>
     <div class="form-group">
         <div class="col-lg-1"><span class="pull-right"></span></div>
-        <label class="control-label col-lg-2" for="product_count">Product count</label>
+        <label class="control-label col-lg-2" for="product_count">{l s='Product count'  mod=autorestocking}</label>
         <div class="col-lg-1">
             <input type="number" name="product_count" id="product_count"
-                   value="{if $relations}{$relations.product_count}{else}{/if}">
+                   value="{if $relations}{$relations.product_count|escape:'htmlall':'UTF-8'}{else}{/if}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-lg-3">
-            Send
+            {l s='Send'  mod=autorestocking}
         </label>
         <div class="col-lg-1 text-center">
             <select name="type_order_day" class="selectpicker">
                 <option>Select</option>
-                <option value="1" {if $relations.type_order_day == 1}selected{/if}>Days week</option>
-                <option value="2" {if $relations.type_order_day == 2}selected{/if}>Days month</option>
+                <option value="1" {if $relations.type_order_day == 1}selected{/if}>{l s='Days week'  mod=autorestocking}</option>
+                <option value="2" {if $relations.type_order_day == 2}selected{/if}>{l s='Days month'  mod=autorestocking}</option>
             </select>
 
             <div class="select-days-week no-active">
                 <div class="weekday-select" data-name="order_day" id="days_">
                     <div class="week-parts">
                         <label>
-                            <input type="checkbox" data-values="0,1,2,3,4,5,6"> Any day
+                            <input type="checkbox" data-values="0,1,2,3,4,5,6"> {l s='Any day'  mod=autorestocking}
                         </label>
                         <label>
-                            <input type="checkbox" data-values="0,6"> Weekends
+                            <input type="checkbox" data-values="0,6"> {l s='Weekends'  mod=autorestocking}
                         </label>
                         <label>
-                            <input type="checkbox" data-values="1,2,3,4,5"> Weekdays
+                            <input type="checkbox" data-values="1,2,3,4,5"> {l s='Weekdays'  mod=autorestocking}
                         </label>
                     </div>
                     <div class="days">
@@ -310,9 +310,9 @@
 
     <div class="panel-footer">
         <a href="{Context::getContext()->link->getAdminLink('AdminProducts')|escape:'htmlall':'UTF-8'}"
-           class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel' mod='wtproductadditionalfields'}
+           class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'  mod=autorestocking}
         </a>
         <button type="submit" name="submitCombination" class="btn btn-default pull-right submitCombination"><i
-                    class="process-icon-save"></i> {l s='Save' mod='wtproductadditionalfields'}</button>
+                    class="process-icon-save"></i> {l s='Save'  mod=autorestocking}</button>
     </div>
 </div>

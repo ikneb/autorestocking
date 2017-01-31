@@ -1,90 +1,90 @@
 <div class="row product-tab" data-atrt="0"
-     data-atrt="99999999999"
-     data-cat="{$id_category_default}"
-     data-rel="{if $relations.id_relations}{$relations.id_relations}{/if}"
-     data-comb="{$relations.comb}"
-     data-prod="{$id_product}">
+     data-atrt=""
+     data-cat="{$id_category_default|escape:'htmlall':'UTF-8'}"
+     data-rel="{if $relations.id_relations}{$relations.id_relations|escape:'htmlall':'UTF-8'}{/if}"
+     data-comb="{$relations.comb|escape:'htmlall':'UTF-8'}"
+     data-prod="{$id_product|escape:'htmlall':'UTF-8'}">
     <div class="col-md-3">
-        <label class="form-control-label">Provider</label>
+        <label class="form-control-label">{l s='Provider'  mod=autorestocking}</label>
         <select id="id_provider" name="id_provider" class="form-control select2-hidden-accessible" data-toggle="select2"
                 tabindex="-1" aria-hidden="true">
             <option value="0"></option>
             {foreach from=$providers item=provider}
                 <option {if $relations.id_provider == $provider.id_providers}selected{/if}
-                        value="{$provider.id_providers}">{$provider.name}</option>
+                        value="{$provider.id_providers|escape:'htmlall':'UTF-8'}">{$provider.name|escape:'htmlall':'UTF-8'}</option>
             {/foreach}
         </select>
     </div>
 
     <div class="col-md-2">
-        <label class="form-control-label">Auto-order count</label>
+        <label class="form-control-label">{l s='Auto-order count'  mod=autorestocking}</label>
         <span class="help-box" data-toggle="popover" data-content="Information" data-original-title="" title=""></span>
         <input type="text" id="min_count" name="min_count" required="required" class="form-control"
-               value="{if $relations}{$relations.min_count}{/if}">
+               value="{if $relations}{$relations.min_count|escape:'htmlall':'UTF-8'}{/if}">
     </div>
     <div class="col-md-2">
-        <label class="form-control-label">Product count</label>
+        <label class="form-control-label">{l s='Product count'  mod=autorestocking}</label>
         <span class="help-box" data-toggle="popover" data-content="Information" data-original-title="" title=""></span>
         <input type="text" id="product_count" name="product_count" required="required" class="form-control"
-               value="{if $relations}{$relations.product_count}{/if}">
+               value="{if $relations}{$relations.product_count|escape:'htmlall':'UTF-8'}{/if}">
     </div>
 
     <div class="col-md-3 text-center">
-        <label class="form-control-label">Send</label>
+        <label class="form-control-label">{l s='Send'  mod=autorestocking}</label>
         <select name="type_order_day" class="selectpicker">
             <option>Select</option>
-            <option value="1" {if $relations.type_order_day == 1}selected{/if}>Days week</option>
-            <option value="2" {if $relations.type_order_day == 2}selected{/if}>Days month</option>
+            <option value="1" {if $relations.type_order_day == 1}selected{/if}>{l s='Days week'  mod=autorestocking}</option>
+            <option value="2" {if $relations.type_order_day == 2}selected{/if}>{l s='Days month'  mod=autorestocking}</option>
         </select>
 
         <div class="select-days-week no-active">
-            <div class="weekday-select" data-name="order_day" id="days_99999999999">
+            <div class="weekday-select" data-name="order_day" id="days_">
                 <div class="week-parts">
                     <label>
-                        <input type="checkbox" data-values="0,1,2,3,4,5,6"> Any day
+                        <input type="checkbox" data-values="0,1,2,3,4,5,6"> {l s='Any day'  mod=autorestocking}
                     </label>
                     <label>
-                        <input type="checkbox" data-values="0,6"> Weekends
+                        <input type="checkbox" data-values="0,6"> {l s='Weekends'  mod=autorestocking}
                     </label>
                     <label>
-                        <input type="checkbox" data-values="1,2,3,4,5"> Weekdays
+                        <input type="checkbox" data-values="1,2,3,4,5"> {l s='Weekdays'  mod=autorestocking}
                     </label>
                 </div>
                 <div class="days">
                     <label>
                         <input type="checkbox" value="1"
                                {if $relations.type_order_day ==1 && preg_match('/"1"/',$relations.order_day)}checked{/if}
-                               name="order_day"> Monday
+                               name="order_day"> {l s='Monday'  mod=autorestocking}
                     </label>
                     <label>
                         <input type="checkbox" value="2"
                                {if $relations.type_order_day ==1 && preg_match('/"2"/',$relations.order_day)}checked{/if}
-                               name="order_day"> Tuesday
+                               name="order_day"> {l s='Tuesday'  mod=autorestocking}
                     </label>
                     <label>
                         <input type="checkbox" value="3"
                                {if $relations.type_order_day ==1 && preg_match('/"3"/',$relations.order_day)}checked{/if}
-                               name="order_day"> Wednesday
+                               name="order_day">{l s='Wednesday'  mod=autorestocking}
                     </label>
                     <label>
                         <input type="checkbox"
                                {if $relations.type_order_day ==1 && preg_match('/"4"/',$relations.order_day)}checked{/if}
-                               value="4" name="order_day"> Thursday
+                               value="4" name="order_day"> {l s='Thursday'  mod=autorestocking}
                     </label>
                     <label>
                         <input type="checkbox"
                                {if $relations.type_order_day ==1 && preg_match('/"5"/',$relations.order_day)}checked{/if}
-                               value="5" name="order_day"> Friday
+                               value="5" name="order_day"> {l s='Friday'  mod=autorestocking}
                     </label>
                     <label>
                         <input type="checkbox"
                                {if $relations.type_order_day ==1 && preg_match('/"6"/',$relations.order_day)}checked{/if}
-                               value="6" name="order_day"> Saturday
+                               value="6" name="order_day">{l s='Saturday'  mod=autorestocking}
                     </label>
                     <label>
                         <input type="checkbox"
                                {if $relations.type_order_day ==1 && preg_match('/"7"/',$relations.order_day)}checked{/if}
-                               value="0" name="order_day"> Sunday
+                               value="0" name="order_day"> {l s='Sunday'  mod=autorestocking}
                     </label>
                 </div>
             </div>
@@ -301,6 +301,6 @@
     </div>
     <div class="col-md-2">
         <label class="form-control-label"></label>
-        <input type="submit" class="btn btn-primary save uppercase save-relation-new submitCombination" value="Save">
+        <input type="submit" class="btn btn-primary save uppercase save-relation-new submitCombination" value="{l s='Save'  mod=autorestocking}">
     </div>
 </div>

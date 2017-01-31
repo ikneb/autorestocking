@@ -1,40 +1,40 @@
 {foreach from=$combinations item=combination}
-    <div class="panel product-tab" data-atrt="{$combination.id_product_attribute}"
-         data-comb="{$combination.comb}" data-cat="{$combination.id_category_default}"
-         data-rel="{if $combination.id_relations}{$combination.id_relations}{/if}"
-         data-prod="{$combination.id_product}">
-        <div class="panel-heading"><strong>{$combination.comb}</strong></div>
+    <div class="panel product-tab" data-atrt="{$combination.id_product_attribute|escape:'htmlall':'UTF-8'}"
+         data-comb="{$combination.comb|escape:'htmlall':'UTF-8'}" data-cat="{$combination.id_category_default|escape:'htmlall':'UTF-8'}"
+         data-rel="{if $combination.id_relations}{$combination.id_relations|escape:'htmlall':'UTF-8'}{/if}"
+         data-prod="{$combination.id_product|escape:'htmlall':'UTF-8'}">
+        <div class="panel-heading"><strong>{$combination.comb|escape:'htmlall':'UTF-8'}</strong></div>
 
         <div class="row panel-body">
             <div class="col-md-3">
-                <label class="form-control-label">Provider</label>
+                <label class="form-control-label">{l s='Provider'  mod=autorestocking}</label>
                 <select id="id_provider" name="id_provider" class="form-control select2-hidden-accessible"
                         data-toggle="select2" tabindex="-1" aria-hidden="true">
                     <option value="0"></option>
                     {foreach from=$providers item=provider}
                         <option {if $combination.id_provider == $provider.id_providers}selected{/if}
-                                value="{$provider.id_providers}">{$provider.name}</option>
+                                value="{$provider.id_providers|escape:'htmlall':'UTF-8'}">{$provider.name|escape:'htmlall':'UTF-8'}</option>
                     {/foreach}
                 </select>
             </div>
 
             <div class="col-md-2">
-                <label class="form-control-label">Auto-order count</label>
+                <label class="form-control-label">{l s='Auto-order count'  mod=autorestocking}</label>
                 <span class="help-box" data-toggle="popover" data-content="Information" data-original-title=""
                       title=""></span>
                 <input type="text" id="min_count" name="min_count" required="required" class="form-control"
-                       value="{if $combination}{$combination.min_count}{/if}">
+                       value="{if $combination}{$combination.min_count|escape:'htmlall':'UTF-8'}{/if}">
             </div>
             <div class="col-md-2">
-                <label class="form-control-label">Product count</label>
+                <label class="form-control-label">{l s='Product count' mod=autorestocking}</label>
                 <span class="help-box" data-toggle="popover" data-content="Information" data-original-title=""
                       title=""></span>
                 <input type="text" id="product_count" name="product_count" required="required" class="form-control"
-                       value="{if $combination}{$combination.product_count}{/if}">
+                       value="{if $combination}{$combination.product_count|escape:'htmlall':'UTF-8'}{/if}">
             </div>
 
             <div class="col-md-3 text-center">
-                <label class="form-control-label">Send</label>
+                <label class="form-control-label">{l s='Send'  mod=autorestocking}</label>
                 <select name="type_order_day" class="selectpicker">
                     <option>Select</option>
                     <option value="1" {if $combination.type_order_day == 1}selected{/if}>Days week</option>
@@ -42,53 +42,53 @@
                 </select>
 
                 <div class="select-days-week no-active">
-                    <div class="weekday-select" data-name="order_day" id="days_{$combination.id_product_attribute}">
+                    <div class="weekday-select" data-name="order_day" id="days_{$combination.id_product_attribute|escape:'htmlall':'UTF-8'}">
                         <div class="week-parts">
                             <label>
-                                <input type="checkbox" data-values="0,1,2,3,4,5,6"> Any day
+                                <input type="checkbox" data-values="0,1,2,3,4,5,6"> {l s='Any day'  mod=autorestocking}
                             </label>
                             <label>
-                                <input type="checkbox" data-values="0,6"> Weekends
+                                <input type="checkbox" data-values="0,6"> {l s='Weekends'  mod=autorestocking}
                             </label>
                             <label>
-                                <input type="checkbox" data-values="1,2,3,4,5"> Weekdays
+                                <input type="checkbox" data-values="1,2,3,4,5"> {l s='Weekdays'  mod=autorestocking}
                             </label>
                         </div>
                         <div class="days">
                             <label>
                                 <input type="checkbox" value="1" name="order_day"
                                        {if $combination.type_order_day ==1 && preg_match('/"1"/',$combination.order_day)}checked{/if}
-                                > Monday
+                                > {l s='Monday'  mod=autorestocking}
                             </label>
                             <label>
                                 <input type="checkbox" value="2"
                                        {if $combination.type_order_day ==1 && preg_match('/"2"/',$combination.order_day)}checked{/if}
-                                       name="order_day"> Tuesday
+                                       name="order_day"> {l s='Tuesday'  mod=autorestocking}
                             </label>
                             <label>
                                 <input type="checkbox" value="3"
                                        {if $combination.type_order_day ==1 && preg_match('/"3"/',$combination.order_day)}checked{/if}
-                                       name="order_day"> Wednesday
+                                       name="order_day"> {l s='Wednesday'  mod=autorestocking}
                             </label>
                             <label>
                                 <input type="checkbox" value="4"
                                        {if $combination.type_order_day ==1 && preg_match('/"4"/',$combination.order_day)}checked{/if}
-                                       name="order_day"> Thursday
+                                       name="order_day"> {l s='Thursday'  mod=autorestocking}
                             </label>
                             <label>
                                 <input type="checkbox" value="5"
                                        {if $combination.type_order_day ==1 && preg_match('/"5"/',$combination.order_day)}checked{/if}
-                                       name="order_day"> Friday
+                                       name="order_day"> {l s='Friday'  mod=autorestocking}
                             </label>
                             <label>
                                 <input type="checkbox" value="6"
                                        {if $combination.type_order_day ==1 && preg_match('/"6"/',$combination.order_day)}checked{/if}
-                                       name="order_day"> Saturday
+                                       name="order_day"> {l s='Saturday'  mod=autorestocking}
                             </label>
                             <label>
                                 <input type="checkbox" value="7"
                                        {if $combination.type_order_day ==1 && preg_match('/"7"/',$combination.order_day)}checked{/if}
-                                       name="order_day"> Sunday
+                                       name="order_day"> {l s='Sunday'  mod=autorestocking}
                             </label>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                             <th scope="col" class="ui-datepicker-week-end"></th>
                         </tr>
                         </thead>
-                        <tbody class="month_days_{$combination.id_product_attribute}">
+                        <tbody class="month_days_{$combination.id_product_attribute|escape:'htmlall':'UTF-8'}">
                         <tr>
                             <td class=" ui-datepicker-week-end ">
                                 <a class="ui-state-default
@@ -282,7 +282,7 @@
             </div>
             <div class="col-md-2">
                 <label class="form-control-label"></label>
-                <button type="button" class="btn btn-primary save uppercase save-relation-new submitCombination">Save
+                <button type="button" class="btn btn-primary save uppercase save-relation-new submitCombination">{l s='Save'  mod=autorestocking}
                 </button>
             </div>
         </div>
