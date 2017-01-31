@@ -178,3 +178,17 @@ tbody {
     background: #ffffff 50% 50% repeat-x;
     font-weight: normal;
 }
+
+.new-product-select-type-order{
+    display: block;
+    width: 100%;
+    padding: .375rem .563rem;
+    font-size: .9rem;
+    line-height: 1.5;
+    color: #55595c;
+    background-color: #fafbfc;
+    background-image: none;
+    border: 1px solid #bbcdd2;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}

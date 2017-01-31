@@ -30,7 +30,7 @@
 
     <div class="col-md-3 text-center">
         <label class="form-control-label">{l s='Send'  mod=autorestocking}</label>
-        <select name="type_order_day" class="selectpicker">
+        <select name="type_order_day" class="selectpicker new-product-select-type-order">
             <option>Select</option>
             <option value="1" {if $relations.type_order_day == 1}selected{/if}>{l s='Days week'  mod=autorestocking}</option>
             <option value="2" {if $relations.type_order_day == 2}selected{/if}>{l s='Days month'  mod=autorestocking}</option>
