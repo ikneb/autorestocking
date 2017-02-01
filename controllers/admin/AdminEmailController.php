@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
 
 class AdminEmailController extends ModuleAdminController
 {
@@ -13,7 +19,6 @@ class AdminEmailController extends ModuleAdminController
         $this->className = 'Email';
         $this->lang = false;
         $this->context = Context::getContext();
-
 
         parent::__construct();
 
@@ -46,5 +51,4 @@ class AdminEmailController extends ModuleAdminController
             )
         );
     }
-
 }

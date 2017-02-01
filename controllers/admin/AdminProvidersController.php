@@ -1,4 +1,11 @@
 <?php
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
 
 class AdminProvidersController extends ModuleAdminController
 {
@@ -18,13 +25,11 @@ class AdminProvidersController extends ModuleAdminController
         $this->context = Context::getContext();
 
         parent::__construct();
-
     }
 
     public function initProcess()
     {
         parent::initProcess();
-
     }
 
     public function renderList()
@@ -46,14 +51,12 @@ class AdminProvidersController extends ModuleAdminController
             'description' => array('title' => $this->l('Description')),
             'email' => array('title' => $this->l('Email')),
         );
-
         return parent::renderList();
     }
 
     public function renderForm()
     {
         $id_provider = Tools::getValue('id_providers');
-        $all_categories = $id_provider ? Relation::getAllCategoryByProviderId($id_provider) : array();
         $categories = new HelperTreeCategories('associated-categories-tree', 'Add category');
         $categories->setUseCheckBox(true);
         $categories->render();
@@ -69,9 +72,12 @@ class AdminProvidersController extends ModuleAdminController
                 'token' => $this->token,
                 'tree' => $categories,
                 'product_id' => (int)Tools::getValue('id_product')
-            ));
+            )
+        );
         parent::renderForm();
-        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/provider_template.tpl');
+        return $this->context->smarty->fetch(
+            _PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/provider_template.tpl'
+        );
     }
 
     public function setMedia()
@@ -80,7 +86,5 @@ class AdminProvidersController extends ModuleAdminController
         $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'autorestocking/views/css/autorestocking.css', 'all');
         $this->context->controller->addJS(_PS_MODULE_DIR_ . 'autorestocking/views/js/provider.js');
         $this->context->controller->addJqueryPlugin('autocomplete');
-
     }
-
 }

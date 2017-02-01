@@ -1,4 +1,11 @@
 <?php
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
 
 require_once(dirname(__FILE__) . '../../../config/config.inc.php');
 require_once(dirname(__FILE__) . '../../../init.php');
@@ -16,12 +23,3 @@ if ($dif > 10 && Configuration::get('PS_CRON_AUTORESTOCKING_METHOD') == 1) {
     $time = Configuration::updateValue('PS_AUTOCRON_TIME', time());
     AutoRestocking::autoCron();
 }
-
-
-
-
-
-
-
-
-

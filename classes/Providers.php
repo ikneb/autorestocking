@@ -1,4 +1,11 @@
 <?php
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
 
 class Providers extends ObjectModel
 {
@@ -9,8 +16,6 @@ class Providers extends ObjectModel
     public $description;
 
     public $email;
-
-
 
     /**
      * @see ObjectModel::$definition
@@ -49,7 +54,6 @@ class Providers extends ObjectModel
         if (!$result = $db->getRow($sql)) {
             return false;
         }
-
         return $result;
     }
 
@@ -74,7 +78,6 @@ class Providers extends ObjectModel
         if (!Db::getInstance()->execute($sql)) {
             return false;
         }
-
         return true;
     }
 
@@ -95,6 +98,4 @@ class Providers extends ObjectModel
         $id_insert = Db::getInstance()->Insert_ID();
         return $id_insert;
     }
-
-
 }

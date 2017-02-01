@@ -1,3 +1,11 @@
+{**
+* 2016 WeeTeam
+*
+* @author    WeeTeam
+* @copyright 2016 WeeTeam
+* @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+*}
+
 {foreach from=$combinations item=combination}
     <div id="provider-product-tab" class="panel product-tab" data-atrt="{$combination.id_product_attribute|escape:'htmlall':'UTF-8'}"
          data-comb="{$combination.comb|escape:'htmlall':'UTF-8'}" data-cat="{$combination.id_category_default|escape:'htmlall':'UTF-8'}"
@@ -38,7 +46,7 @@
                 </label>
                 <div class="col-lg-2 col-md-2 col-sm-2 text-center">
                     <select name="type_order_day" class="selectpicker">
-                        <option>{l s='Select'}</option>
+                        <option>{l s='Select' mod=autorestocking}</option>
                         <option value="1" {if $combination.type_order_day == 1}selected{/if}>{l s='Days week' mod=autorestocking}</option>
                         <option value="2" {if $combination.type_order_day == 2}selected{/if}>{l s='Days month' mod=autorestocking}</option>
                     </select>

@@ -1,3 +1,11 @@
+{**
+* 2016 WeeTeam
+*
+* @author    WeeTeam
+* @copyright 2016 WeeTeam
+* @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+*}
+
 {foreach from=$combinations item=combination}
     <div class="panel product-tab" data-atrt="{$combination.id_product_attribute|escape:'htmlall':'UTF-8'}"
          data-comb="{$combination.comb|escape:'htmlall':'UTF-8'}" data-cat="{$combination.id_category_default|escape:'htmlall':'UTF-8'}"

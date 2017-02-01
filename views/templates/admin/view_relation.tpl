@@ -1,3 +1,11 @@
+{**
+* 2016 WeeTeam
+*
+* @author    WeeTeam
+* @copyright 2016 WeeTeam
+* @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+*}
+
 <div class="panel" id="fieldset_0">
     <div class="panel-heading">
         <i class="icon-briefcase"></i>{l s='Relation'  mod=autorestocking}
@@ -44,20 +52,25 @@
                 {if $relation.id_product_attribute == 0}{$relation.product_quantity|escape:'htmlall':'UTF-8'}{else}{$relation.attribute_quantity|escape:'htmlall':'UTF-8'}{/if}
             </td>
             <td class="pointer text-center">
-                <input type="number" name="min_count" id="min_count" value="{$relation.min_count|escape:'htmlall':'UTF-8'}">
+                <input type="number" name="min_count" id="min_count"
+                       value="{$relation.min_count|escape:'htmlall':'UTF-8'}">
             </td>
             <td class="text-center">
-                <input type="number" name="product_count" id="product_count" value="{$relation.product_count|escape:'htmlall':'UTF-8'|escape:'htmlall':'UTF-8'}">
+                <input type="number" name="product_count" id="product_count"
+                       value="{$relation.product_count|escape:'htmlall':'UTF-8'|escape:'htmlall':'UTF-8'}">
             </td>
             <td class="text-center">
                 <select name="type_order_day" class="selectpicker">
                     <option>Select</option>
-                    <option value="1" {if $relation.type_order_day == 1}selected{/if}>{l s='Days week' mod=autorestocking}</option>
-                    <option value="2" {if $relation.type_order_day == 2}selected{/if}>{l s='Days month' mod=autorestocking}</option>
+                    <option value="1"
+                            {if $relation.type_order_day == 1}selected{/if}>{l s='Days week' mod=autorestocking}</option>
+                    <option value="2"
+                            {if $relation.type_order_day == 2}selected{/if}>{l s='Days month' mod=autorestocking}</option>
                 </select>
 
                 <div class="select-days-week no-active">
-                    <div class="weekday-select" data-name="order_day" id="days_{$relation.id_relations|escape:'htmlall':'UTF-8'}">
+                    <div class="weekday-select" data-name="order_day"
+                         id="days_{$relation.id_relations|escape:'htmlall':'UTF-8'}">
                         <div class="week-parts">
                             <label>
                                 <input type="checkbox" data-values="0,1,2,3,4,5,6">{l s='Any day' mod=autorestocking}
@@ -329,13 +342,15 @@
 {/foreach}
 {if $pages>1}
     <nav aria-label="...">
-        <ul class="pagination pagination-sm" data-sel="{$select|escape:'htmlall':'UTF-8'}" data-count="{$pages|escape:'htmlall':'UTF-8'}">
+        <ul class="pagination pagination-sm" data-sel="{$select|escape:'htmlall':'UTF-8'}"
+            data-count="{$pages|escape:'htmlall':'UTF-8'}">
             <li class="page-item {if $select == 1}disabled{/if}">
                 <a class="page-link" data-page="-1">{l s='Previous' mod=autorestocking}</a>
             </li>
             {for $page=1 to $pages}
                 <li class="page-item {if $select==$page}active{/if}"><a class="page-link"
-                                                                        data-page="{$page|escape:'htmlall':'UTF-8'}">{$page|escape:'htmlall':'UTF-8'}</a></li>
+                                                                        data-page="{$page|escape:'htmlall':'UTF-8'}">{$page|escape:'htmlall':'UTF-8'}</a>
+                </li>
             {/for}
             <li class="page-item {if $select == $pages}disabled{/if}">
                 <a class="page-link" data-page="+1">{l s='Next' mod=autorestocking}</a>
@@ -348,4 +363,3 @@
 {else}
 <h4>{l s='You need add relation' mod=autorestocking}</h4>
 {/if}
-</div>

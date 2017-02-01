@@ -1,4 +1,11 @@
 <?php
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
 
 require_once(dirname(__FILE__) . '../../../config/config.inc.php');
 require_once(dirname(__FILE__) . '../../../init.php');
@@ -7,7 +14,7 @@ require_once(dirname(__FILE__) . '/classes/Relation.php');
 $sql = 'SELECT id_sent_email FROM `' . _DB_PREFIX_ . 'sent_email` WHERE token = "'. Tools::getValue('token').'"';
 $token = Db::getInstance()->getValue($sql);
 
-if($token == 0){
+if ($token == 0) {
     header("HTTP/1.1 404 Not Found");
     header("Status: 404 Not Found");
     die();
@@ -44,6 +51,7 @@ if($token == 0){
             data-provider="<?php echo Tools::getValue('provider') ?>"
             data-product="<?php echo Tools::getValue('product') ?>"
             data-email="<?php echo Tools::getValue('id_email') ?>"
+            data-list='<?php echo Tools::getValue('relation_list') ?>'
         >Order
         send
     </button>

@@ -1,8 +1,16 @@
+{**
+* 2016 WeeTeam
+*
+* @author    WeeTeam
+* @copyright 2016 WeeTeam
+* @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+*}
+
 <div class="row">
     <div class="col-lg-2 col-md-3">
         <div class="list-group">
-            <a class="list-group-item active" data-toggle="tab" id="linkProvider" href="#provider">{l s='Provider'}</a>
-            <a class="list-group-item " data-toggle="tab" id="linkRelation" href="#relation">{l s='Relation'}</a>
+            <a class="list-group-item active" data-toggle="tab" id="linkProvider" href="#provider">{l s='Provider' mod=autorestocking}</a>
+            <a class="list-group-item " data-toggle="tab" id="linkRelation" href="#relation">{l s='Relation' mod=autorestocking}</a>
             <a class="list-group-item " data-toggle="tab" id="linkAddRelation"
                href="#addRelation">{l s='Add relation' mod=autorestocking}</a>
         </div>
@@ -83,7 +91,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        {$tree}
+                        {$tree|escape:'quotes':'UTF-8'}
                     </div>
                 </div>
             </div>
@@ -95,7 +103,7 @@
                     </div>
                     <ul class="list-group product-list" id="product-list">
                         <li class="list-group-item justify-content-between"><span class="name-product">{l s='ID' mod=autorestocking}</span>
-                            <span class="name-product">{l s='Name'}</span><span
+                            <span class="name-product">{l s='Name' mod=autorestocking}</span><span
                                     class="badge badge-default badge-pill">{l s='Save' mod=autorestocking}</span>
                         </li>
                     </ul>

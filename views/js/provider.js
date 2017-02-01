@@ -1,3 +1,11 @@
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
+
 $(document).ready(function () {
 
     $('.list-group-item').click(function () {
@@ -588,6 +596,3 @@ $(document).ready(function () {
     });
 
 });
-
-
-

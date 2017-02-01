@@ -1,3 +1,11 @@
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
+
 $(document).ready(function () {
     $('body').on('click', '.submitCombination', function (e) {
         e.preventDefault();
@@ -165,5 +173,4 @@ $(document).ready(function () {
     $('body').on('mouseleave', '.select-days-week, .select-days-month',function () {
         $(this).addClass('no-active');
     });
-
 });

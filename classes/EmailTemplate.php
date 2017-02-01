@@ -1,9 +1,14 @@
 <?php
-
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
 
 class EmailTemplate extends ObjectModel
 {
-
     public $id_template_email;
     public $template_email;
 
@@ -19,7 +24,6 @@ class EmailTemplate extends ObjectModel
             'template_email' => array('type' => self::TYPE_STRING,)
         ),
     );
-
 
     public static function updateTemplate($template_email)
     {

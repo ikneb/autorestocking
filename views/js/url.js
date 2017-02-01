@@ -1,3 +1,11 @@
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
+
 $(document).ready(function () {
 
     $('.status').click(function (e) {
@@ -7,7 +15,9 @@ $(document).ready(function () {
         var id_product = $(this).attr('data-product');
         var id_order = $(this).attr('data-order');
         var id_email = $(this).attr('data-email');
+        var relation_list = $(this).attr('data-list');
 
+        console.log(relation_list);
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/status_ajax.php',
@@ -16,7 +26,8 @@ $(document).ready(function () {
                 status: status,
                 id_provider: id_provider,
                 id_product: id_product,
-                id_email: id_email
+                id_email: id_email,
+                relation_list: relation_list
             },
             success: function (data) {
                 console.log(data);
@@ -27,5 +38,4 @@ $(document).ready(function () {
         });
 
     });
-
 });

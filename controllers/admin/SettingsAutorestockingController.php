@@ -1,11 +1,12 @@
 <?php
-
 /**
- * Created by PhpStorm.
- * User: junta
- * Date: 1/27/17
- * Time: 10:25 AM
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
  */
+
 class SettingsAutorestockingController extends AdminController
 {
 
@@ -24,16 +25,12 @@ class SettingsAutorestockingController extends AdminController
 
     public function renderList()
     {
-        $form = $this->renderForm();
-        // To load form inside your template
-        $this->context->smarty->assign('form_tpl', $form);
-        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/setting.tpl');
-
+        return $this->renderForm();
     }
 
     public function renderForm()
     {
-
+        $fields_form = array();
         $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
         $fields_form[0]['form'] = array(
@@ -42,7 +39,6 @@ class SettingsAutorestockingController extends AdminController
                 'icon' => 'icon-briefcase'
             ),
             'input' => array(
-
                 array(
                     'type' => 'radio',
                     'label' => $this->l('Template compilation'),
@@ -62,7 +58,6 @@ class SettingsAutorestockingController extends AdminController
                         )
                     )
                 ),
-
             ),
             'submit' => array(
                 'title' => $this->l('Save')
@@ -77,12 +72,8 @@ class SettingsAutorestockingController extends AdminController
         $helper->toolbar_scroll = true;
         $helper->submit_action = 'submitCmsReadMore';
 
-
         $helper->fields_value['cron_autorestocking_method'] = Configuration::get('PS_CRON_AUTORESTOCKING_METHOD');
 
-
         return $helper->generateForm($fields_form);
-
     }
-
 }

@@ -1,4 +1,12 @@
-<div class="row product-tab" data-atrt="9999999999"
+{**
+* 2016 WeeTeam
+*
+* @author    WeeTeam
+* @copyright 2016 WeeTeam
+* @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+*}
+
+<div class="row product-tab" data-atrt="99999999"
      data-cat="{$id_category_default|escape:'htmlall':'UTF-8'}"
      data-rel="{if $relations.id_relations}{$relations.id_relations|escape:'htmlall':'UTF-8'}{/if}"
      data-comb="--"
@@ -37,7 +45,7 @@
         </select>
 
         <div class="select-days-week no-active">
-            <div class="weekday-select" data-name="order_day" id="days_9999999999">
+            <div class="weekday-select" data-name="order_day" id="days_99999999">
                 <div class="week-parts">
                     <label>
                         <input type="checkbox" data-values="0,1,2,3,4,5,6"> {l s='Any day'  mod=autorestocking}

@@ -1,3 +1,11 @@
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
+
 $(document).ready(function () {
 
     $('#template_email_form').submit(function (e) {
@@ -35,19 +43,19 @@ $(document).ready(function () {
         });
 
     });
-});
 
 
-function checkReturnData(data) {
-    if (data) {
-        $('#ajax_confirmation').text('Update successfully!').removeClass('hide alert-danger').addClass('alert-success');
-        setTimeout(function () {
-            $('#ajax_confirmation').addClass('hide');
-        }, 2000);
-    } else {
-        $('#ajax_confirmation').text('Not update try again later!').removeClass('hide alert-success').addClass('alert-danger');
-        setTimeout(function () {
-            $('#ajax_confirmation').addClass('hide');
-        }, 2000);
+    function checkReturnData(data) {
+        if (data) {
+            $('#ajax_confirmation').text('Update successfully!').removeClass('hide alert-danger').addClass('alert-success');
+            setTimeout(function () {
+                $('#ajax_confirmation').addClass('hide');
+            }, 2000);
+        } else {
+            $('#ajax_confirmation').text('Not update try again later!').removeClass('hide alert-success').addClass('alert-danger');
+            setTimeout(function () {
+                $('#ajax_confirmation').addClass('hide');
+            }, 2000);
+        }
     }
-}
+});

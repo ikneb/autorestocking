@@ -1,16 +1,21 @@
 <?php
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
-include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/Providers.php');
-include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/Relation.php');
-include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/Email.php');
-include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/EmailTemplate.php');
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
 
 class AutoRestocking extends Module
 {
     public function __construct()
     {
+        include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/Providers.php');
+        include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/Relation.php');
+        include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/Email.php');
+        include_once(_PS_MODULE_DIR_ . 'autorestocking/classes/EmailTemplate.php');
+
         $this->name = 'autorestocking';
         $this->tab = 'shipping_logistics';
         $this->version = '1.0.0';
@@ -122,6 +127,13 @@ class AutoRestocking extends Module
         return true;
     }
 
+    public function hookActionOrderStatusUpdate($params)
+    {
+
+        return /*function for changing order's state*/
+            ;
+    }
+
     public function hookActionAdminControllerSetMedia($params)
     {
         if ($this->context->controller->controller_name == 'AdminProducts') {
@@ -161,9 +173,14 @@ class AutoRestocking extends Module
         $has_combination = $product->hasAttributes();
         $providers = Providers::getAll();
 
-        $autorestocking = $has_combination ? Relation::getAllByProductId($id_product) : Relation::getRowByProductId($id_product);
+        $autorestocking = $has_combination ?
+            Relation::getAllByProductId($id_product) :
+            Relation::getRowByProductId($id_product);
 
-        $combination = $autorestocking ? Relation::getCombinationAndReelation($id_product) : Relation::getAttributeByIdProduct($id_product);
+        $combination = $autorestocking ?
+            Relation::getCombinationAndReelation($id_product) :
+            Relation::getAttributeByIdProduct($id_product);
+
         $this->smarty->assign(array(
             'providers' => $providers,
             'relations' => $autorestocking,
@@ -217,7 +234,11 @@ class AutoRestocking extends Module
 
     public static function updateConfig()
     {
-        if (!Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD', Tools::getValue('method_value'))) {
+        if (!Configuration::updateValue(
+            'PS_CRON_AUTORESTOCKING_METHOD',
+            Tools::getValue('method_value')
+        )
+        ) {
             return false;
         }
         return true;
@@ -262,29 +283,40 @@ class AutoRestocking extends Module
                 $count_current_month = date('t');
                 if (!empty($relations)) {
                     $product_list = array();
+                    $relation_list = array();
                     foreach ($relations as $relation) {
-                        $order_day = Tools::jsonDecode($relation['order_day']);
-                        $type_data_order = $relation['type_order_day'];
-                        $type_data = ($type_data_order == 1) ? date('w') : date('j');
-                        if($type_data > $count_current_month ){
-                            $type_data = $count_current_month;
-                        }
-                        if ($relation['id_product_attribute'] != 0 && $relation['id_product_attribute'] != 999999999) {
-                            if ($relation['min_count'] >= $relation['attribute_quantity']
-                                || $order_day == $type_data
-                            ) {
-                                $product_list[] = $relation;
+                        if ($relation['status'] != 1) {
+
+                            $order_day = Tools::jsonDecode($relation['order_day']);
+                            $type_data_order = $relation['type_order_day'];
+                            $type_data = ($type_data_order == 1) ? date('w') : date('j');
+                            if ($type_data > $count_current_month) {
+                                $type_data = $count_current_month;
                             }
-                        } else {
-                            if ($relation['min_count'] >= $relation['product_quantity']
-                                || $order_day == $type_data
-                            ) {
-                                $product_list[] = $relation;
+                            if ($relation['id_product_attribute'] != 0 &&
+                                $relation['id_product_attribute'] != 999999999) {
+                                if ($relation['min_count'] >= $relation['attribute_quantity']
+                                    || $order_day == $type_data
+                                ) {
+                                    $product_list[] = $relation;
+                                    Relation::setStatus($relation['id_relations'], 1);
+                                    $relation_list[] = $relation['id_relations'];
+                                }
+                            } else {
+                                if ($relation['min_count'] >= $relation['product_quantity']
+                                    || $order_day == $type_data
+                                ) {
+                                    $product_list[] = $relation;
+                                    Relation::setStatus($relation['id_relations'], 1);
+                                    $relation_list[] = $relation['id_relations'];
+                                }
                             }
                         }
                     }
+
                     $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-                    $sql = "SELECT id_order_state FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_lang ="
+                    $sql = "SELECT id_order_state FROM " . _DB_PREFIX_ .
+                        "order_state_lang WHERE id_lang ="
                         . $id_lang . " AND name ='Email sent(Autorestockin)'";
                     $id_order_state = Db::getInstance()->getValue($sql);
 
@@ -294,7 +326,7 @@ class AutoRestocking extends Module
 
                         $order = new OrderCore();
                         $order->current_state = $id_order_state;
-                        $order->id_address_delivery = 0;
+                        $order->id_address_delivery = 4;
                         $order->id_shop = 1;
                         $order->id_address_invoice = 0;
                         $order->id_cart = 0;
@@ -322,15 +354,21 @@ class AutoRestocking extends Module
 
                         $email->getID($token);
 
-                        $message = self::generateMessage($provider['id_providers'], $provider['name'], $product_list,
-                            $token, $order->getFields()['id_order'],  $email->getID($token));
-                        print_r($message);
-
+                        $message = self::generateMessage(
+                            $provider['id_providers'],
+                            $provider['name'],
+                            $product_list,
+                            $token,
+                            $order->getFields()['id_order'],
+                            $email->getID($token),
+                            $relation_list
+                        );
                         $send = Email::sendEmail($provider['email'], $message);
 
-                        if($message && $send){
+                        var_dump($message);
+                        if ($message && $send) {
                             return true;
-                        }else {
+                        } else {
                             $email->delete();
                             $order->delete();
                         }
@@ -340,22 +378,45 @@ class AutoRestocking extends Module
         }
     }
 
-    public static function generateUrlStatus($id_provider, $token, $id_order, $id_sent_email)
-    {
-        return $url = _PS_BASE_URL_ . '/modules/autorestocking/status.php?provider=' . $id_provider
-            . '&token=' . $token . '&id_order=' . $id_order . '&id_email=' . $id_sent_email;
+    public static function generateUrlStatus(
+        $id_provider,
+        $token,
+        $id_order,
+        $id_sent_email,
+        $relation_list
+    ) {
+        return _PS_BASE_URL_ . '/modules/autorestocking/status.php?provider=' .
+        $id_provider . '&token=' . $token . '&id_order=' .
+        $id_order . '&id_email=' . $id_sent_email . '&relation_list=' .
+        Tools::jsonEncode($relation_list);
     }
 
-    public static function generateMessage($id_provider, $name, $product_list, $token, $id_order, $id_sent_email)
-    {
+    public static function generateMessage(
+        $id_provider,
+        $name,
+        $product_list,
+        $token,
+        $id_order,
+        $id_sent_email,
+        $relation_list
+    ) {
         $list = '';
 
         foreach ($product_list as $product) {
-            $combination = $product['id_product_attribute'] ? ':(' . $product['name_combination'] . ')' : '';
-            $list .= "<p>" . $product['name'] . $combination . "   count order : " . $product['product_count'] . " </p>";
+            $combination = $product['id_product_attribute'] ?
+                ':(' . $product['name_combination'] . ')' : '';
+            $list .= "<p>" . $product['name'] .
+                $combination . "   count order : " . $product['product_count'] . " </p>";
         }
 
-        $url_status = self::generateUrlStatus($id_provider, $token, $id_order, $id_sent_email);
+        $url_status = self::generateUrlStatus(
+            $id_provider,
+            $token,
+            $id_order,
+            $id_sent_email,
+            $relation_list
+        );
+
         $message = EmailTemplate::getMailTemplate();
 
         if ($message) {
@@ -372,17 +433,17 @@ class AutoRestocking extends Module
     public static function changeStatus()
     {
         $status = Tools::getValue('status');
-        $id_povider = Tools::getValue('id_povider');
-        $id_product = Tools::getValue('id_product');
         $id_order = Tools::getValue('id_order');
         $id_email = Tools::getValue('id_email');
+        $relation_list = Tools::getValue('relation_list');
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
 
         switch ($status) {
             case 1:
 
-                $sql = "SELECT id_order_state FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_lang ="
+                $sql = "SELECT id_order_state FROM " .
+                    _DB_PREFIX_ . "order_state_lang WHERE id_lang ="
                     . $id_lang . " AND name ='In process(Autorestockin)'";
                 $id_order_state = Db::getInstance()->getValue($sql);
 
@@ -392,9 +453,9 @@ class AutoRestocking extends Module
 
                 return 1;
 
-                break;
             case 2:
-                $sql = "SELECT id_order_state FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_lang ="
+                $sql = "SELECT id_order_state FROM " .
+                    _DB_PREFIX_ . "order_state_lang WHERE id_lang ="
                     . $id_lang . " AND name ='Order sent(Autorestockin)'";
                 $id_order_state = Db::getInstance()->getValue($sql);
 
@@ -408,11 +469,17 @@ class AutoRestocking extends Module
 
                 Db::getInstance()->execute($sql);
 
+                $list = Tools::jsonDecode($relation_list);
+
+                if (is_array($list)) {
+                    foreach ($list as $id_relation) {
+                        Relation::setStatus($id_relation, 0);
+                    }
+                } else {
+                    Relation::setStatus($list, 0);
+                }
                 return 2;
-
-                break;
         }
-
         return false;
     }
 }

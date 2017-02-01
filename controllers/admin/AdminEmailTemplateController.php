@@ -1,4 +1,11 @@
 <?php
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
 
 class AdminEmailTemplateController extends ModuleAdminController
 {
@@ -20,21 +27,18 @@ class AdminEmailTemplateController extends ModuleAdminController
     public function setMedia()
     {
         parent::setMedia();
-        $this->context->controller->addJS(_PS_MODULE_DIR_ . 'autorestocking/views/js/autorest.js');
+        $this->context->controller->addJS(
+            _PS_MODULE_DIR_ . 'autorestocking/views/js/autorest.js'
+        );
     }
 
     public function renderList()
     {
-        $form = $this->renderForm();
-        // To load form inside your template
-        $this->context->smarty->assign('form_tpl', $form);
-        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'autorestocking/views/templates/admin/email_template.tpl');
-
+        return $this->renderForm();
     }
 
     public function renderForm()
     {
-
         $fields_form = array(
             'form' => array(
                 'legend' => array(
@@ -48,7 +52,11 @@ class AdminEmailTemplateController extends ModuleAdminController
                         'required' => false,
                         'autoload_rte' => true,
                         'col' => '5',
-                        'desc' => $this->module->l('If you want insert name provider, status URL or product list in the mail, you need use shortcode [name],[status_url] or [product_list]!'),
+                        'desc' => $this->module->l(
+                            'If you want insert name provider,
+                            status URL or product list in the mail,
+                            you need use shortcode [name],[status_url] or [product_list]!'
+                        ),
                     ),
                 ),
                 'submit' => array(
@@ -62,7 +70,6 @@ class AdminEmailTemplateController extends ModuleAdminController
          WHERE id_template_email=1';
         $template = DB::getInstance()->getValue($sql);
 
-
         $helper = new HelperForm();
         $helper->table = 'template_email';
         $helper->default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -75,7 +82,5 @@ class AdminEmailTemplateController extends ModuleAdminController
         );
 
         return $helper->generateForm(array($fields_form));
-
     }
-
 }

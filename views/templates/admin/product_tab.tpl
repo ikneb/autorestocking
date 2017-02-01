@@ -1,3 +1,11 @@
+{**
+* 2016 WeeTeam
+*
+* @author    WeeTeam
+* @copyright 2016 WeeTeam
+* @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+*}
+
 {if $version }
     {if $has_combination}
         {include file="$has_comb_tpl" }

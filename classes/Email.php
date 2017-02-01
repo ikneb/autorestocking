@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
 
 class Email extends ObjectModel
 {
@@ -40,24 +46,45 @@ class Email extends ObjectModel
 
     public static function sendEmail($to, $message)
     {
-        $shop_email = Configuration::get('PS_SHOP_EMAIL');
+        $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+
         $shop_name = Configuration::get('PS_SHOP_NAME');
         $subject = 'New order';
-        $headers = 'Content-type: text/html; charset=windows-1251 \r\n';
-        $headers .= 'From: ' . $shop_name . ' <' . $shop_email . '>\r\n';
-        mail($to, $subject, $message, $headers);
+
+        $dump = Mail::Send(
+            $id_lang,
+            'mail',
+            Mail::l(
+                $subject,
+                (int)$id_lang
+            ),
+            $message,
+            $to,
+            $shop_name,
+            null,
+            null,
+            null,
+            null,
+            _PS_MODULE_DIR_ . 'autorestocking/views/templates/admin',
+            true,
+            1,
+            false
+        );
+
+        if (!$dump) {
+            return false;
+        }
 
         return true;
     }
 
-    public function getID($token){
-
+    public function getID($token)
+    {
         $sql = $sql = 'SELECT id_sent_email FROM
         ' . _DB_PREFIX_ . 'sent_email
         WHERE token ="' . $token.'"';
         $id_sent_email = Db::getInstance()->getValue($sql);
 
         return $id_sent_email;
-
     }
 }

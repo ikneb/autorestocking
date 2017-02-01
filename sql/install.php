@@ -1,7 +1,13 @@
 <?php
-/* Init */
+/**
+ * 2016 WeeTeam
+ *
+ * @author    WeeTeam
+ * @copyright 2016 WeeTeam
+ * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
+ */
+
 $sql = array();
-/* Create Table in Database */
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "providers` (
 `id_providers` int(11) NOT NULL AUTO_INCREMENT,
@@ -11,7 +17,6 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "providers` (
 `token` varchar(36) NOT NULL,
 PRIMARY KEY (`id_providers`)
 )";
-
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "autorestocking_relations` (
 `id_relations` int(11) NOT NULL AUTO_INCREMENT,
@@ -28,7 +33,6 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "autorestocking_relation
 PRIMARY KEY (`id_relations`))
 ";
 
-
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'sent_email` (
 `id_sent_email` int(10) NOT NULL AUTO_INCREMENT,
 `provider_name` varchar(50) NOT NULL,
@@ -39,7 +43,6 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'sent_email` (
 `id_state` int(10),
 PRIMARY KEY (`id_sent_email`)
 )';
-
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'template_email` (
 `id_template_email` int(11) NOT NULL AUTO_INCREMENT,
@@ -53,4 +56,3 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'setting_autorestocking`
 `value_setting` int(11),
 PRIMARY KEY (`id_setting`)
 )';
-
