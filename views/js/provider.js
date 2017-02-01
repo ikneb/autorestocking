@@ -130,7 +130,7 @@ $(document).ready(function () {
                         var data_decoder = JSON.parse(data);
                         var attr = '';
                         if (data_decoder.length == 0) {
-                            attr = "<li class='list-group-item justify-content-between product attribute' data-prod='" + id_product + "'><span class='not-attribute'>You need add attributes and combinations</span></li>";
+                            attr = "<li class='list-group-item justify-content-between product attribute' data-save='0' data-attr='0' data-prod='" + id_product + "'><span class='not-attribute'>You need add attributes and combinations</span></li>";
                         } else {
                             for (i = 0; i < data_decoder.length; i++) {
                                 attr += "<li class='list-group-item justify-content-between product attribute ' data-cat='" +
@@ -138,13 +138,12 @@ $(document).ready(function () {
                                     data_decoder[i]['comb'] + " data-attr=" + data_decoder[i]['id_product_attribute'] + " ><span class='product-col'></span><span class='attribute-col-name'>" +
                                     name + "(" + data_decoder[i]['comb'] + ")</span><span class='badge badge-default badge-pill'><i class='icon-check check-attribute'></i><i class='icon-remove remove-attribute hidden'></i></span></li>";
                             }
-
+                            _this.closest('.product').attr('data-save', '0');
                         }
                         _this.addClass('off');
                         _this.closest('li').after(function () {
                             return attr;
                         });
-                        _this.closest('.product').attr('data-save', '0');
                         _this.closest('.product').find('.check-product').addClass('no-active');
                     }
                 });
@@ -233,7 +232,7 @@ $(document).ready(function () {
                                 $('.product-list').append("<li id='product_" + products[i][0]['id_product']
                                     + "' class='list-group-item justify-content-between product' data-cat='" +
                                     products[i][0]['id_category_default'] + "' data-prod='" +
-                                    products[i][0]['id_product'] + "' data-save='1' data-name = " +
+                                    products[i][0]['id_product'] + "' data-attr='0' data-save='1' data-name = " +
                                     products[i][0]['name'] + "><span class='product-col'>" +
                                     products[i][0]['id_product'] + "</span><span class='product-col-name'>" +
                                     products[i][0]['name'] + "</span>" + attributeSpan + "<span class='badge badge-default badge-pill'><i class='icon-check check-product'></i><i class='icon-remove remove-product hidden'></i></span></li>");
@@ -386,23 +385,29 @@ $(document).ready(function () {
                 order_day[i] = $(this).html();
             });
         }
-
-        $.ajax({
-            type: 'POST',
-            url: '/modules/autorestocking/ajax.php',
-            data: {
-                id_relations: id_relation,
-                min_count: min_count,
-                product_count: product_count,
-                type_order_day: type_order_day,
-                order_day: order_day,
-                ajax: 'update_relation'
-            },
-            success: function (data) {
-                console.log(data);
-                checkReturnData(data);
-            }
-        });
+        if (order_day ==  0) {
+            $('#ajax_confirmation').text('Fill in all the fields!').removeClass('hide alert-success').addClass('alert-danger');
+            setTimeout(function () {
+                $('#ajax_confirmation').addClass('hide');
+            }, 2000);
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: '/modules/autorestocking/ajax.php',
+                data: {
+                    id_relations: id_relation,
+                    min_count: min_count,
+                    product_count: product_count,
+                    type_order_day: type_order_day,
+                    order_day: order_day,
+                    ajax: 'update_relation'
+                },
+                success: function (data) {
+                    console.log(data);
+                    checkReturnData(data);
+                }
+            });
+        }
     });
 
     $('body').on('click', '.delete-relation', function (e) {

@@ -286,7 +286,6 @@ class AutoRestocking extends Module
                     $relation_list = array();
                     foreach ($relations as $relation) {
                         if ($relation['status'] != 1) {
-
                             $order_day = Tools::jsonDecode($relation['order_day']);
                             $type_data_order = $relation['type_order_day'];
                             $type_data = ($type_data_order == 1) ? date('w') : date('j');
@@ -365,7 +364,6 @@ class AutoRestocking extends Module
                         );
                         $send = Email::sendEmail($provider['email'], $message);
 
-                        var_dump($message);
                         if ($message && $send) {
                             return true;
                         } else {
@@ -385,10 +383,14 @@ class AutoRestocking extends Module
         $id_sent_email,
         $relation_list
     ) {
+        $list = '';
+            foreach ($relation_list as $id ) {
+                $list .= $id.'_';
+            }
+
         return _PS_BASE_URL_ . '/modules/autorestocking/status.php?provider=' .
         $id_provider . '&token=' . $token . '&id_order=' .
-        $id_order . '&id_email=' . $id_sent_email . '&relation_list=' .
-        Tools::jsonEncode($relation_list);
+        $id_order . '&id_email=' . $id_sent_email . '&relation_list=' . substr($list, 0, -1);
     }
 
     public static function generateMessage(
@@ -441,7 +443,6 @@ class AutoRestocking extends Module
 
         switch ($status) {
             case 1:
-
                 $sql = "SELECT id_order_state FROM " .
                     _DB_PREFIX_ . "order_state_lang WHERE id_lang ="
                     . $id_lang . " AND name ='In process(Autorestockin)'";
@@ -469,7 +470,7 @@ class AutoRestocking extends Module
 
                 Db::getInstance()->execute($sql);
 
-                $list = Tools::jsonDecode($relation_list);
+                $list = explode('_', $relation_list);
 
                 if (is_array($list)) {
                     foreach ($list as $id_relation) {

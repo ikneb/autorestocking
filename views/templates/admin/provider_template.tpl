@@ -91,7 +91,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        {$tree|escape:'quotes':'UTF-8'}
+                        {$tree|escape:'':'UTF-8'}
                     </div>
                 </div>
             </div>

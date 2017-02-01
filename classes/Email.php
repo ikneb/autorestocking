@@ -47,29 +47,25 @@ class Email extends ObjectModel
     public static function sendEmail($to, $message)
     {
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-
         $shop_name = Configuration::get('PS_SHOP_NAME');
         $subject = 'New order';
 
         $dump = Mail::Send(
             $id_lang,
             'mail',
-            Mail::l(
-                $subject,
-                (int)$id_lang
+            $subject,
+            array(
+                '{message}' => $message,
             ),
-            $message,
             $to,
+            $shop_name,
+            Configuration::get('PS_SHOP_EMAIL'),
             $shop_name,
             null,
             null,
-            null,
-            null,
-            _PS_MODULE_DIR_ . 'autorestocking/views/templates/admin',
-            true,
-            1,
-            false
+            _PS_MODULE_DIR_ . 'autorestocking/mail/'
         );
+
 
         if (!$dump) {
             return false;
