@@ -42,6 +42,7 @@ class AutoRestocking extends Module
     {
         if (!parent::install()
             || !$this->registerHook('actionAdminControllerSetMedia')
+            || !$this->registerHook('displayHelperTree')
             || !$this->registerHook('displayAdminProductsExtra')
             || !$this->registerHook('displayHeader')
             || !Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD', 1)
@@ -127,11 +128,12 @@ class AutoRestocking extends Module
         return true;
     }
 
-    public function hookActionOrderStatusUpdate($params)
+    public function hookDisplayHelperTree($params)
     {
-
-        return /*function for changing order's state*/
-            ;
+        $categories = new HelperTreeCategories('associated-categories-tree', 'Add category');
+        $categories->setUseCheckBox(true);
+        $categories->render();
+        return $categories;
     }
 
     public function hookActionAdminControllerSetMedia($params)
@@ -149,7 +151,7 @@ class AutoRestocking extends Module
         $time = Configuration::get('PS_AUTOCRON_TIME');
         $current_time = time();
         $dif = $current_time - $time;
-        if ($dif > 10 && Configuration::get('PS_CRON_AUTORESTOCKING_METHOD') == 1) {
+        if ($dif > 21600 && Configuration::get('PS_CRON_AUTORESTOCKING_METHOD') == 1) {
             $time = Configuration::updateValue('PS_AUTOCRON_TIME', time());
             self::autoCron();
         }
@@ -384,13 +386,13 @@ class AutoRestocking extends Module
         $relation_list
     ) {
         $list = '';
-            foreach ($relation_list as $id ) {
-                $list .= $id.'_';
-            }
+        foreach ($relation_list as $id) {
+            $list .= $id.'_';
+        }
 
         return _PS_BASE_URL_ . '/modules/autorestocking/status.php?provider=' .
         $id_provider . '&token=' . $token . '&id_order=' .
-        $id_order . '&id_email=' . $id_sent_email . '&relation_list=' . substr($list, 0, -1);
+        $id_order . '&id_email=' . $id_sent_email . '&relation_list=' . Tools::substr($list, 0, -1);
     }
 
     public static function generateMessage(

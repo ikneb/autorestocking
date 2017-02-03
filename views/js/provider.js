@@ -72,7 +72,6 @@ $(document).ready(function () {
                 url: '/modules/autorestocking/ajax.php',
                 data: {id_product: id_product, ajax: 'add_product_autocomplete'},
                 success: function (data) {
-                    console.log(data);
                     data = JSON.parse(data);
                     try {
                         $('.product').each(function (i) {
@@ -215,7 +214,6 @@ $(document).ready(function () {
                 url: '/modules/autorestocking/ajax.php',
                 data: {categories: categories, ajax: 'add_product_tree'},
                 success: function (data) {
-                    console.log(data);
                     var products = JSON.parse(data);
                     var product_list = [];
                     for (i = 0; i < products.length; i++) {
@@ -385,29 +383,22 @@ $(document).ready(function () {
                 order_day[i] = $(this).html();
             });
         }
-        if (order_day ==  0) {
-            $('#ajax_confirmation').text('Fill in all the fields!').removeClass('hide alert-success').addClass('alert-danger');
-            setTimeout(function () {
-                $('#ajax_confirmation').addClass('hide');
-            }, 2000);
-        }else{
-            $.ajax({
-                type: 'POST',
-                url: '/modules/autorestocking/ajax.php',
-                data: {
-                    id_relations: id_relation,
-                    min_count: min_count,
-                    product_count: product_count,
-                    type_order_day: type_order_day,
-                    order_day: order_day,
-                    ajax: 'update_relation'
-                },
-                success: function (data) {
-                    console.log(data);
-                    checkReturnData(data);
-                }
-            });
-        }
+        $.ajax({
+            type: 'POST',
+            url: '/modules/autorestocking/ajax.php',
+            data: {
+                id_relations: id_relation,
+                min_count: min_count,
+                product_count: product_count,
+                type_order_day: type_order_day,
+                order_day: order_day,
+                ajax: 'update_relation'
+            },
+            success: function (data) {
+                checkReturnData(data);
+            }
+        });
+
     });
 
     $('body').on('click', '.delete-relation', function (e) {

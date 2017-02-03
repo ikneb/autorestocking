@@ -57,10 +57,6 @@ class AdminProvidersController extends ModuleAdminController
     public function renderForm()
     {
         $id_provider = Tools::getValue('id_providers');
-        $categories = new HelperTreeCategories('associated-categories-tree', 'Add category');
-        $categories->setUseCheckBox(true);
-        $categories->render();
-
         $provider = $id_provider ? Providers::getCurrentProvider($id_provider) : false;
 
         $this->context->smarty->assign(
@@ -70,7 +66,6 @@ class AdminProvidersController extends ModuleAdminController
                 'description' => $provider ? $provider['description'] : '',
                 'email' => $provider ? $provider['email'] : '',
                 'token' => $this->token,
-                'tree' => $categories,
                 'product_id' => (int)Tools::getValue('id_product')
             )
         );

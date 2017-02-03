@@ -46,7 +46,7 @@
                 </label>
                 <div class="col-lg-2 col-md-2 col-sm-2 text-center">
                     <select name="type_order_day" class="selectpicker">
-                        <option>{l s='Select' mod=autorestocking}</option>
+                        <option value="0">{l s='Select' mod=autorestocking}</option>
                         <option value="1" {if $combination.type_order_day == 1}selected{/if}>{l s='Days week' mod=autorestocking}</option>
                         <option value="2" {if $combination.type_order_day == 2}selected{/if}>{l s='Days month' mod=autorestocking}</option>
                     </select>

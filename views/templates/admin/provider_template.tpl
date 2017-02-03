@@ -91,7 +91,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        {$tree|escape:'':'UTF-8'}
+                        {hook h="displayHelperTree"}
                     </div>
                 </div>
             </div>

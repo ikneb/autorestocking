@@ -402,7 +402,7 @@ class Relation extends ObjectModel
 
     public static function saveRelationCombination()
     {
-        $order_day = Tools::jsonEncode(Tools::getValue('order_day'));
+        $order_day = Tools::jsonDecode(Tools::getValue('order_day'));
         $id_relation = Tools::getValue('id_relation');
         $id_attr = Tools::getValue('id_attribute');
         if ($id_attr == 99999999) {
@@ -418,7 +418,7 @@ class Relation extends ObjectModel
                 name_combination = '" . htmlspecialchars(Tools::getValue('name_combination')) . "',
                 id_category = " . Tools::getValue('id_category') . ",
                 type_order_day = " . Tools::getValue('type_order_day') . ",
-                order_day =  '" . Tools::jsonDecode($order_day) . "',
+                order_day =  '" . $order_day . "',
                 product_count = " . Tools::getValue('product_count') . "
                 WHERE id_relations = " . $id_relation;
 

@@ -53,7 +53,6 @@ $(document).ready(function () {
             },
 
             success: function (data) {
-                console.log(data)
                 if (id_relations == 0 && data.length < 10) {
                     _this.attr('data-rel', data);
                 }

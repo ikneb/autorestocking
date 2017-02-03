@@ -32,7 +32,6 @@ $(document).ready(function () {
         } else {
             method_value = document.getElementById('cron_autorestocking_method_2').value;
         }
-        //console.log(conf);
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/ajax.php',

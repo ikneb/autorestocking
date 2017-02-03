@@ -17,7 +17,6 @@ $(document).ready(function () {
         var id_email = $(this).attr('data-email');
         var relation_list = $(this).attr('data-list');
 
-        console.log(relation_list);
         $.ajax({
             type: 'POST',
             url: '/modules/autorestocking/status_ajax.php',
@@ -30,7 +29,6 @@ $(document).ready(function () {
                 relation_list: relation_list
             },
             success: function (data) {
-                console.log(data);
                 if (data) {
                     $('#myModal').modal('show');
                 }

@@ -61,7 +61,7 @@
             </td>
             <td class="text-center">
                 <select name="type_order_day" class="selectpicker">
-                    <option>Select</option>
+                    <option value="1">{l s='Select' mod=autorestocking}</option>
                     <option value="1"
                             {if $relation.type_order_day == 1}selected{/if}>{l s='Days week' mod=autorestocking}</option>
                     <option value="2"
